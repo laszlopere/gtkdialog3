@@ -27,7 +27,9 @@
 
 #ifndef G_OS_WIN32
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <regex.h>
+#include <unistd.h>
 #endif
 
 #include "gtkdialog.h"
@@ -38,6 +40,31 @@
 #include "tag_attributes.h"
 
 extern gchar *option_include_file;
+
+/***********************************************************************
+ * Run a command using the user's SHELL instead of /bin/sh.            *
+ * This preserves bash exported functions (export -f) which system()   *
+ * loses because it always invokes /bin/sh.                            *
+ ***********************************************************************/
+
+static int run_shell_command(const char *command)
+{
+	const char *shell = getenv("SHELL");
+	if (shell == NULL)
+		shell = "/bin/sh";
+
+	pid_t pid = fork();
+	if (pid == -1)
+		return -1;
+	if (pid == 0) {
+		execl(shell, shell, "-c", command, (char *)NULL);
+		_exit(127);
+	}
+	int status;
+	if (waitpid(pid, &status, 0) == -1)
+		return -1;
+	return status;
+}
 
 /* Local function prototypes */
 void action_closewindow(GtkWidget *widget, char *string);
@@ -632,7 +659,7 @@ void action_shellcommand(GtkWidget *widget, char *string)
 
 	if (option_include_file == NULL) {
 
-		result = system(string);
+		result = run_shell_command(string);
 
 	} else {
 
@@ -640,7 +667,7 @@ void action_shellcommand(GtkWidget *widget, char *string)
 		command = g_strdup_printf("source %s; %s", */
 		command = g_strdup_printf(". %s; %s",
 				option_include_file, string);
-		result = system(command);
+		result = run_shell_command(command);
 		g_free(command);
 
 	}

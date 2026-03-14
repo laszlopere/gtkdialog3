@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# This example requires bash.
-
-# Notice that the function print_this() is also being executed using /bin/bash
-# within the action directive and the reason for this is that Gtkdialog is a
-# C program and the C library will execute a system command using /bin/sh.
-# Ubuntu users whose /bin/sh links to dash especially should be aware of this.
+# Gtkdialog3 executes action commands via system(), which uses /bin/sh.
+# On many systems /bin/sh is dash, which does not support bash's
+# "export -f" mechanism. This example requires bash as /bin/sh, or
+# the script must be run with bash explicitly.
 
 GTKDIALOG=gtkdialog3
 
