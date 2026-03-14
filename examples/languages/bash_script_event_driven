@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# Gtkdialog3 executes action commands via system(), which uses /bin/sh.
-# On many systems /bin/sh is dash, which does not support bash's
-# "export -f" mechanism. This example requires bash as /bin/sh, or
-# the script must be run with bash explicitly.
+# Gtkdialog3 executes action commands using the user's $SHELL,
+# so bash exported functions (export -f) work directly in actions.
 
 GTKDIALOG=gtkdialog3
 
@@ -12,11 +10,14 @@ print_this() {
 }; export -f print_this
 
 export MAIN_DIALOG='
-<window>
+<window title="Bash Event Driven">
 	<vbox>
+		<text wrap="true" width-chars="40">
+			<label>"This example demonstrates calling bash functions from GtkDialog3 actions. The print_this() function is defined in the bash script and exported with \"export -f\". When you click the button below, the action invokes the function directly. Output is printed to the terminal."</label>
+		</text>
 		<button>
-			<label>function</label>
-			<action>bash -c "print_this button"</action>
+			<label>Call print_this()</label>
+			<action>print_this button</action>
 		</button>
 		<button>
 			<label>Exit</label>

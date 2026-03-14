@@ -20,3 +20,6 @@ Thunor: These still remain:
 (11) At the creation of the widgets the initialization should be sorted
      as the dependencies are dictating.
 (13) Unpaired " is printed to the standard output, which is very problematic.
+(14) The <text wrap="true" width-chars="40"> label is not wrapping long text.
+     See examples/languages/bash_script_event_driven and its test
+     tests/ft_bash_script_event_driven/ft_bash_script_event_driven.py.
