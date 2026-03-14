@@ -1,0 +1,68 @@
+GtkDialog2 - A small utility for fast and easy GUI building
+
+This is a fork of the original Gtkdialog project, created by the
+original author Pere László (pipas). The original project was maintained
+by Thunor from 2011 to 2013. This fork continues development under the
+name GtkDialog2.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+Downloading the Source Code
+===========================
+
+Original project (no longer maintained):
+    http://code.google.com/p/gtkdialog/
+
+Compilation and Installation
+============================
+
+From a Source Package
+---------------------
+
+    ./configure [configure-options]
+    make
+    make install
+
+From Git
+--------
+
+    ./autogen.sh [configure-options]
+    make
+    make install
+
+The doc/reference/* and examples/* don't install by default so you might
+like to copy them somewhere.
+
+Support for using Glade generated user interfaces is very old and I'd
+rather not encourage folk to create GtkDialog2 applications in this way.
+
+VTE
+---
+GtkDialog2's configure script will compile-in support for the Virtual
+Terminal Emulator if it finds libvte and its development headers.
+libvte source package -> http://ftp.gnome.org/pub/GNOME/sources/vte/
+
+ARM
+---
+A problem was encountered when compiling on the ARM platform whereby the
+widgets were being packed in the wrong order and I have applied a fix for
+this wrapped in an #ifdef __arm__ preprocessor macro in automaton.c.
+
+Contacting Us
+=============
+
+Original author: Pere László <pipas@linux.pte.hu>
+
+2026-03-14
