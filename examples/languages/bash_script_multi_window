@@ -6,34 +6,44 @@ GTKDIALOG=gtkdialog3
 # window widget's variable directive which is a requirement. Not doing
 # this will result in the launching of duplicate windows none of which
 # can be closed and a warning message being sent to the terminal.
-# 
+#
 # Try changing modal to true for a different window behaviour.
 
 modal=false
 
-funcframeCreate() {
-	if [ $2 -eq 1 ]; then
-		echo '<frame This window>'
-	else
-		echo '<frame>'
-	fi
-	echo '			<button>
-				<label>launch '$1'</label>
-				<action function="launch">'$1'</action>
-			</button>
-			<button>
-				<label>closewindow '$1'</label>
-				<action function="closewindow">'$1'</action>
-			</button>
-		</frame>'
-}
-
 winMain='
 <window title="winMain" width-request="250" modal="'$modal'">
 	<vbox>
-		'"`funcframeCreate winMain 1`"'
-		'"`funcframeCreate winLaunch1 0`"'
-		'"`funcframeCreate winLaunch2 0`"'
+		<frame This window>
+			<button>
+				<label>launch winMain</label>
+				<action function="launch">winMain</action>
+			</button>
+			<button>
+				<label>closewindow winMain</label>
+				<action function="closewindow">winMain</action>
+			</button>
+		</frame>
+		<frame>
+			<button>
+				<label>launch winLaunch1</label>
+				<action function="launch">winLaunch1</action>
+			</button>
+			<button>
+				<label>closewindow winLaunch1</label>
+				<action function="closewindow">winLaunch1</action>
+			</button>
+		</frame>
+		<frame>
+			<button>
+				<label>launch winLaunch2</label>
+				<action function="launch">winLaunch2</action>
+			</button>
+			<button>
+				<label>closewindow winLaunch2</label>
+				<action function="closewindow">winLaunch2</action>
+			</button>
+		</frame>
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>
@@ -46,9 +56,36 @@ export winMain
 winLaunch1='
 <window title="winLaunch1" width-request="250" modal="'$modal'">
 	<vbox>
-		'"`funcframeCreate winMain 0`"'
-		'"`funcframeCreate winLaunch1 1`"'
-		'"`funcframeCreate winLaunch2 0`"'
+		<frame>
+			<button>
+				<label>launch winMain</label>
+				<action function="launch">winMain</action>
+			</button>
+			<button>
+				<label>closewindow winMain</label>
+				<action function="closewindow">winMain</action>
+			</button>
+		</frame>
+		<frame This window>
+			<button>
+				<label>launch winLaunch1</label>
+				<action function="launch">winLaunch1</action>
+			</button>
+			<button>
+				<label>closewindow winLaunch1</label>
+				<action function="closewindow">winLaunch1</action>
+			</button>
+		</frame>
+		<frame>
+			<button>
+				<label>launch winLaunch2</label>
+				<action function="launch">winLaunch2</action>
+			</button>
+			<button>
+				<label>closewindow winLaunch2</label>
+				<action function="closewindow">winLaunch2</action>
+			</button>
+		</frame>
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>
@@ -61,9 +98,36 @@ export winLaunch1
 winLaunch2='
 <window title="winLaunch2" width-request="250" modal="'$modal'">
 	<vbox>
-		'"`funcframeCreate winMain 0`"'
-		'"`funcframeCreate winLaunch1 0`"'
-		'"`funcframeCreate winLaunch2 1`"'
+		<frame>
+			<button>
+				<label>launch winMain</label>
+				<action function="launch">winMain</action>
+			</button>
+			<button>
+				<label>closewindow winMain</label>
+				<action function="closewindow">winMain</action>
+			</button>
+		</frame>
+		<frame>
+			<button>
+				<label>launch winLaunch1</label>
+				<action function="launch">winLaunch1</action>
+			</button>
+			<button>
+				<label>closewindow winLaunch1</label>
+				<action function="closewindow">winLaunch1</action>
+			</button>
+		</frame>
+		<frame This window>
+			<button>
+				<label>launch winLaunch2</label>
+				<action function="launch">winLaunch2</action>
+			</button>
+			<button>
+				<label>closewindow winLaunch2</label>
+				<action function="closewindow">winLaunch2</action>
+			</button>
+		</frame>
 		<hbox homogeneous="true">
 			<button use-stock="true" label="gtk-quit"></button>
 		</hbox>

@@ -246,7 +246,6 @@ void action_launchwindow(GtkWidget *widget, char *string)
 				fprintf(stderr, "%s():\ncharsreaded=%i\nprogram_src=%s\n",
 					__func__, charsreaded, program_src);
 #endif
-
 				/* Call the parser to interpret the new code (it won't return) */
 				gtkdialog_parse();
 
