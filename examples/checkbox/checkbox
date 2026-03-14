@@ -1,4 +1,10 @@
 #!/bin/sh
+#
+# The GUI is described in an XML-like language and stored in a shell
+# variable (MAIN_DIALOG). The variable is exported into the environment
+# and gtkdialog3 is invoked with --program=MAIN_DIALOG, passing the
+# NAME of the environment variable (not its value).
+#
 
 GTKDIALOG=gtkdialog3
 
@@ -39,5 +45,6 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
+	-p | --print-ir) $GTKDIALOG --program=MAIN_DIALOG --print-ir ;;
 	*) $GTKDIALOG --program=MAIN_DIALOG ;;
 esac
