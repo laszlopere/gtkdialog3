@@ -2,7 +2,7 @@
 
 # This example requires bash.
 
-GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog3
 
 treWidth=320; treHeight=200
 

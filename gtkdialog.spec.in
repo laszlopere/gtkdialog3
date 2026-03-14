@@ -1,7 +1,7 @@
 # Copyright (c) 2003 Pere Laszlo pipas@linux.pte.hu
-# Forked as GtkDialog2 in 2026
+# Forked as GtkDialog3 in 2026
 #
-%define name gtkdialog2
+%define name gtkdialog3
 %define version @VERSION@
 %define release 1
 %define manifest %{_builddir}/%{name}-%{version}-%{release}.manifest
@@ -16,10 +16,10 @@ Source: %{name}-%{version}.tar.gz
 URL: ftp://linux.pte.hu/pub/gtkdialog/%{name}-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-%{version}
 
-Summary: GtkDialog2 - GUI creation tool for shells and arbitrary interpreters.
+Summary: GtkDialog3 - GUI creation tool for shells and arbitrary interpreters.
 
 %description
-GtkDialog2 is a fork of gtkdialog, continued by the original author.
+GtkDialog3 is a fork of gtkdialog, continued by the original author.
 It uses an XML like simple language as a GUI description language to
 produce dialog boxes. The program can be used with shells and arbitrary
 interpreters. Example programs included for BASH and AWK.

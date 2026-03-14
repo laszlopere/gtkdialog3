@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog3
 
 functgbCreate() {
 	echo '<togglebutton active="true">

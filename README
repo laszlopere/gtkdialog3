@@ -1,9 +1,9 @@
-GtkDialog2 - A small utility for fast and easy GUI building
+GtkDialog3 - A small utility for fast and easy GUI building
 
 This is a fork of the original Gtkdialog project, created by the
 original author Pere László (pipas). The original project was maintained
 by Thunor from 2011 to 2013. This fork continues development under the
-name GtkDialog2.
+name GtkDialog3.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,11 +46,11 @@ The doc/reference/* and examples/* don't install by default so you might
 like to copy them somewhere.
 
 Support for using Glade generated user interfaces is very old and I'd
-rather not encourage folk to create GtkDialog2 applications in this way.
+rather not encourage folk to create GtkDialog3 applications in this way.
 
 VTE
 ---
-GtkDialog2's configure script will compile-in support for the Virtual
+GtkDialog3's configure script will compile-in support for the Virtual
 Terminal Emulator if it finds libvte and its development headers.
 libvte source package -> http://ftp.gnome.org/pub/GNOME/sources/vte/
 

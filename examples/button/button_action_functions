@@ -5,7 +5,7 @@
 # See execute_action() for more information.
 #
 
-GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog3
 
 DIALOG='
 <window>

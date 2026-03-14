@@ -3,7 +3,7 @@
 # Thunor: This example is broken: input from a command has not been
 # implemented for this widget and it's now old and deprecated.
 
-GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog3
 
 MAIN_DIALOG='
 <window>

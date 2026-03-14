@@ -2,9 +2,9 @@
 
 # This example requires bash.
 
-GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog3
 
-export TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+export TMPDIR=/tmp/gtkdialog3/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 funcmuiCreate() {

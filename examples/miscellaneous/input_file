@@ -2,7 +2,7 @@
 
 # Thunor: I'm not sure that this example is doing what was originally intended.
 
-GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog3
 
 MAIN_DIALOG='
 <window>

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog3
 
 # This example requires bash.
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+export TMPDIR=/tmp/gtkdialog3/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 cp no.svg yes.svg "$TMPDIR"/

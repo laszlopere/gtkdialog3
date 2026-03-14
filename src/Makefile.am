@@ -7,8 +7,8 @@ AM_YFLAGS=-d -p $$(basename $@ parser.c)
 BUILT_SOURCES = \
 	gtkdialog_parser.h 
 
-bin_PROGRAMS = gtkdialog2
-gtkdialog2_SOURCES = \
+bin_PROGRAMS = gtkdialog3
+gtkdialog3_SOURCES = \
 	gtkdialog.c gtkdialog.h \
 	macros.h \
 	printing.c printing.h \

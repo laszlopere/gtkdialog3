@@ -24,11 +24,11 @@
 
 /* Function prototypes */
 void button_clicked_attr(GtkWidget *button, AttributeSet *Attr);
-void button_entered_attr(GtkWidget *button, AttributeSet *Attr);
-void button_leaved_attr(GtkWidget *button, AttributeSet *Attr);
+void button_entered_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSet *Attr);
+void button_leaved_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSet *Attr);
 void button_pressed(GtkWidget *button, const gchar *str);
-void button_pressed_attr(GtkWidget *button, AttributeSet *Attr);
-void button_released_attr(GtkWidget *button, AttributeSet *Attr);
+void button_pressed_attr(GtkWidget *button, GdkEventButton *event, AttributeSet *Attr);
+void button_released_attr(GtkWidget *button, GdkEventButton *event, AttributeSet *Attr);
 
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet  *Attr);
 gboolean on_any_widget_button_pressed(GtkWidget *widget,

@@ -120,7 +120,7 @@ void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
  *                                                                     *
  ***********************************************************************/
 
-void button_entered_attr(GtkWidget *button, AttributeSet *Attr)
+void button_entered_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSet *Attr)
 {
 /*	GList *element;	Redundant
 	gchar *command;
@@ -154,7 +154,7 @@ void button_entered_attr(GtkWidget *button, AttributeSet *Attr)
  *                                                                     *
  ***********************************************************************/
 
-void button_leaved_attr(GtkWidget *button, AttributeSet *Attr)
+void button_leaved_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSet *Attr)
 {
 /*	GList *element;	Redundant
 	gchar *command;
@@ -199,7 +199,7 @@ void button_pressed(GtkWidget *button, const gchar *str)
  *                                                                     *
  ***********************************************************************/
 
-void button_pressed_attr(GtkWidget *button, AttributeSet *Attr)
+void button_pressed_attr(GtkWidget *button, GdkEventButton *event, AttributeSet *Attr)
 {
 /*	GList *element;	Redundant
 	gchar *command;
@@ -233,7 +233,7 @@ void button_pressed_attr(GtkWidget *button, AttributeSet *Attr)
  *                                                                     *
  ***********************************************************************/
 
-void button_released_attr(GtkWidget *button, AttributeSet *Attr)
+void button_released_attr(GtkWidget *button, GdkEventButton *event, AttributeSet *Attr)
 {
 /*	GList *element;	Redundant
 	gchar *command;

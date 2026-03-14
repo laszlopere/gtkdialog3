@@ -6,9 +6,9 @@
 #   o icon or icon-name
 #
 
-GTKDIALOG=gtkdialog
+GTKDIALOG=gtkdialog3
 
-TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+TMPDIR=/tmp/gtkdialog3/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 cat <<EOF > "$TMPDIR"/inputfile0
