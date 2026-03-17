@@ -46,6 +46,7 @@ extern gint geometry_y;
 static void widget_window_input_by_command(variable *var, char *command);
 static void widget_window_input_by_file(variable *var, char *filename);
 static void widget_window_input_by_items(variable *var);
+static void widget_window_fix_size(GtkWidget *window, gpointer data);
 
 /* Notes: */
 
@@ -127,6 +128,17 @@ GtkWidget *widget_window_create(
 	/* Pop the widgets that the window will contain and add them */
 	s = pop();
 	gtk_container_add(GTK_CONTAINER(widget), s.widgets[0]);
+
+	/* Fix GTK3 height-for-width window sizing: connect a handler that
+	 * fires once after realization to correct the window size.
+	 * Without this, windows containing wrapping GtkLabels are sized
+	 * too tall because GTK3 computes height for the minimum width
+	 * (which wraps text into many lines) even though the window
+	 * actually uses the natural (wider) width. */
+	if (!have_geometry_dxdy) {
+		g_signal_connect(widget, "map",
+			G_CALLBACK(widget_window_fix_size), NULL);
+	}
 
 	/* Thunor: Each menu created will have an accelerator group
 	 * for its menuitems which will require adding to the window */
@@ -460,4 +472,64 @@ static void widget_window_input_by_items(variable *var)
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
+}
+
+/***********************************************************************
+ * Fix Size                                                            *
+ ***********************************************************************
+ * Work around a GTK3 height-for-width window sizing issue.
+ *
+ * GtkWindow computes its initial height to accommodate the child's
+ * minimum height, which for height-for-width children (e.g. wrapping
+ * GtkLabels) is the height needed at the minimum width. This is much
+ * larger than the height needed at the natural (actual) width, causing
+ * a large vertical gap below the content.
+ *
+ * Fix: after the window is mapped, an idle handler queries the correct
+ * height for the actual allocated width, then sets the child's minimum
+ * width to lock in that width and resizes the window to the correct
+ * (smaller) height.
+ ***********************************************************************/
+
+static gboolean widget_window_fix_size_idle(gpointer data)
+{
+	GtkWidget        *window = GTK_WIDGET(data);
+	GtkWidget        *child;
+	GtkAllocation     alloc;
+	gint              child_width;
+	gint              min_height, nat_height;
+	gint              border_width;
+	gint              correct_height;
+
+	child = gtk_bin_get_child(GTK_BIN(window));
+	if (child == NULL)
+		return FALSE;
+
+	/* Get the current window size (GTK chose the width correctly) */
+	gtk_widget_get_allocation(window, &alloc);
+	border_width = gtk_container_get_border_width(GTK_CONTAINER(window));
+	child_width = alloc.width - 2 * border_width;
+
+	/* Compute the correct height for the actual width */
+	gtk_widget_get_preferred_height_for_width(child, child_width,
+		&min_height, &nat_height);
+
+	correct_height = nat_height + 2 * border_width;
+
+	if (correct_height < alloc.height) {
+		/* Set child's min width to current width so the window's
+		 * minimum height is recomputed for this width, allowing
+		 * gtk_window_resize to shrink the height */
+		gtk_widget_set_size_request(child, child_width, -1);
+		gtk_window_resize(GTK_WINDOW(window), alloc.width, correct_height);
+	}
+
+	return FALSE;  /* Run only once */
+}
+
+static void widget_window_fix_size(GtkWidget *window, gpointer data)
+{
+	/* Defer to an idle handler so GTK has finished its initial sizing
+	 * and will honour our set_size_request + resize */
+	g_idle_add(widget_window_fix_size_idle, window);
 }
