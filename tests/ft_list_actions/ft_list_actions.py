@@ -20,6 +20,9 @@ import gi
 gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
 
+sys.path.insert(0, sys.path[0] + '/..')
+from testlib import TestRunner
+
 TIMEOUT = 10  # seconds
 
 
@@ -111,24 +114,14 @@ def dump_tree(node, indent=0):
         dump_tree(node.get_child_at_index(i), indent + 1)
 
 
-def test_pass(msg):
-    print(f"  PASS: {msg}")
-
-
-def test_fail(msg):
-    print(f"  FAIL: {msg}")
-    global failures
-    failures += 1
-
-
-failures = 0
+t = TestRunner()
 
 # Kill any leftover gtkdialog3 processes
 subprocess.run(['pkill', '-x', 'gtkdialog3'], capture_output=True)
 time.sleep(0.5)
 
 # Launch the example
-print("Launching list_actions example...")
+t.log("Launching list_actions example...")
 proc = subprocess.Popen(
     ['./examples/list/list_actions'],
     stdout=subprocess.PIPE,
@@ -138,133 +131,122 @@ proc = subprocess.Popen(
 
 time.sleep(1)
 
-print("Looking for window via AT-SPI...")
+t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('gtkdialog3')
 
 if window is None:
-    print("FAIL: Could not find gtkdialog3 window via AT-SPI")
     proc.kill()
-    sys.exit(1)
+    t.abort("Could not find gtkdialog3 window via AT-SPI")
 
-print(f"Found window: '{window.get_name()}'")
-print()
-print("Widget tree:")
-dump_tree(window)
-print()
+t.log(f"Found window: '{window.get_name()}'")
+if t.verbose:
+    print()
+    print("Widget tree:")
+    dump_tree(window)
+    print()
 
 # --- Test 1: Initial list contents ---
-print("Test 1: Initial list contents")
+t.begin("testInitialContents")
 cells = get_table_cells(window)
 cell_names = [c.get_name() or '' for c in cells]
 expected = ['First item', 'Second item', 'Third item']
-if cell_names == expected:
-    test_pass(f"List has 3 items: {cell_names}")
-else:
-    test_fail(f"Expected {expected}, got {cell_names}")
+t.check(cell_names == expected,
+        f"List has 3 items: {cell_names}"
+        if cell_names == expected
+        else f"Expected {expected}, got {cell_names}")
 
 # --- Test 2: First item is selected by default ---
-print("\nTest 2: First item selected by default")
-if cells and is_selected(cells[0]):
-    test_pass("First item is selected")
-else:
-    test_fail("First item should be selected by default")
+t.begin("testDefaultSelection")
+t.check(cells and is_selected(cells[0]),
+        "First item is selected")
 
 # --- Test 3: Disable button disables the list ---
-print("\nTest 3: Disable button disables the list")
+t.begin("testDisableList")
 disable_btn = find_button(window, 'Disable')
 if disable_btn:
     do_action(disable_btn, 'click')
     time.sleep(0.5)
     tables = find_widgets(window, Atspi.Role.TABLE)
-    if tables and not is_enabled(tables[0]):
-        test_pass("List is disabled")
-    else:
-        test_fail("List should be disabled after clicking Disable")
+    t.check(tables and not is_enabled(tables[0]),
+            "List is disabled")
 else:
-    test_fail("Disable button not found")
+    t.check(False, "Disable button not found")
 
 # --- Test 4: Enable button re-enables the list ---
-print("\nTest 4: Enable button re-enables the list")
+t.begin("testEnableList")
 enable_btn = find_button(window, 'Enable')
 if enable_btn:
     do_action(enable_btn, 'click')
     time.sleep(0.5)
     tables = find_widgets(window, Atspi.Role.TABLE)
-    if tables and is_enabled(tables[0]):
-        test_pass("List is enabled again")
-    else:
-        test_fail("List should be enabled after clicking Enable")
+    t.check(tables and is_enabled(tables[0]),
+            "List is enabled again")
 else:
-    test_fail("Enable button not found")
+    t.check(False, "Enable button not found")
 
 # --- Test 5: Removeselected removes the selected item ---
-print("\nTest 5: Removeselected removes selected item")
+t.begin("testRemoveSelected")
 remove_btn = find_button(window, 'Removeselected')
 if remove_btn:
     do_action(remove_btn, 'click')
     time.sleep(0.5)
     cells = get_table_cells(window)
     cell_names = [c.get_name() or '' for c in cells]
-    if 'First item' not in cell_names and len(cell_names) == 2:
-        test_pass(f"Selected item removed, remaining: {cell_names}")
-    else:
-        test_fail(f"Expected 2 items without 'First item', got {cell_names}")
+    t.check('First item' not in cell_names and len(cell_names) == 2,
+            f"Selected item removed, remaining: {cell_names}"
+            if 'First item' not in cell_names and len(cell_names) == 2
+            else f"Expected 2 items without 'First item', got {cell_names}")
 else:
-    test_fail("Removeselected button not found")
+    t.check(False, "Removeselected button not found")
 
 # --- Test 6: Clear button clears all items ---
-print("\nTest 6: Clear button clears all items")
+t.begin("testClearList")
 clear_btn = find_button(window, 'Clear')
 if clear_btn:
     do_action(clear_btn, 'click')
     time.sleep(0.5)
     cells = get_table_cells(window)
     if len(cells) == 0:
-        test_pass("List is empty after Clear")
+        t.check(True, "List is empty after Clear")
     else:
         cell_names = [c.get_name() or '' for c in cells]
-        test_fail(f"List should be empty after Clear, got {cell_names}")
+        t.check(False, f"List should be empty after Clear, got {cell_names}")
 else:
-    test_fail("Clear button not found")
+    t.check(False, "Clear button not found")
 
 # --- Test 7: Refresh reloads items from file ---
-print("\nTest 7: Refresh reloads items from file")
+t.begin("testRefreshList")
 refresh_btn = find_button(window, 'Refresh')
 if refresh_btn:
     do_action(refresh_btn, 'click')
     time.sleep(0.5)
     cells = get_table_cells(window)
     cell_names = [c.get_name() or '' for c in cells]
-    if cell_names == expected:
-        test_pass(f"Items reloaded: {cell_names}")
-    else:
-        test_fail(f"Expected {expected} after Refresh, got {cell_names}")
+    t.check(cell_names == expected,
+            f"Items reloaded: {cell_names}"
+            if cell_names == expected
+            else f"Expected {expected} after Refresh, got {cell_names}")
 else:
-    test_fail("Refresh button not found")
+    t.check(False, "Refresh button not found")
 
 # --- Test 8: Cancel closes the dialog ---
-print("\nTest 8: Cancel closes the dialog")
+t.begin("testCancelClose")
 cancel_btn = find_button(window, 'Cancel')
 if cancel_btn:
     do_action(cancel_btn, 'click')
     time.sleep(1)
     retcode = proc.poll()
-    if retcode is not None:
-        test_pass(f"Dialog closed after Cancel (exit code {retcode})")
+    if t.check(retcode is not None,
+               f"Dialog closed after Cancel (exit code {retcode})"
+               if retcode is not None
+               else "Dialog should have closed after Cancel"):
+        pass
     else:
-        test_fail("Dialog should have closed after Cancel")
         proc.kill()
         proc.wait()
 else:
-    test_fail("Cancel button not found")
+    t.check(False, "Cancel button not found")
     proc.kill()
     proc.wait()
 
-# Print summary
-print(f"\n{'=' * 40}")
-if failures == 0:
-    print("All tests PASSED")
-    sys.exit(0)
-else:
-    print(f"{failures} test(s) FAILED")
-    sys.exit(1)
+t.summary()

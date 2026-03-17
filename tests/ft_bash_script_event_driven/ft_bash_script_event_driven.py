@@ -16,6 +16,9 @@ import gi
 gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
 
+sys.path.insert(0, sys.path[0] + '/..')
+from testlib import TestRunner
+
 TIMEOUT = 10
 
 
@@ -64,20 +67,10 @@ def do_action(widget, action_name=''):
     return False
 
 
-def test_pass(msg):
-    print(f"  PASS: {msg}")
-
-
-def test_fail(msg):
-    print(f"  FAIL: {msg}")
-    global failures
-    failures += 1
-
-
-failures = 0
+t = TestRunner()
 
 # Launch the example
-print("Launching bash_script_event_driven example...")
+t.log("Launching bash_script_event_driven example...")
 proc = subprocess.Popen(
     ['./examples/languages/bash_script_event_driven'],
     stdout=subprocess.PIPE,
@@ -87,31 +80,30 @@ proc = subprocess.Popen(
 
 time.sleep(1)
 
-print("Looking for window via AT-SPI...")
+t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('Bash Event Driven')
 
 if window is None:
-    print("FAIL: Could not find 'Bash Event Driven' window via AT-SPI")
     proc.kill()
-    sys.exit(1)
+    t.abort("Could not find 'Bash Event Driven' window via AT-SPI")
 
-print(f"Found window: '{window.get_name()}'")
+t.log(f"Found window: '{window.get_name()}'")
 
 # --- Test 1: Descriptive label is present ---
-print("\nTest 1: Descriptive label")
+t.begin("testDescriptiveLabel")
 labels = find_widgets(window, Atspi.Role.LABEL)
 found_label = False
 for lbl in labels:
     text = lbl.get_name() or ''
     if 'export -f' in text and 'bash function' in text.lower():
         found_label = True
-        test_pass(f"Label contains expected text ({len(text)} chars)")
+        t.check(True, f"Label contains expected text ({len(text)} chars)")
         break
 if not found_label:
-    test_fail("Could not find descriptive label with expected text")
+    t.check(False, "Could not find descriptive label with expected text")
 
 # --- Test 2: Button calls exported bash function ---
-print("\nTest 2: Button calls exported bash function")
+t.begin("testBashFunctionCall")
 buttons = find_widgets(window, Atspi.Role.PUSH_BUTTON)
 func_button = None
 exit_button = None
@@ -126,40 +118,34 @@ if func_button:
     do_action(func_button, 'click')
     time.sleep(0.5)
     # The function prints to stdout, check it
-    # Read what's available without blocking
     import select
     if select.select([proc.stdout], [], [], 1.0)[0]:
         output = proc.stdout.readline().decode().strip()
-        if output == 'print: button':
-            test_pass(f"Function output: '{output}'")
-        else:
-            test_fail(f"Expected 'print: button', got '{output}'")
+        t.check(output == 'print: button',
+                f"Function output: '{output}'"
+                if output == 'print: button'
+                else f"Expected 'print: button', got '{output}'")
     else:
-        test_fail("No output from function call")
+        t.check(False, "No output from function call")
 else:
-    test_fail("Could not find function button")
+    t.check(False, "Could not find function button")
 
 # --- Test 3: Exit button closes dialog ---
-print("\nTest 3: Exit button closes dialog")
+t.begin("testExitButton")
 if exit_button:
     do_action(exit_button, 'click')
     time.sleep(1)
 
     retcode = proc.poll()
-    if retcode is not None:
-        test_pass(f"Dialog closed after Exit click (exit code {retcode})")
+    if t.check(retcode is not None,
+               f"Dialog closed after Exit click (exit code {retcode})"
+               if retcode is not None
+               else "Dialog should have closed after Exit click"):
+        pass
     else:
-        test_fail("Dialog should have closed after Exit click")
         proc.kill()
 else:
-    test_fail("Could not find Exit button")
+    t.check(False, "Could not find Exit button")
     proc.kill()
 
-# Print summary
-print(f"\n{'=' * 40}")
-if failures == 0:
-    print("All tests PASSED")
-    sys.exit(0)
-else:
-    print(f"{failures} test(s) FAILED")
-    sys.exit(1)
+t.summary()

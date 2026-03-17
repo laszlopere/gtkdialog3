@@ -16,6 +16,9 @@ import gi
 gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
 
+sys.path.insert(0, sys.path[0] + '/..')
+from testlib import TestRunner
+
 TIMEOUT = 10  # seconds
 
 
@@ -98,20 +101,10 @@ def is_checked(widget):
     return states.contains(Atspi.StateType.CHECKED)
 
 
-def test_pass(msg):
-    print(f"  PASS: {msg}")
-
-
-def test_fail(msg):
-    print(f"  FAIL: {msg}")
-    global failures
-    failures += 1
-
-
-failures = 0
+t = TestRunner()
 
 # Launch the checkbox example
-print("Launching checkbox example...")
+t.log("Launching checkbox example...")
 proc = subprocess.Popen(
     ['./examples/checkbox/checkbox'],
     stdout=subprocess.PIPE,
@@ -122,59 +115,51 @@ proc = subprocess.Popen(
 # Give it time to start up
 time.sleep(1)
 
-print("Looking for window via AT-SPI...")
+t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('gtkdialog3')
 
 if window is None:
-    print("FAIL: Could not find gtkdialog3 window via AT-SPI")
     proc.kill()
-    sys.exit(1)
+    t.abort("Could not find gtkdialog3 window via AT-SPI")
 
-print(f"Found window: '{window.get_name()}'")
-print()
-print("Widget tree:")
-dump_tree(window)
-print()
+t.log(f"Found window: '{window.get_name()}'")
+if t.verbose:
+    print()
+    print("Widget tree:")
+    dump_tree(window)
+    print()
 
 # Find checkboxes
 checkboxes = find_widgets(window, Atspi.Role.CHECK_BOX)
-print(f"Found {len(checkboxes)} checkboxes")
+t.log(f"Found {len(checkboxes)} checkboxes")
 
 # Find buttons
 buttons = find_widgets(window, Atspi.Role.PUSH_BUTTON)
-print(f"Found {len(buttons)} buttons")
+t.log(f"Found {len(buttons)} buttons")
 
 # Find text entry
 entries = find_widgets(window, Atspi.Role.TEXT)
 if not entries:
     entries = find_widgets(window, Atspi.Role.ENTRY)
-print(f"Found {len(entries)} text entries")
-print()
+t.log(f"Found {len(entries)} text entries")
 
 # --- Test 1: Initial state ---
-print("Test 1: Initial state")
+t.begin("testInitialState")
 if len(checkboxes) >= 2:
     cb1 = checkboxes[0]
     cb2 = checkboxes[1]
 
-    if not is_checked(cb1):
-        test_pass("First checkbox is unchecked initially")
-    else:
-        test_fail("First checkbox should be unchecked initially")
-
-    if is_checked(cb2):
-        test_pass("Second checkbox is checked initially (default=true)")
-    else:
-        test_fail("Second checkbox should be checked initially")
+    t.check(not is_checked(cb1),
+            "First checkbox is unchecked initially")
+    t.check(is_checked(cb2),
+            "Second checkbox is checked initially (default=true)")
 else:
-    test_fail(f"Expected 2 checkboxes, found {len(checkboxes)}")
+    t.check(False, f"Expected 2 checkboxes, found {len(checkboxes)}")
 
 if entries:
     entry = entries[0]
-    if not is_enabled(entry):
-        test_pass("Entry is disabled initially (sensitive=false)")
-    else:
-        test_fail("Entry should be disabled initially")
+    t.check(not is_enabled(entry),
+            "Entry is disabled initially (sensitive=false)")
 
 # Find OK button
 ok_button = None
@@ -182,49 +167,36 @@ for b in buttons:
     if 'ok' in (b.get_name() or '').lower() or 'gtk-ok' in (b.get_name() or '').lower():
         ok_button = b
         break
-# If we can't find by name, take the first button
 if ok_button is None and buttons:
     ok_button = buttons[0]
 
-if ok_button and is_enabled(ok_button):
-    test_pass("OK button is enabled initially (second checkbox is true)")
-else:
-    test_fail("OK button should be enabled initially")
+t.check(ok_button and is_enabled(ok_button),
+        "OK button is enabled initially (second checkbox is true)")
 
 # --- Test 2: Toggle first checkbox -> entry should become enabled ---
-print("\nTest 2: Toggle first checkbox")
+t.begin("testToggleFirst")
 if len(checkboxes) >= 1:
     do_action(cb1, 'click')
     time.sleep(0.5)
 
-    if is_checked(cb1):
-        test_pass("First checkbox is now checked")
-    else:
-        test_fail("First checkbox should be checked after click")
-
-    if entries and is_enabled(entries[0]):
-        test_pass("Entry is now enabled")
-    else:
-        test_fail("Entry should be enabled when first checkbox is checked")
+    t.check(is_checked(cb1),
+            "First checkbox is now checked")
+    t.check(entries and is_enabled(entries[0]),
+            "Entry is now enabled")
 
 # --- Test 3: Toggle second checkbox -> OK button should become disabled ---
-print("\nTest 3: Toggle second checkbox (uncheck)")
+t.begin("testToggleSecond")
 if len(checkboxes) >= 2:
     do_action(cb2, 'click')
     time.sleep(0.5)
 
-    if not is_checked(cb2):
-        test_pass("Second checkbox is now unchecked")
-    else:
-        test_fail("Second checkbox should be unchecked after click")
-
-    if ok_button and not is_enabled(ok_button):
-        test_pass("OK button is now disabled")
-    else:
-        test_fail("OK button should be disabled when second checkbox is unchecked")
+    t.check(not is_checked(cb2),
+            "Second checkbox is now unchecked")
+    t.check(ok_button and not is_enabled(ok_button),
+            "OK button is now disabled")
 
 # --- Test 4: Re-enable OK and click it to close ---
-print("\nTest 4: Re-enable OK button and close dialog")
+t.begin("testCloseDialog")
 if len(checkboxes) >= 2:
     do_action(cb2, 'click')  # re-check to enable OK
     time.sleep(0.5)
@@ -234,17 +206,12 @@ if len(checkboxes) >= 2:
         time.sleep(1)
 
         retcode = proc.poll()
-        if retcode is not None:
-            test_pass(f"Dialog closed after OK click (exit code {retcode})")
+        if t.check(retcode is not None,
+                   f"Dialog closed after OK click (exit code {retcode})"
+                   if retcode is not None
+                   else "Dialog should have closed after OK click"):
+            pass
         else:
-            test_fail("Dialog should have closed after OK click")
             proc.kill()
 
-# Print summary
-print(f"\n{'=' * 40}")
-if failures == 0:
-    print("All tests PASSED")
-    sys.exit(0)
-else:
-    print(f"{failures} test(s) FAILED")
-    sys.exit(1)
+t.summary()

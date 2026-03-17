@@ -18,6 +18,9 @@ import subprocess
 import sys
 import time
 
+sys.path.insert(0, sys.path[0] + '/..')
+from testlib import TestRunner
+
 
 def get_child_pid(shell_pid):
     """Get the gtkdialog3 child PID of the shell script."""
@@ -92,30 +95,17 @@ def click_button_by_name(window_id, button_text):
     subprocess.run(['xdotool', 'windowactivate', '--sync', window_id],
                    capture_output=True, timeout=3)
     time.sleep(0.2)
-    # Use xdotool to search for the button text in the window and click it
-    # Since we can't use AT-SPI, we'll use xdotool's mouse click on
-    # a position found by searching the button name
     pass
 
 
-def test_pass(msg):
-    print(f"  PASS: {msg}")
-
-
-def test_fail(msg):
-    print(f"  FAIL: {msg}")
-    global failures
-    failures += 1
-
-
-failures = 0
+t = TestRunner()
 
 # Kill any leftover gtkdialog3 processes from previous runs
 subprocess.run(['pkill', '-x', 'gtkdialog3'], capture_output=True)
 time.sleep(0.5)
 
 # Launch the example
-print("Launching bash_script_multi_window example...")
+t.log("Launching bash_script_multi_window example...")
 proc = subprocess.Popen(
     ['./examples/languages/bash_script_multi_window'],
     stdout=subprocess.PIPE,
@@ -128,25 +118,24 @@ time.sleep(1)
 # Get gtkdialog3 PID
 our_pid = get_child_pid(proc.pid)
 if our_pid is None:
-    print("FAIL: Could not find gtkdialog3 child process")
-    proc.kill()
-    sys.exit(1)
-print(f"gtkdialog3 PID: {our_pid}")
+    t.abort("Could not find gtkdialog3 child process")
+
+t.log(f"gtkdialog3 PID: {our_pid}")
 
 # --- Test 1: winMain appears ---
-print("\nTest 1: winMain appears")
+t.begin("testWinMainAppears")
 wid_main = find_window_by_title_and_pid('winMain', our_pid)
-if wid_main:
-    test_pass(f"winMain found (window id {wid_main})")
-else:
-    test_fail("winMain not found")
+if not t.check(wid_main is not None,
+               f"winMain found (window id {wid_main})"
+               if wid_main
+               else "winMain not found"):
     proc.kill()
-    sys.exit(1)
+    t.summary()
 
 # --- Test 2: Launch winLaunch1 by clicking its launch button ---
 # We use AT-SPI on the initial window (before any launch) since it works
 # for the first window. After launch, AT-SPI breaks for the app.
-print("\nTest 2: Launch winLaunch1 from winMain")
+t.begin("testLaunchWinLaunch1")
 import gi
 gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
@@ -204,29 +193,24 @@ if win_main_atspi:
 
         # After launch, AT-SPI is broken, use xdotool to verify
         wid_launch1 = find_window_by_title_and_pid('winLaunch1', our_pid)
-        if wid_launch1:
-            test_pass(f"winLaunch1 appeared (window id {wid_launch1})")
-        else:
-            test_fail("winLaunch1 did not appear")
+        t.check(wid_launch1 is not None,
+                f"winLaunch1 appeared (window id {wid_launch1})"
+                if wid_launch1
+                else "winLaunch1 did not appear")
     else:
-        test_fail("'launch winLaunch1' button not found via AT-SPI")
+        t.check(False, "'launch winLaunch1' button not found via AT-SPI")
 else:
-    test_fail("winMain not found via AT-SPI")
+    t.check(False, "winMain not found via AT-SPI")
 
 # --- Test 3: Verify winMain still exists ---
-print("\nTest 3: winMain still exists after launch")
-if window_exists('winMain', our_pid):
-    test_pass("winMain still present")
-else:
-    test_fail("winMain disappeared")
+t.begin("testWinMainStillExists")
+t.check(window_exists('winMain', our_pid), "winMain still present")
 
 # --- Test 4: Both windows have distinct xdotool IDs ---
-print("\nTest 4: Windows have distinct IDs")
+t.begin("testDistinctWindowIDs")
 wid_launch1 = find_window_by_title_and_pid('winLaunch1', our_pid, timeout=3)
-if wid_launch1 and wid_main and wid_launch1 != wid_main:
-    test_pass(f"winMain={wid_main} winLaunch1={wid_launch1}")
-else:
-    test_fail(f"Windows should have distinct IDs: winMain={wid_main} winLaunch1={wid_launch1}")
+t.check(wid_launch1 and wid_main and wid_launch1 != wid_main,
+        f"winMain={wid_main} winLaunch1={wid_launch1}")
 
 # Clean up: kill gtkdialog3 directly since nested gtk_main() loops
 # prevent clean shutdown via window close events (see TODO item 15)
@@ -238,11 +222,4 @@ except subprocess.TimeoutExpired:
     os.kill(our_pid, signal.SIGKILL)
     proc.wait(timeout=3)
 
-# Print summary
-print(f"\n{'=' * 40}")
-if failures == 0:
-    print("All tests PASSED")
-    sys.exit(0)
-else:
-    print(f"{failures} test(s) FAILED")
-    sys.exit(1)
+t.summary()
