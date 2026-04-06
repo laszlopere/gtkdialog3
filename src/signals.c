@@ -900,8 +900,8 @@ next_command:
  */
 
 #if HAVE_SYS_INOTIFY_H
-void on_any_widget_file_changed_event(gpointer data, gint source,
-	GdkInputCondition condition)
+gboolean on_any_widget_file_changed_event(GIOChannel *gio,
+	GIOCondition condition, gpointer data)
 #else
 void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
@@ -909,6 +909,7 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 {
 #if HAVE_SYS_INOTIFY_H
 	gchar             buffer[sizeof(struct inotify_event)];
+	gint              fd = g_io_channel_unix_get_fd(gio);
 	variable         *var = (variable*)data;
 #endif
 
@@ -916,7 +917,7 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 
 #if HAVE_SYS_INOTIFY_H
 	/* Just clearing, don't care the type */
-	read(source, buffer, sizeof(buffer));
+	(void)read(fd, buffer, sizeof(buffer));
 
 #else
 	GDG_DEBUG("event_type=%i filename=%s", event_type, g_file_get_path(file));
@@ -926,6 +927,9 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	widget_signal_executor(var->Widget, var->Attributes, "file-changed");
 
 	GDG_DEBUG("Exiting.");
+#if HAVE_SYS_INOTIFY_H
+	return TRUE;
+#endif
 }
 
 /***********************************************************************
@@ -933,8 +937,8 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
  ***********************************************************************/
 
 #if HAVE_SYS_INOTIFY_H
-void on_any_widget_auto_refresh_event(gpointer data, gint source,
-	GdkInputCondition condition)
+gboolean on_any_widget_auto_refresh_event(GIOChannel *gio,
+	GIOCondition condition, gpointer data)
 #else
 void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
@@ -942,6 +946,7 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 {
 #if HAVE_SYS_INOTIFY_H
 	gchar             buffer[sizeof(struct inotify_event)];
+	gint              fd = g_io_channel_unix_get_fd(gio);
 	variable         *var = (variable*)data;
 #endif
 
@@ -949,7 +954,7 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 
 #if HAVE_SYS_INOTIFY_H
 	/* Just clearing, don't care the type */
-	read(source, buffer, sizeof(buffer));
+	(void)read(fd, buffer, sizeof(buffer));
 
 #else
 	if (event_type == G_FILE_MONITOR_EVENT_CHANGED)
@@ -1036,6 +1041,9 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	}
 
 	GDG_DEBUG("Exiting.");
+#if HAVE_SYS_INOTIFY_H
+	return TRUE;
+#endif
 }
 
 /***********************************************************************
@@ -1398,7 +1406,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 				variables_export_all();
 
 				/* Opening pipe for reading... */
-				if (infile = widget_opencommand(argument)) {
+				if ((infile = widget_opencommand(argument))) {
 					/* Just one line */
 					if (fgets(line, 64, infile)) {
 						/* Enforce end of string in case of max chars read */
@@ -1434,7 +1442,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			 ***********************************************************/
 			} else if (condfunc == TYPE_CONDFUNC_FILE) {
 
-				if (infile = fopen(argument, "r")) {
+				if ((infile = fopen(argument, "r"))) {
 					/* Just one line */
 					if (fgets(line, 64, infile)) {
 						/* Enforce end of string in case of max chars read */
@@ -1589,24 +1597,28 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 						GDG_DEBUG("fdname=%s wdname=%s", fdname, wdname);
 						/* Store fd as a piece of widget data */
 						g_object_set_data(G_OBJECT(var->Widget), fdname,
-							(gpointer)fd);
+							GINT_TO_POINTER(fd));
 
 						/* Store wd as a piece of widget data */
 						g_object_set_data(G_OBJECT(var->Widget), wdname,
-							(gpointer)wd);
+							GINT_TO_POINTER(wd));
 
-						if (!count) {
-							/* Connect to the "changed" signal which will reach
-							 * the application as the "file-changed" signal */
-							gdk_input_add(fd, GDK_INPUT_READ,
-								on_any_widget_file_changed_event, (gpointer)var); 
-						} else {
-							/* Connect to the "changed" signal which will call
-							 * the widget's refresh function directly without
-							 * being routed through gtkdialog's signal handling
-							 * system and without emitting a signal (it's faster) */
-							gdk_input_add(fd, GDK_INPUT_READ,
-								on_any_widget_auto_refresh_event, (gpointer)var); 
+						{
+							GIOChannel *gio = g_io_channel_unix_new(fd);
+							if (!count) {
+								/* Connect to the "changed" signal which will reach
+								 * the application as the "file-changed" signal */
+								g_io_add_watch(gio, G_IO_IN,
+									on_any_widget_file_changed_event, (gpointer)var);
+							} else {
+								/* Connect to the "changed" signal which will call
+								 * the widget's refresh function directly without
+								 * being routed through gtkdialog's signal handling
+								 * system and without emitting a signal (it's faster) */
+								g_io_add_watch(gio, G_IO_IN,
+									on_any_widget_auto_refresh_event, (gpointer)var);
+							}
+							g_io_channel_unref(gio);
 						}
 
 					} else {
@@ -1631,7 +1643,6 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gchar            *value;
 	gint              count;
 	gint              index = 0;
-	gint              fd, wd;
 
 	GDG_DEBUG("Entering.");
 

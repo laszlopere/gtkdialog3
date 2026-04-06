@@ -1,7 +1,7 @@
 /*
  * widget_edit.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  Lï¿½szlï¿½ Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -45,8 +45,6 @@ static void widget_edit_input_by_items(variable *var);
 
 void widget_edit_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -92,7 +90,7 @@ GtkWidget *widget_edit_create(
 
 gchar *widget_edit_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -136,8 +134,6 @@ gchar *widget_edit_envvar_construct(GtkWidget *widget)
 void widget_edit_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -214,8 +210,6 @@ void widget_edit_refresh(variable *var)
 
 void widget_edit_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -283,8 +277,6 @@ void widget_edit_save(variable *var)
 
 static void widget_edit_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -301,7 +293,8 @@ static void widget_edit_input_by_file(variable *var, char *filename)
 {
 	GtkTextBuffer    *buffer;
 	gchar            *filebuffer;
-	gint              infile, result;
+	gint              infile;
+	ssize_t           bytes_read;
 	struct stat       st;
 
 	GDG_DEBUG("Entering.");
@@ -314,12 +307,12 @@ static void widget_edit_input_by_file(variable *var, char *filename)
 
 		if (infile != -1) {
 
-			result = read(infile, filebuffer, st.st_size);
+			bytes_read = read(infile, filebuffer, st.st_size);
 			close(infile);
 
 			buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
-			if (st.st_size > 0) {
-				gtk_text_buffer_set_text(buffer, filebuffer, st.st_size);
+			if (bytes_read > 0) {
+				gtk_text_buffer_set_text(buffer, filebuffer, bytes_read);
 			} else {
 				gtk_text_buffer_set_text(buffer, "", 0);
 			}
@@ -342,8 +335,6 @@ static void widget_edit_input_by_file(variable *var, char *filename)
 
 static void widget_edit_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

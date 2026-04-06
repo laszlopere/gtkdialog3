@@ -55,8 +55,6 @@ static void widget_menuitem_input_by_items(variable *var);
 
 void widget_menuitem_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -72,12 +70,10 @@ void widget_menuitem_clear(variable *var)
 GtkWidget *widget_menu_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
-	GList            *element;
 	GtkAccelGroup    *accel_group;
 	GtkWidget        *menu;
 	GtkWidget        *menuitems;
 	GtkWidget        *widget;
-	gchar            *label;
 	gint              n;
 	stackelement      s;
 
@@ -134,13 +130,12 @@ GtkWidget *widget_menuitem_create(
 	GList            *element;
 	GtkWidget        *widget;
 	gchar             accel_path[64];
-	gchar            *active;
+	gchar            *active = NULL;
 	gchar            *icon_name, *image_name;
 	gchar            *label, *stock_id;
 	gchar            *value;
 	gint              is_active;
 	gint              menuitemtype = TYPE_MENUITEM;
-	gint              width = -1, height = -1;
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 
 	GDG_DEBUG("Entering.");
@@ -200,20 +195,16 @@ GtkWidget *widget_menuitem_create(
 	}
 	/* Only image menuitems from theme or file support this */
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT)) {
-		if (menuitemtype == TYPE_MENUITEM_IMAGE_ICON ||
-			menuitemtype == TYPE_MENUITEM_IMAGE_FILE) {
-			height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
-		} else {
+		if (menuitemtype != TYPE_MENUITEM_IMAGE_ICON &&
+			menuitemtype != TYPE_MENUITEM_IMAGE_FILE) {
 			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
 				__func__);
 		}
 	}
 	/* Only image menuitems from theme or file support this */
 	if (attributeset_is_avail(Attr, ATTR_WIDTH)) {
-		if (menuitemtype == TYPE_MENUITEM_IMAGE_ICON ||
-			menuitemtype == TYPE_MENUITEM_IMAGE_FILE) {
-			width = atoi(attributeset_get_first(&element, Attr, ATTR_WIDTH));
-		} else {
+		if (menuitemtype != TYPE_MENUITEM_IMAGE_ICON &&
+			menuitemtype != TYPE_MENUITEM_IMAGE_FILE) {
 			fprintf(stderr, "%s(): <width> not implemented for this widget.\n",
 				__func__);
 		}
@@ -332,7 +323,7 @@ GtkWidget *widget_menuitem_create(
 
 gchar *widget_menuitem_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -378,8 +369,6 @@ gchar *widget_menuitem_envvar_construct(GtkWidget *widget)
 void widget_menuitem_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -501,8 +490,6 @@ void widget_menuitem_refresh(variable *var)
 
 void widget_menuitem_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -583,7 +570,7 @@ static void widget_menuitem_input_by_command(variable *var, char *command)
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
 
 		/* Opening pipe for reading... */
-		if (infile = widget_opencommand(command)) {
+		if ((infile = widget_opencommand(command))) {
 			/* Just one line */
 			if ((fgets(line, 512, infile))) {
 				/* Enforce end of string in case of max chars read */
@@ -632,7 +619,7 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
 
-		if (infile = fopen(filename, "r")) {
+		if ((infile = fopen(filename, "r"))) {
 			/* Just one line */
 			if ((fgets(line, 512, infile))) {
 				/* Enforce end of string in case of max chars read */
@@ -672,8 +659,6 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 
 static void widget_menuitem_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

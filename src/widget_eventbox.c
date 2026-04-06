@@ -1,7 +1,7 @@
 /*
  * widget_eventbox.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  Lï¿½szlï¿½ Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -45,8 +45,6 @@ static void widget_eventbox_input_by_items(variable *var);
 
 void widget_eventbox_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -84,7 +82,7 @@ GtkWidget *widget_eventbox_create(
 
 gchar *widget_eventbox_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -121,8 +119,6 @@ gchar *widget_eventbox_envvar_construct(GtkWidget *widget)
 void widget_eventbox_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -195,8 +191,6 @@ void widget_eventbox_refresh(variable *var)
 
 void widget_eventbox_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -212,6 +206,9 @@ void widget_eventbox_removeselected(variable *var)
 
 void widget_eventbox_save(variable *var)
 {
+	GDG_DEBUG("Entering.");
+
+#if 0	/* Pointless since loading doesn't work at run-time */
 	FILE             *outfile;
 	GList            *element;
 	gboolean          above_child;
@@ -219,10 +216,6 @@ void widget_eventbox_save(variable *var)
 	gchar            *act;
 	gchar            *filename = NULL;
 	gchar             string[32];
-
-	GDG_DEBUG("Entering.");
-
-#if 0	/* Pointless since loading doesn't work at run-time */
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
@@ -274,8 +267,6 @@ void widget_eventbox_save(variable *var)
 
 static void widget_eventbox_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -290,15 +281,14 @@ static void widget_eventbox_input_by_command(variable *var, char *command)
 
 static void widget_eventbox_input_by_file(variable *var, char *filename)
 {
+	GDG_DEBUG("Entering.");
+
+#if 0	/* At run-time this has no effect -- shame */
 	FILE             *infile;
 	gchar             line[512];
 	gint              count;
 	list_t           *sliced;
-
-	GDG_DEBUG("Entering.");
-
-#if 0	/* At run-time this has no effect -- shame */
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -361,8 +351,6 @@ GDG_DEBUG("setting count=%i FALSE", count);
 
 static void widget_eventbox_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

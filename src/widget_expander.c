@@ -45,8 +45,6 @@ static void widget_expander_input_by_items(variable *var);
 
 void widget_expander_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -103,7 +101,7 @@ GtkWidget *widget_expander_create(
 
 gchar *widget_expander_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -144,8 +142,6 @@ gchar *widget_expander_envvar_construct(GtkWidget *widget)
 void widget_expander_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -223,8 +219,6 @@ void widget_expander_refresh(variable *var)
 
 void widget_expander_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -296,7 +290,7 @@ static void widget_expander_input_by_command(variable *var, char *command)
 	GDG_DEBUG("command: '%s'", command);
 
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -337,7 +331,7 @@ static void widget_expander_input_by_file(variable *var, char *filename)
 
 	GDG_DEBUG("Entering.");
 
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -371,8 +365,6 @@ static void widget_expander_input_by_file(variable *var, char *filename)
 
 static void widget_expander_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

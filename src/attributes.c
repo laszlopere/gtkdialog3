@@ -135,12 +135,11 @@ gchar *attributeset_set_if_unset(
 	AttributeSet *set, gint attribute, const gchar *value)
 {
 	GList *element;
-	Attribute *a;
 
 	g_assert(set != NULL);
 	g_assert(attribute >= 0 && attribute < ATTRNUMBER);
 
-#ifdef DEBUG	
+#ifdef DEBUG
 	g_message("%s(): attribute = %d (%s) value = '%s'", 
 			__func__, attribute, attribute_name(attribute), value);
 #endif

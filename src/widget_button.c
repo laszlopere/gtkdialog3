@@ -48,8 +48,6 @@ static void widget_button_input_by_items(variable *var);
 
 void widget_button_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -345,7 +343,7 @@ GtkWidget *widget_button_create(
 
 gchar *widget_button_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -388,8 +386,6 @@ gchar *widget_button_envvar_construct(GtkWidget *widget)
 void widget_button_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -495,8 +491,6 @@ void widget_button_refresh(variable *var)
 
 void widget_button_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -570,7 +564,7 @@ static void widget_button_input_by_command(variable *var, char *command)
 
 	if (var->Type == WIDGET_TOGGLEBUTTON) {
 		/* Opening pipe for reading... */
-		if (infile = widget_opencommand(command)) {
+		if ((infile = widget_opencommand(command))) {
 			/* Just one line */
 			if (fgets(line, 512, infile)) {
 				/* Enforce end of string in case of max chars read */
@@ -666,8 +660,6 @@ static void widget_button_input_by_file(variable *var, char *filename)
 
 static void widget_button_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

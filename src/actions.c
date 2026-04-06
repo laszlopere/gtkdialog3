@@ -332,7 +332,7 @@ void action_fileselect(GtkWidget *widget, char *string)
 	fprintf(stderr, "%s(): string='%s'\n", __func__, string);
 #endif
 
-	if (var = variables_get_by_name(string)) {
+	if ((var = variables_get_by_name(string))) {
 
 		/* Set the title of the chooser dialog to the label directive
 		 * of the target widget if available (this was the original
@@ -652,13 +652,12 @@ void action_presentwindow(GtkWidget *widget, char *string)
 void action_shellcommand(GtkWidget *widget, char *string)
 {
 	char *command;
-	int result;
 
 	variables_export_all();
 
 	if (option_include_file == NULL) {
 
-		result = run_shell_command(string);
+		run_shell_command(string);
 
 	} else {
 
@@ -666,7 +665,7 @@ void action_shellcommand(GtkWidget *widget, char *string)
 		command = g_strdup_printf("source %s; %s", */
 		command = g_strdup_printf(". %s; %s",
 				option_include_file, string);
-		result = run_shell_command(command);
+		run_shell_command(command);
 		g_free(command);
 
 	}

@@ -230,7 +230,6 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 	gchar             *string;
 	gchar             *text;
 	gdouble            valdouble;
-	gint               column;
 	gint               index;
 	gint               initialrow;
 	gint               selectionmode;
@@ -389,8 +388,6 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 void widget_tree_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -663,7 +660,7 @@ void widget_tree_save(variable *var)
 	gchar            *filename = NULL;
 	gchar            *line;
 	gchar            *string;
-	gchar            *text;
+	gchar            *text = NULL;
 	gint              column, columnmax;
 	gint              initialrow = TRUE;
 	gint64            valint64;

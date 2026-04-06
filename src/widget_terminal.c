@@ -287,7 +287,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 
 gchar *widget_terminal_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -332,8 +332,6 @@ gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 void widget_terminal_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -409,8 +407,6 @@ void widget_terminal_refresh(variable *var)
 
 void widget_terminal_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -426,8 +422,6 @@ void widget_terminal_removeselected(variable *var)
 
 void widget_terminal_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -454,7 +448,7 @@ static void widget_terminal_input_by_command(variable *var, char *command)
 
 #if HAVE_VTE
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Read the file one line at a time */
 		while (fgets(line, 512, infile)) {
 			g_string_append(text, line);
@@ -489,7 +483,7 @@ static void widget_terminal_input_by_file(variable *var, char *filename)
 	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Read the file one line at a time */
 		while (fgets(line, 512, infile)) {
 			g_string_append(text, line);
@@ -515,8 +509,6 @@ static void widget_terminal_input_by_file(variable *var, char *filename)
 
 static void widget_terminal_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

@@ -106,13 +106,11 @@ stackelement pop(void)
 
 void show_without_pop(GtkWidget *window)
 {
-	GtkWidget *parent;
 	stackelement *current;
 	g_assert(window != NULL);
 	g_assert(sp != 0);
 
 	current = stack + (sp - 1);
-	parent = gtk_widget_get_parent(current->widgets[0]);
 	//gtk_widget_reparent(current->widgets[0], window);
 	g_message("sp = %d nwidgets = %d", sp, current->nwidgets);
 	gtk_container_add(GTK_CONTAINER(window), current->widgets[0]);

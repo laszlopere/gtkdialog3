@@ -1053,21 +1053,25 @@ int _tree_insert(variable *new, variable *actual)
 		exit(EXIT_FAILURE);
 	}
 
-	if (compare < 0)
+	if (compare < 0) {
 		if (actual->left == NULL) {
 			actual->left = new;
 			return (0);
 		} else {
 			return (_tree_insert(new, actual->left));
 		}
+	}
 
-	if (compare > 0)
+	if (compare > 0) {
 		if (actual->right == NULL) {
 			actual->right = new;
 			return (0);
 		} else {
 			return (_tree_insert(new, actual->right));
 		}
+	}
+
+	return 0;
 }
 
 /***********************************************************************
@@ -1090,17 +1094,21 @@ static variable *_tree_find(const char *name, variable *actual)
 	if (compare == 0)
 		return (actual);
 
-	if (compare < 0)
+	if (compare < 0) {
 		if (actual->left != NULL)
 			return _tree_find(name, actual->left);
 		else
 			return NULL;
+	}
 
-	if (compare > 0)
+	if (compare > 0) {
 		if (actual->right != NULL)
 			return _tree_find(name, actual->right);
 		else
 			return NULL;
+	}
+
+	return NULL;
 }
 
 /***********************************************************************
@@ -1202,10 +1210,10 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 					sprintf(wdname, "_inotifywd%i", index);
 					if ((g_object_get_data(G_OBJECT(actual->Widget), fdname)) &&
 						(g_object_get_data(G_OBJECT(actual->Widget), wdname))) {
-						fd = (gint)g_object_get_data(G_OBJECT(actual->Widget),
-							fdname);
-						wd = (gint)g_object_get_data(G_OBJECT(actual->Widget),
-							wdname);
+						fd = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(actual->Widget),
+							fdname));
+						wd = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(actual->Widget),
+							wdname));
 #ifdef DEBUG
 						fprintf(stderr, "%s(): fd=%i wd=%i\n", __func__,
 							fd, wd);
@@ -1308,7 +1316,6 @@ static void _variables_initialize(variable *actual)
 	GList *element;
 	char *socket_id;
 	char command[128];
-	int result;
 
 #ifdef DEBUG
 	fprintf(stderr, "%s: Start.\n", __func__);
@@ -1332,7 +1339,8 @@ static void _variables_initialize(variable *actual)
 		if (socket_id != NULL) {
 			sprintf(command, "gvim --socketid %s &",
 				socket_id);
-			result = system(command);
+			if (system(command) == -1)
+				yywarning("Failed to execute command");
 		} else {
 			yywarning("Socket ID is NULL\n");
 		}
@@ -1608,8 +1616,6 @@ int append_fromto_variable(const char *from, const char *to)
 	GtkTreeIter   iter;
 	variable     *var_from, *var_to;
 	char         *value;
-	GtkWidget    *item;
-	GList        *glist = NULL;
 
 	g_assert(from != NULL);
 	g_assert(to != NULL);

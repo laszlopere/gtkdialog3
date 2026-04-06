@@ -105,7 +105,7 @@ GtkWidget *widget_list_create(
 
 gchar *widget_list_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -150,8 +150,6 @@ gchar *widget_list_envvar_construct(GtkWidget *widget)
 void widget_list_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

@@ -556,7 +556,7 @@ static void widget_comboboxtext_input_by_command(variable *var, char *command)
 	GDG_DEBUG("command: '%s'", command);
 
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
 		while (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -588,7 +588,7 @@ static void widget_comboboxtext_input_by_file(variable *var, char *filename)
 
 	GDG_DEBUG("Entering.");
 
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
 		while (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */

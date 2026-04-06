@@ -114,7 +114,7 @@ void print_command(instruction command)
     int Instr_Code;
     int Widget_Type;
     int Attribute_Number;
-    static AttributeSet *Attr = NULL;
+
 
     Token = command.command;
     Argument = command.argument;
@@ -344,8 +344,7 @@ print_program()
 void run_program()
 {
 	static int        is_launched = 0;
-	int               pc, q;
-	stackelement      s;
+	int               pc;
 	variable         *var;
 	gchar            *progname;
 
@@ -366,11 +365,11 @@ void run_program()
 	 * When we executed the program, there is only one widget in
 	 * the stack which is a window.
 	 */
-	s = pop();
+	(void)pop();
 	//gtk_widget_show_all(s.widgets[0]);	Redundant: done manually.
 	widget_show_all();
 
-	PIP_DEBUG("Window: %p.", s.widgets[0]);
+	PIP_DEBUG("Window popped from stack.");
 
 	//
 	// Now, all of the widgets are realized, so we can initialize
@@ -391,7 +390,7 @@ void run_program()
 		fprintf(stderr, "%s(): program_name=%s variable->Name=%s\n",
 			__func__, progname, var->Name);
 #endif
-		if (var->Name == NULL) {
+		if (var->Name[0] == '\0') {
 			g_warning("The recently launched window \"%s\" is missing \
 an equivalently named variable directive <variable>%s</variable> which \
 is a requirement of the launch action.", progname, progname);
@@ -755,9 +754,9 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 		case WIDGET_VBOX:
 			/* Get dimensions from custom tag attributes */
 			if (attr) {
-				if (value = get_tag_attribute(attr, "width"))
+				if ((value = get_tag_attribute(attr, "width")))
 					width = atoi(value);
-				if (value = get_tag_attribute(attr, "height"))
+				if ((value = get_tag_attribute(attr, "height")))
 					height = atoi(value);
 			}
 			/* Set some defaults */
@@ -808,7 +807,7 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	 * but for the viewport it's GTK_SHADOW_IN which should be modifiable */
 	/* Get shadow-type */
 	if (attr) {
-		if (value = get_tag_attribute(attr, "shadow-type")) {
+		if ((value = get_tag_attribute(attr, "shadow-type"))) {
 			parent = gtk_widget_get_parent(widget);
 			if (GTK_IS_VIEWPORT(parent)) {
 				gtk_viewport_set_shadow_type(GTK_VIEWPORT(parent), atoi(value));
@@ -857,50 +856,6 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	return scrolledwindow;
 }
 
-static
-gboolean widget_moved(GtkWidget *widget,
-                      GdkEvent *event,
-                      gpointer user_data){
-	GtkRequisition size;
-	GtkWindow *window = user_data;
-	GdkEventType type;
-	GdkEventConfigure  *configure;
-	
-	type = event->type;
-	
-	if (type == 2)
-		return FALSE;
-#if 0
-	fprintf(stderr, "%s(): event->type: %d mask %x.\n", __func__, 
-			type,
-			gtk_widget_get_events(widget)
-			);
-#endif	
-  	if (type == GDK_EXPOSE ){
-		return FALSE;
-	}
-	
-	if (type == GDK_CONFIGURE){
-		configure = (GdkEventConfigure *)event;
-#if 0
-		printf("   ->x = %d y = %d dx = %d dy = %d\n", 
-				configure->x,
-				configure->y,
-				configure->width,
-				configure->height);
-#endif
-		//gtk_widget_set_size_request(window, 
-		//		configure->width -20,
-		//		configure->height);
-		gtk_window_move(GTK_WINDOW(GTK_WIDGET(window)),
-				configure->x,
-				configure->y);
-	}
-	
-	fflush(stderr);
-
-	return FALSE;
-}
 
 /* GtkSocket was removed in GTK3 - GVIM embedding is not supported */
 static GtkWidget *
@@ -973,15 +928,11 @@ instruction_execute_push(
 		AttributeSet  *Attr,
 		tag_attr      *tag_attributes)
 {
-	GList            *accel_group = NULL;
 	GList            *element;
 	GtkWidget        *scrolled_window = NULL;
 	GtkWidget        *Widget = NULL;
 	gchar            *value;
-	gint              Widget_Type, n, border_width;
-	gint              original_expand, original_fill;
-	gint              space_expand, space_fill;
-	variable         *var;
+	gint              Widget_Type;
 
 	PIP_DEBUG("token: %d", Token);
 	
@@ -1315,9 +1266,10 @@ instruction_set_jump(gint from, gint where)
 int token_store(token command)
 {
 	instruction inst;
-	
+
 	inst.command = command;
 	inst.argument = NULL;
+	inst.ival = 0;
 	inst.tag_attributes = NULL;
 	
 	instruction_new(inst);
@@ -1331,6 +1283,7 @@ token_store_attr(token command,
 	gint             count;
 	gint             index;
 	instruction      inst;
+	inst.ival = 0;
 
 	/* Thunor: I've added this to convert underscores within tag
 	 * attributes to hyphens so that we can deal exclusively in
@@ -1370,9 +1323,10 @@ token_store_with_tag_attributes(
 		GList *attr)
 {
 	instruction inst;
-	
+
 	inst.command = command;
 	inst.argument = NULL;
+	inst.ival = 0;
 	inst.tag_attributes = NULL;
 	instruction_new(inst);
 
@@ -1390,6 +1344,7 @@ token_store_with_argument_attr(
 	gint              sub_attribute;
 	gint              count, index;
 
+	inst.ival = 0;
 	PIP_DEBUG("Start argument='%s' attributes: %p", argument, attributes);
 
 	/* Thunor: I've added this to convert underscores to hyphens within

@@ -342,8 +342,6 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 void widget_table_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -358,7 +356,6 @@ void widget_table_fileselect(
 void widget_table_refresh(variable *var)
 {
 	GList            *element;
-	GtkTreeModel     *model;
 	GtkTreePath      *path;
 	GtkTreeSelection *selection;
 	gchar            *act;

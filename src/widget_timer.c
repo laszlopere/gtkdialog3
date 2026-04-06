@@ -52,8 +52,6 @@ gboolean widget_timer_timer_callback(gpointer data);
 
 void widget_timer_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -97,7 +95,7 @@ GtkWidget *widget_timer_create(
 
 gchar *widget_timer_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -141,8 +139,6 @@ gchar *widget_timer_envvar_construct(GtkWidget *widget)
 void widget_timer_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -254,8 +250,6 @@ void widget_timer_refresh(variable *var)
 
 void widget_timer_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -271,8 +265,6 @@ void widget_timer_removeselected(variable *var)
 
 void widget_timer_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -297,7 +289,7 @@ static void widget_timer_input_by_command(variable *var, char *command)
 	GDG_DEBUG("command: '%s'", command);
 
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -338,7 +330,7 @@ static void widget_timer_input_by_file(variable *var, char *filename)
 
 	GDG_DEBUG("Entering.");
 
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -372,8 +364,6 @@ static void widget_timer_input_by_file(variable *var, char *filename)
 
 static void widget_timer_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -389,7 +379,7 @@ static void widget_timer_input_by_items(variable *var)
 gboolean widget_timer_timer_callback(gpointer data)
 {
 	gchar             retval = TRUE;
-	GList            *element;
+	G_GNUC_UNUSED GList *element;
 	variable         *var = (variable*)data;
 
 	GDG_DEBUG("Entering.");

@@ -46,8 +46,6 @@ static void widget_pixmap_input_by_items(variable *var);
 
 void widget_pixmap_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -164,7 +162,7 @@ GtkWidget *widget_pixmap_create(
 
 gchar *widget_pixmap_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -199,8 +197,6 @@ gchar *widget_pixmap_envvar_construct(GtkWidget *widget)
 void widget_pixmap_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -217,7 +213,6 @@ void widget_pixmap_refresh(variable *var)
 {
 	GList            *element;
 	gchar            *act;
-	gchar            *value;
 	gint              initialised = FALSE;
 
 	GDG_DEBUG("Entering.");
@@ -278,8 +273,6 @@ void widget_pixmap_refresh(variable *var)
 
 void widget_pixmap_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -295,8 +288,6 @@ void widget_pixmap_removeselected(variable *var)
 
 void widget_pixmap_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -311,8 +302,6 @@ void widget_pixmap_save(variable *var)
 
 static void widget_pixmap_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -365,8 +354,6 @@ static void widget_pixmap_input_by_file(variable *var, char *filename)
 
 static void widget_pixmap_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

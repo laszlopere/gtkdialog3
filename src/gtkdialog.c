@@ -244,7 +244,7 @@ gtkdialog_init(
 	if (argc > 1 && g_utf8_strchr(argv[1], -1, ' ') != NULL) {
 		gint   optionindex;
 		gchar *tmp;
-		gchar *command_line;
+		gchar *command_line = NULL;
 
 		PIP_DEBUG("Must re-slice the options.");
 		/*
@@ -319,37 +319,39 @@ gint get_program_from_variable(gchar *name)
 "variable '%s'.", name);
 
 	source = PRG_MEMORY;
+	return 0;
 }
-	
-static gint 
+
+static gint
 get_program_from_file(char *name)
 {
 	size_t tmp;
-	int result;
-	
+
 	PIP_DEBUG("Start.");
-	
+
 	set_program_name("MAIN_WINDOW");
-	
+
 	sourcefile = fopen(name, "r");
-	if (!sourcefile) 
+	if (!sourcefile)
 		g_error("Error opening file '%s': %m", name );
-	
+
 	/* FIXME: We read the first line of file and drop it. It is
 	 * required because the #! is not included in the language.
 	 */
 	program_src = NULL;
-	result = getline(&program_src, &tmp, sourcefile);
+	if (getline(&program_src, &tmp, sourcefile) == -1)
+		program_src = g_strdup("");
 	if (program_src[0] != '#') {
 		fclose(sourcefile);
 		sourcefile = fopen(name, "r");
-		if (!sourcefile) 
+		if (!sourcefile)
 			g_error("Error opening file '%s': %m", name );
 	}
 	free(program_src);
 	program_src = NULL;
-	
+
 	source = PRG_FILE;
+	return 0;
 }
 
 static gint
@@ -358,6 +360,7 @@ get_program_from_stdin(void)
 	/* Moose / Debian 03_stdin patch: changed from PRG_MEMORY */
 	source = PRG_STDIN;
 	PIP_DEBUG("Start.");
+	return 0;
 }
 
 static void 

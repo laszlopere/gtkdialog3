@@ -56,6 +56,7 @@ gtkdialog3_SOURCES = \
 	widget_window.c widget_window.h
 
 AM_CFLAGS = \
+	-Wall -Werror \
 	-fcommon \
 	$(GTK_CFLAGS) \
 	$(GTHREAD_CFLAGS) \

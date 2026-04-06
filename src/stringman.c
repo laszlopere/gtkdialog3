@@ -559,7 +559,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 					/* Note: All leading zeroes evaluate as 0 */
 					/* This is Unicode safe */
 					c1val = c1val * 10 + *c1 - '0';
-					*c1++;
+					c1++;
 				}
 				c1val += 1000;	/* Add some weight */
 			} else {
@@ -571,7 +571,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 					 * and lower case dependent upon locale */
 					c1val = tolower(*c1);
 				}
-				*c1++;
+				c1++;
 			}
 			if ((*c2 >= '0' && *c2 <= '9')) {
 				/* Evaluate consecutive numbers */
@@ -580,7 +580,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 					/* Note: All leading zeroes evaluate as 0 */
 					/* This is Unicode safe */
 					c2val = c2val * 10 + *c2 - '0';
-					*c2++;
+					c2++;
 				}
 				c2val += 1000;	/* Add some weight */
 			} else {
@@ -592,7 +592,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 					 * and lower case dependent upon locale */
 					c2val = tolower(*c2);
 				}
-				*c2++;
+				c2++;
 			}
 
 			/* At this point both c1 and c2 will be pointing to the next

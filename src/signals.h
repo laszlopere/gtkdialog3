@@ -80,10 +80,10 @@ void on_any_widget_row_activated_event(GtkWidget *widget,
 void on_any_widget_cursor_changed_event(GtkWidget *widget, AttributeSet *Attr);
 
 #if HAVE_SYS_INOTIFY_H
-void on_any_widget_file_changed_event(gpointer data, gint source,
-	GdkInputCondition condition);
-void on_any_widget_auto_refresh_event(gpointer data, gint source,
-	GdkInputCondition condition);
+gboolean on_any_widget_file_changed_event(GIOChannel *gio,
+	GIOCondition condition, gpointer data);
+gboolean on_any_widget_auto_refresh_event(GIOChannel *gio,
+	GIOCondition condition, gpointer data);
 #else
 void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var);

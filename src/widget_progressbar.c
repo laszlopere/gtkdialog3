@@ -65,8 +65,6 @@ void widget_progressbar_realized_callback(GtkWidget *widget, AttributeSet *Attr)
 
 void widget_progressbar_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -108,7 +106,7 @@ GtkWidget *widget_progressbar_create(
 
 gchar *widget_progressbar_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = g_strdup("");
 
 	GDG_DEBUG("Entering.");
 
@@ -145,8 +143,6 @@ gchar *widget_progressbar_envvar_construct(GtkWidget *widget)
 void widget_progressbar_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -224,8 +220,6 @@ void widget_progressbar_refresh(variable *var)
 
 void widget_progressbar_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -241,8 +235,6 @@ void widget_progressbar_removeselected(variable *var)
 
 void widget_progressbar_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -270,8 +262,6 @@ static void widget_progressbar_input_by_command(variable *var, char *command)
 
 static void widget_progressbar_input_by_file(variable *var, char *filename)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 
@@ -286,8 +276,6 @@ static void widget_progressbar_input_by_file(variable *var, char *filename)
 
 static void widget_progressbar_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 	GDG_DEBUG("Entering.");
 

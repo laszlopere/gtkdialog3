@@ -46,8 +46,6 @@
 int getnextchar(void);
 int gtkdialog_error(char *c);
 
-static gchar *process_string(gchar *str);
-
 extern int linenumber;
 gchar *Token;
 
@@ -57,6 +55,8 @@ gchar *Token;
 	 * Thunor: Uncomment this to debug.
 	 **************************************************************
 	* %option debug */
+
+%option noinput
 
 %x EMBEDDED
 %x ST_TAG_ATTR ST_QUOTED_TAGATTR
@@ -700,12 +700,4 @@ gchar *Token;
 					  /* we do nothing, this is a dropped char. */
 												}
 %%
-
-static gchar *
-process_string(gchar *str)
-{
-	//fprintf(stderr, "%s(): Input = '%s'\n", __func__, str);
-	// FIXME: Well, this will come tomorrow...
-	return g_strdup(str);
-}
 
