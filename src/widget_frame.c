@@ -30,10 +30,8 @@
 #include "signals.h"
 #include "tag_attributes.h"
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
+#include "gdg_debug.h"
 /* Local function prototypes, located at file bottom */
 static void widget_frame_input_by_command(variable *var, char *command);
 static void widget_frame_input_by_file(variable *var, char *filename);
@@ -50,15 +48,11 @@ void widget_frame_clear(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	gtk_frame_set_label(GTK_FRAME(var->Widget), "");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -77,9 +71,7 @@ GtkWidget *widget_frame_create(
 	stackelement      s;
 	variable         *var;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Set a default label */
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "");
@@ -137,10 +129,7 @@ GtkWidget *widget_frame_create(
 		}
 		if (space_expand != -1) original_expand = space_expand;
 		if (space_fill != -1) original_fill = space_fill;
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): frame expand=%i fill=%i\n", __func__,
-			original_expand, original_fill);
-#endif
+		GDG_DEBUG("frame expand=%i fill=%i", original_expand, original_fill);
 		gtk_box_pack_start(GTK_BOX(vbox), s.widgets[n],
 			original_expand, original_fill, 0);
 	}
@@ -150,9 +139,7 @@ GtkWidget *widget_frame_create(
 	/* This widget has one or more children which require registering */
 	widget_visibility_list_add(vbox, attr);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -165,19 +152,13 @@ gchar *widget_frame_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): Hello.\n", __func__);
-#endif
+	GDG_DEBUG("Hello.");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -190,15 +171,11 @@ gchar *widget_frame_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	string = g_strdup(gtk_frame_get_label(GTK_FRAME(widget)));
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -213,15 +190,11 @@ void widget_frame_fileselect(
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -233,9 +206,7 @@ void widget_frame_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -283,9 +254,7 @@ void widget_frame_refresh(variable *var)
 
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -297,16 +266,12 @@ void widget_frame_removeselected(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -320,9 +285,7 @@ void widget_frame_save(variable *var)
 	gchar            *act;
 	gchar            *filename = NULL;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -349,9 +312,7 @@ void widget_frame_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -364,13 +325,9 @@ static void widget_frame_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
-#endif
+	GDG_DEBUG("command: '%s'", command);
 
 	/* Opening pipe for reading... */
 	if (infile = widget_opencommand(command)) {
@@ -392,9 +349,7 @@ static void widget_frame_input_by_command(variable *var, char *command)
 			command);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -407,9 +362,7 @@ static void widget_frame_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 	gint              count;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
@@ -430,9 +383,7 @@ static void widget_frame_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -444,13 +395,9 @@ static void widget_frame_input_by_items(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }

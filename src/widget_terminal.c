@@ -30,13 +30,11 @@
 #include "widgets.h"
 #include "signals.h"
 #include "tag_attributes.h"
+#include "gdg_debug.h"
 #if HAVE_VTE
 #include <vte/vte.h>
 #endif
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
 #define VTE_WARNING "The terminal (VteTerminal) widget requires \
 a version of gtkdialog built with libvte."
@@ -54,9 +52,7 @@ static void widget_terminal_input_by_items(variable *var);
 
 void widget_terminal_clear(variable *var)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
 	/* This won't result in child-exited being emitted */
@@ -64,9 +60,7 @@ void widget_terminal_clear(variable *var)
 	widget_terminal_fork_command(var->Widget, var->widget_tag_attr);
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -84,9 +78,7 @@ GtkWidget *widget_terminal_create(
 	gint              width = -1, height = -1;
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
 	/* Read declared directives */
@@ -122,9 +114,7 @@ GtkWidget *widget_terminal_create(
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
 			if (gdk_rgba_parse(g_strstrip(value), &color)) {
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+				GDG_DEBUG("valid colour found");
 				/* background tint removed in VTE 2.91 */
 			}
 			kill_tag_attribute(attr, tagattribute);
@@ -141,9 +131,7 @@ GtkWidget *widget_terminal_create(
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
 			if (gdk_rgba_parse(g_strstrip(value), &color)) {
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_background(VTE_TERMINAL(widget), &color);  /* Uses GdkRGBA in VTE 2.91 */
 			}
 		}
@@ -154,9 +142,7 @@ GtkWidget *widget_terminal_create(
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
 			if (gdk_rgba_parse(g_strstrip(value), &color)) {
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_foreground(VTE_TERMINAL(widget), &color);
 			}
 		}
@@ -167,9 +153,7 @@ GtkWidget *widget_terminal_create(
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
 			if (gdk_rgba_parse(g_strstrip(value), &color)) {
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_bold(VTE_TERMINAL(widget), &color);
 			}
 		}
@@ -180,9 +164,7 @@ GtkWidget *widget_terminal_create(
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
 			if (gdk_rgba_parse(g_strstrip(value), &color)) {
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+				GDG_DEBUG("valid colour found");
 				/* vte_terminal_set_color_dim removed in VTE 2.91 */
 			}
 		}
@@ -193,9 +175,7 @@ GtkWidget *widget_terminal_create(
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
 			if (gdk_rgba_parse(g_strstrip(value), &color)) {
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_cursor(VTE_TERMINAL(widget), &color);
 			}
 		}
@@ -206,9 +186,7 @@ GtkWidget *widget_terminal_create(
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
 			if (gdk_rgba_parse(g_strstrip(value), &color)) {
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_highlight(VTE_TERMINAL(widget), &color);
 			}
 		}
@@ -225,9 +203,7 @@ GtkWidget *widget_terminal_create(
 	widget = gtk_label_new(VTE_WARNING);
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -248,9 +224,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 	/* spawn_async doesn't return pid synchronously */
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
 	/* Initialise strings */
@@ -271,25 +245,19 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 			sprintf(tagattribute, "argv%i", count);
 			if ((value = get_tag_attribute(attr, tagattribute)))
 				argv[count] = value;
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s:() %s=%s\n", __func__, tagattribute, value);
-#endif
+			GDG_DEBUG("%s=%s", tagattribute, value);
 			sprintf(tagattribute, "envv%i", count);
 			if ((value = get_tag_attribute(attr, tagattribute)))
 				envv[count] = value;
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s:() %s=%s\n", __func__, tagattribute, value);
-#endif
+			GDG_DEBUG("%s=%s", tagattribute, value);
 		}
 	}
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s:() working_directory=%s\n", __func__, working_directory);
-	fprintf(stderr, "%s:() argv=%p *argv=%s argv[0]=%s argv[1]=%s\n",
-		__func__, argv, *argv, argv[0], argv[1]);
-	fprintf(stderr, "%s:() envv=%p *envv=%s envv[0]=%s envv[1]=%s\n",
-		__func__, envv, *envv, envv[0], envv[1]);
-#endif
+	GDG_DEBUG("working_directory=%s", working_directory);
+	GDG_DEBUG("argv=%p *argv=%s argv[0]=%s argv[1]=%s",
+		argv, *argv, argv[0], argv[1]);
+	GDG_DEBUG("envv=%p *envv=%s envv[0]=%s envv[1]=%s",
+		envv, *envv, envv[0], envv[1]);
 
 	vte_terminal_spawn_async(VTE_TERMINAL(widget),
 		VTE_PTY_DEFAULT,
@@ -310,9 +278,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -323,19 +289,13 @@ gchar *widget_terminal_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): Hello.\n", __func__);
-#endif
+	GDG_DEBUG("Hello.");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -351,9 +311,7 @@ gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 #endif
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
 	sprintf(envvar, "%i", (gint)g_object_get_data(G_OBJECT(widget), "_pid"));
@@ -362,9 +320,7 @@ gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 	string = g_strdup("");
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -379,15 +335,11 @@ void widget_terminal_fileselect(
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -399,9 +351,7 @@ void widget_terminal_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -450,9 +400,7 @@ void widget_terminal_refresh(variable *var)
 
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -464,16 +412,12 @@ void widget_terminal_removeselected(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -485,15 +429,11 @@ void widget_terminal_save(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -508,13 +448,9 @@ static void widget_terminal_input_by_command(variable *var, char *command)
 	gchar             line[512];
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
-#endif
+	GDG_DEBUG("command: '%s'", command);
 
 #if HAVE_VTE
 	/* Opening pipe for reading... */
@@ -535,9 +471,7 @@ static void widget_terminal_input_by_command(variable *var, char *command)
 	}
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -552,9 +486,7 @@ static void widget_terminal_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
 	if (infile = fopen(filename, "r")) {
@@ -574,9 +506,7 @@ static void widget_terminal_input_by_file(variable *var, char *filename)
 	}
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -588,13 +518,9 @@ static void widget_terminal_input_by_items(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }

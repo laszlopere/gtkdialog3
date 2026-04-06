@@ -29,6 +29,7 @@
 #include "signals.h"
 #include "tag_attributes.h"
 #include "widgets.h"
+#include "gdg_debug.h"
 #if HAVE_VTE
 #include <vte/vte.h>
 #endif
@@ -36,9 +37,6 @@
 #include <sys/inotify.h>
 #endif
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
 /* Local variables */
 char *condexpr[] = {
@@ -65,9 +63,7 @@ void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
 	gchar *signal;
 	gchar *type; */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "clicked");
 
@@ -75,17 +71,7 @@ void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL) {
 
-#ifdef DEBUG_CONTENT
-		GList *attr;
-		Attribute *data;
 		attr = g_list_first(Attr->attr[ATTR_ACTION]);
-		while (attr) {
-			data = attr->data;
-			printf("%s: BEFORE: element=%p attr->data->text='%s'\n",
-				__func__, element, data->text);
-			attr = g_list_next(attr);
-		}
-#endif
 
 		type = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "type");
 		signal = attributeset_get_this_tagattr(&element, Attr, ATTR_ACTION, "signal");
@@ -94,26 +80,14 @@ void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
 			execute_action(button, command, type);
 		}
 
-#ifdef DEBUG_CONTENT
 		attr = g_list_first(Attr->attr[ATTR_ACTION]);
-		while (attr) {
-			data = attr->data;
-			printf("%s:  AFTER: element=%p attr->data->text='%s'\n",
-				__func__, element, data->text);
-			attr = g_list_next(attr);
-		}
-#endif
 
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 
-#ifdef DEBUG_CONTENT
-		printf("%s: element=%p\n", __func__, element);
-#endif
+		GDG_DEBUG("element=%p", element);
 	} */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -127,9 +101,7 @@ void button_entered_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSe
 	gchar *signal;
 	gchar *type; */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "enter");
 
@@ -145,9 +117,7 @@ void button_entered_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSe
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -161,9 +131,7 @@ void button_leaved_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSet
 	gchar *signal;
 	gchar *type; */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "leave");
 
@@ -179,9 +147,7 @@ void button_leaved_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSet
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -206,9 +172,7 @@ void button_pressed_attr(GtkWidget *button, GdkEventButton *event, AttributeSet 
 	gchar *signal;
 	gchar *type; */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "pressed");
 
@@ -224,9 +188,7 @@ void button_pressed_attr(GtkWidget *button, GdkEventButton *event, AttributeSet 
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -240,9 +202,7 @@ void button_released_attr(GtkWidget *button, GdkEventButton *event, AttributeSet
 	gchar *signal;
 	gchar *type; */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "released");
 
@@ -258,9 +218,7 @@ void button_released_attr(GtkWidget *button, GdkEventButton *event, AttributeSet
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -269,15 +227,11 @@ void button_released_attr(GtkWidget *button, GdkEventButton *event, AttributeSet
 
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "activate");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -295,9 +249,7 @@ gboolean on_any_widget_button_pressed(GtkWidget *widget,
 	gchar *ptrxroot = g_strdup_printf("%.0f", event->x_root);
 	gchar *ptryroot = g_strdup_printf("%.0f", event->y_root);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	g_setenv("PTR_X", ptrx, TRUE);
 	g_setenv("PTR_Y", ptry, TRUE);
@@ -324,9 +276,7 @@ gboolean on_any_widget_button_pressed(GtkWidget *widget,
 	g_free(ptrxroot);
 	g_free(ptryroot);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -346,9 +296,7 @@ gboolean on_any_widget_button_released(GtkWidget *widget,
 	gchar *ptrxroot = g_strdup_printf("%.0f", event->x_root);
 	gchar *ptryroot = g_strdup_printf("%.0f", event->y_root);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	g_setenv("PTR_X", ptrx, TRUE);
 	g_setenv("PTR_Y", ptry, TRUE);
@@ -375,9 +323,7 @@ gboolean on_any_widget_button_released(GtkWidget *widget,
 	g_free(ptrxroot);
 	g_free(ptryroot);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -388,15 +334,11 @@ gboolean on_any_widget_button_released(GtkWidget *widget,
 
 void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "changed");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -405,15 +347,11 @@ void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_color_set_event(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "color-set");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -422,15 +360,11 @@ void on_any_widget_color_set_event(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_font_set_event(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "font-set");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -440,15 +374,11 @@ void on_any_widget_font_set_event(GtkWidget *widget, AttributeSet *Attr)
 gboolean on_any_widget_configure_event(GtkWidget *widget,
 	GdkEventConfigure *event, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "configure-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -460,15 +390,11 @@ gboolean on_any_widget_configure_event(GtkWidget *widget,
 gboolean on_any_widget_delete_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "delete-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -480,15 +406,11 @@ gboolean on_any_widget_delete_event(GtkWidget *widget, GdkEvent *event,
 gboolean on_any_widget_destroy_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "destroy-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -500,15 +422,11 @@ gboolean on_any_widget_destroy_event(GtkWidget *widget, GdkEvent *event,
 gboolean on_any_widget_enter_notify_event(GtkWidget *widget,
 	GdkEventCrossing *event, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "enter-notify-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -520,15 +438,11 @@ gboolean on_any_widget_enter_notify_event(GtkWidget *widget,
 gboolean on_any_widget_focus_in_event(GtkWidget *widget,
 	GdkEventFocus *event, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "focus-in-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -540,15 +454,11 @@ gboolean on_any_widget_focus_in_event(GtkWidget *widget,
 gboolean on_any_widget_focus_out_event(GtkWidget *widget,
 	GdkEventFocus *event, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "focus-out-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -559,15 +469,11 @@ gboolean on_any_widget_focus_out_event(GtkWidget *widget,
 
 void on_any_widget_hide(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "hide");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 #if GTK_CHECK_VERSION(2,16,0)
@@ -578,18 +484,14 @@ void on_any_widget_hide(GtkWidget *widget, AttributeSet *Attr)
 void on_any_widget_icon_press_event(GtkWidget *widget,
 	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (pos == GTK_ENTRY_ICON_PRIMARY)
 		widget_signal_executor(widget, Attr, "primary-icon-press");
 	else
 		widget_signal_executor(widget, Attr, "secondary-icon-press");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -599,18 +501,14 @@ void on_any_widget_icon_press_event(GtkWidget *widget,
 void on_any_widget_icon_release_event(GtkWidget *widget,
 	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (pos == GTK_ENTRY_ICON_PRIMARY)
 		widget_signal_executor(widget, Attr, "primary-icon-release");
 	else
 		widget_signal_executor(widget, Attr, "secondary-icon-release");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 #endif
 
@@ -620,9 +518,7 @@ void on_any_widget_icon_release_event(GtkWidget *widget,
 
 void on_any_widget_child_exited_event(GtkWidget *widget, gint status, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
 	if (VTE_IS_TERMINAL(widget)) {
@@ -633,9 +529,7 @@ void on_any_widget_child_exited_event(GtkWidget *widget, gint status, AttributeS
 
 	widget_signal_executor(widget, Attr, "child-exited");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -651,9 +545,7 @@ gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	gchar *keymod = g_strdup_printf("%u", event->state);
 	gchar *keyraw = g_strdup_printf("0x%x", event->hardware_keycode);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	g_setenv("KEY_VAL", keyval, TRUE);
 	g_setenv("KEY_SYM", keysym, TRUE);
@@ -674,9 +566,7 @@ gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	g_free(keymod);
 	g_free(keyraw);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -694,9 +584,7 @@ gboolean on_any_widget_key_release_event(GtkWidget*widget,
 	gchar *keymod = g_strdup_printf("%u", event->state);
 	gchar *keyraw = g_strdup_printf("0x%x", event->hardware_keycode);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	g_setenv("KEY_VAL", keyval, TRUE);
 	g_setenv("KEY_SYM", keysym, TRUE);
@@ -717,9 +605,7 @@ gboolean on_any_widget_key_release_event(GtkWidget*widget,
 	g_free(keymod);
 	g_free(keyraw);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -731,15 +617,11 @@ gboolean on_any_widget_key_release_event(GtkWidget*widget,
 gboolean on_any_widget_leave_notify_event(GtkWidget *widget,
 	GdkEventCrossing *event, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "leave-notify-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -751,15 +633,11 @@ gboolean on_any_widget_leave_notify_event(GtkWidget *widget,
 gboolean on_any_widget_map_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "map-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -772,14 +650,9 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 {
 	variable         *var = find_variable_by_widget(widget);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): widget=%p  tag_attributes=%p\n", __func__,
-		widget, tag_attributes);
-#endif
+	GDG_DEBUG("widget=%p tag_attributes=%p", widget, tag_attributes);
 
 	widget_set_tag_attributes(widget, tag_attributes);
 
@@ -792,9 +665,7 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 		widget_signal_executor(widget, var->Attributes, "realize");
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -803,15 +674,11 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 
 void on_any_widget_show(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "show");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -820,15 +687,11 @@ void on_any_widget_show(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "toggled");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -838,15 +701,11 @@ void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr)
 gboolean on_any_widget_unmap_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "unmap-event");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -857,15 +716,11 @@ gboolean on_any_widget_unmap_event(GtkWidget *widget, GdkEvent *event,
 
 void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "value-changed");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -874,9 +729,7 @@ void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_select_row_event(GtkWidget *widget, gpointer Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "cursor-changed");
 
@@ -906,9 +759,7 @@ void on_any_widget_select_row_event(GtkWidget *widget, gpointer Attr)
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -917,15 +768,11 @@ void on_any_widget_select_row_event(GtkWidget *widget, gpointer Attr)
 
 void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "selection-changed");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -935,15 +782,11 @@ void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr
 void on_any_widget_row_activated_event(GtkWidget *widget,
 	GtkTreePath *path, GtkTreeViewColumn *column, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "row-activated");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /* Redundant
@@ -955,9 +798,7 @@ void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
 	gchar *signal;
 	gchar *type;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL){
@@ -971,9 +812,7 @@ next_command:
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }*/
 
 /***********************************************************************
@@ -982,15 +821,11 @@ next_command:
 
 void on_any_widget_cursor_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "cursor-changed");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /* Redundant
@@ -1001,9 +836,7 @@ gboolean tree_cursor_changed(GtkTreeView *tree_view, AttributeSet *Attr)
 	gchar *signal;
 	gchar *type;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL){
@@ -1017,9 +850,7 @@ next_command:
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return TRUE;
 }*/
@@ -1057,27 +888,20 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	variable         *var = (variable*)data;
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if HAVE_SYS_INOTIFY_H
 	/* Just clearing, don't care the type */
 	read(source, buffer, sizeof(buffer));
 
 #else
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): event_type=%i filename=%s\n", __func__,
-		event_type, g_file_get_path(file));
-#endif
+	GDG_DEBUG("event_type=%i filename=%s", event_type, g_file_get_path(file));
 
 	if (event_type == G_FILE_MONITOR_EVENT_CHANGED)
 #endif
 	widget_signal_executor(var->Widget, var->Attributes, "file-changed");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1097,9 +921,7 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	variable         *var = (variable*)data;
 #endif
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if HAVE_SYS_INOTIFY_H
 	/* Just clearing, don't care the type */
@@ -1189,9 +1011,7 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 			break;
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1203,9 +1023,7 @@ gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 {
 	variable         *var;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	//Redundant: variables_drop_by_parent(NULL, widget);
 	var = find_variable_by_widget(widget);
@@ -1225,24 +1043,17 @@ gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 		exit(EXIT_FAILURE);
 	}
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): variables_count_widgets()=%i\n", __func__,
-		variables_count_widgets());
-#endif
+	GDG_DEBUG("variables_count_widgets()=%i", variables_count_widgets());
 
 	if (variables_count_widgets() == 0) {
 		printf("EXIT=\"abort\"\n");
 
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): Calling exit(EXIT_SUCCESS)\n", __func__);
-#endif
+		GDG_DEBUG("Calling exit(EXIT_SUCCESS)");
 
 		exit(EXIT_SUCCESS);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -1266,14 +1077,9 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	gchar            *signal;
 	gint              execute, is_active;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): Executing signal '%s' on widget %p\n",
-		__func__, signal_name, widget);
-#endif
+	GDG_DEBUG("Executing signal '%s' on widget %p", signal_name, widget);
 
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command) {
@@ -1294,10 +1100,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			 * i.e the specified signal                                *
 			 ***********************************************************/
 
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): command=%s function=%s signal=%s signal_name=%s\n",
-				__func__, command, function, signal, signal_name);
-#endif
+			GDG_DEBUG("command=%s function=%s signal=%s signal_name=%s", command, function, signal, signal_name);
 
 			/* There's a class hierarchy to be aware of here */
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
@@ -1338,10 +1141,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 			 * i.e. the default widget signal                          *
 			 ***********************************************************/
 
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): command=%s function=%s signal=%s signal_name=%s\n",
-				__func__, command, function, signal, signal_name);
-#endif
+			GDG_DEBUG("command=%s function=%s signal=%s signal_name=%s", command, function, signal, signal_name);
 
 			/* There's a class hierarchy to be aware of here */
 /* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
@@ -1456,9 +1256,7 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1489,10 +1287,8 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 	gint              state = -1;
 	variable         *var;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "\n%s(): Entering.\n", __func__);
-	fprintf(stderr, "%s():    condition=%s\n", __func__, condition);
-#endif
+	GDG_DEBUG("Entering.");
+	GDG_DEBUG("condition=%s", condition);
 
 	if (condition != NULL) {
 
@@ -1689,13 +1485,11 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 
 			}
 
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s():        argument=%s\n", __func__, argument);
-			fprintf(stderr, "%s():        not=%i\n", __func__, not);
-			fprintf(stderr, "%s():        line=%s\n", __func__, line);
-			fprintf(stderr, "%s():        state=%i\n", __func__, state);
-			fprintf(stderr, "%s():        retval=%i\n", __func__, retval);
-#endif
+			GDG_DEBUG("argument=%s", argument);
+			GDG_DEBUG("not=%i", not);
+			GDG_DEBUG("line=%s", line);
+			GDG_DEBUG("state=%i", state);
+			GDG_DEBUG("retval=%i", retval);
 		} else {
 			fprintf(stderr, "%s(): Unknown expression '%s'\n", __func__,
 				condition);
@@ -1707,10 +1501,8 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 		retval = TRUE;
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s():    retval=%i\n", __func__, retval);
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("retval=%i", retval);
+	GDG_DEBUG("Exiting.");
 
 	return retval;
 }
@@ -1743,9 +1535,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gint              fd, wd;
 	gint              index = 0;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Is this file going to be monitored? */
 	if (var->widget_tag_attr) {
@@ -1763,10 +1553,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 
 					if ((wd = inotify_add_watch(fd, (gchar*)filename,
 						IN_MODIFY)) != -1) {
-#ifdef DEBUG_CONTENT
-						fprintf(stderr, "%s(): fd=%i wd=%i\n", __func__,
-							fd, wd);
-#endif
+						GDG_DEBUG("fd=%i wd=%i", fd, wd);
 						/* Generate unique name */
 						while (TRUE) {
 							sprintf(fdname, "_inotifyfd%i", index);
@@ -1775,10 +1562,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 								fdname))) break;
 							index++;
 						}
-#ifdef DEBUG_CONTENT
-						fprintf(stderr, "%s(): fdname=%s wdname=%s\n",
-							__func__, fdname, wdname);
-#endif
+						GDG_DEBUG("fdname=%s wdname=%s", fdname, wdname);
 						/* Store fd as a piece of widget data */
 						g_object_set_data(G_OBJECT(var->Widget), fdname,
 							(gpointer)fd);
@@ -1825,9 +1609,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gint              index = 0;
 	gint              fd, wd;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Is this file going to be monitored? */
 	if (var->widget_tag_attr) {
@@ -1850,10 +1632,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 					monitor = g_file_monitor_file(file, G_FILE_MONITOR_NONE,
 						FALSE, &error);
 
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s(): file=%p monitor=%p\n", __func__,
-						file, monitor);
-#endif
+					GDG_DEBUG("file=%p monitor=%p", file, monitor);
 
 					if (monitor) {
 
@@ -1871,9 +1650,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 								break;
 						}
 
-#ifdef DEBUG_CONTENT
-						fprintf(stderr, "%s(): name=%s\n", __func__, name);
-#endif
+						GDG_DEBUG("name=%s", name);
 
 						/* Store monitor as a piece of widget data */
 						g_object_set_data(G_OBJECT(var->Widget), name,

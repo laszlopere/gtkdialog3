@@ -29,9 +29,8 @@
 #include "widgets.h"
 #include "signals.h"
 
+#include "gdg_debug.h"
 /* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 #define MESSAGE_LENGTH_MAX 512
 
 /* Local variables */
@@ -51,15 +50,11 @@ static void widget_statusbar_update(variable *var, gchar *text);
 void widget_statusbar_clear(variable *var)
 {
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_statusbar_update(var, "");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -72,9 +67,7 @@ GtkWidget *widget_statusbar_create(
 	GtkWidget        *widget;
 	guint             context_id;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget = gtk_statusbar_new();
 
@@ -82,9 +75,7 @@ GtkWidget *widget_statusbar_create(
 	context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(widget),
 		"General");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): context_id=%i\n", __func__, context_id);
-#endif
+	GDG_DEBUG("context_id=%i", context_id);
 
 	/* Push an initial empty message and from hereon in, everytime a
 	 * new message is set we will first pop the existing message and
@@ -96,9 +87,7 @@ GtkWidget *widget_statusbar_create(
 	g_object_set_data(G_OBJECT(widget), "_last_push", g_strdup(""));
 	
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -111,15 +100,11 @@ gchar *widget_statusbar_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -133,16 +118,12 @@ gchar *widget_statusbar_envvar_construct(GtkWidget *widget)
 	gchar            *last_push;
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	last_push = g_object_get_data(G_OBJECT(widget), "_last_push");
 	string = g_strdup(last_push);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -155,19 +136,13 @@ void widget_statusbar_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): name=%s value=%s\n", __func__, name, value);
-#endif
+	GDG_DEBUG("name=%s value=%s", name, value);
 
 	widget_statusbar_update(var, (gchar*)value);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -181,9 +156,7 @@ void widget_statusbar_refresh(variable *var)
 	gchar            *text;
 	gint              initialised = FALSE;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -236,9 +209,7 @@ void widget_statusbar_refresh(variable *var)
 
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -250,16 +221,12 @@ void widget_statusbar_removeselected(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -274,9 +241,7 @@ void widget_statusbar_save(variable *var)
 	gchar            *filename = NULL;
 	gchar            *last_push;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -305,9 +270,7 @@ void widget_statusbar_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -320,13 +283,9 @@ static void widget_statusbar_input_by_command(variable *var, char *command)
 	gchar             line[MESSAGE_LENGTH_MAX];
 	gint              count;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
-#endif
+	GDG_DEBUG("command: '%s'", command);
 
 	/* Opening pipe for reading... */
 	if (infile = widget_opencommand(command)) {
@@ -348,9 +307,7 @@ static void widget_statusbar_input_by_command(variable *var, char *command)
 			command);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -363,9 +320,7 @@ static void widget_statusbar_input_by_file(variable *var, char *filename)
 	gchar             line[MESSAGE_LENGTH_MAX];
 	gint              count;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
@@ -386,9 +341,7 @@ static void widget_statusbar_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -400,15 +353,11 @@ static void widget_statusbar_input_by_items(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -419,9 +368,7 @@ static void widget_statusbar_update(variable *var, gchar *text)
 {
 	guint             context_id;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* A context ID is required to push and pop the messages */
 	context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(var->Widget),
@@ -431,7 +378,5 @@ static void widget_statusbar_update(variable *var, gchar *text)
 	gtk_statusbar_push(GTK_STATUSBAR(var->Widget), context_id, text);
 	g_object_set_data(G_OBJECT(var->Widget), "_last_push", g_strdup(text));
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }

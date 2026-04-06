@@ -29,10 +29,8 @@
 #include "widgets.h"
 #include "signals.h"
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
+#include "gdg_debug.h"
 /* Local function prototypes, located at file bottom */
 static void widget_colorbutton_input_by_command(variable *var, char *command);
 static void widget_colorbutton_input_by_file(variable *var, char *filename);
@@ -49,15 +47,11 @@ void widget_colorbutton_clear(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -68,15 +62,11 @@ GtkWidget *widget_colorbutton_create(
 {
 	GtkWidget        *widget;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget = gtk_color_button_new();
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -89,15 +79,11 @@ gchar *widget_colorbutton_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -112,20 +98,13 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 	gchar             envvar[32];
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(widget), &color);
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): color.red  =%.4f  rgb=%02x\n", __func__,
-		color.red, (int)(color.red * 255 + 0.5));
-	fprintf(stderr, "%s(): color.green=%.4f  rgb=%02x\n", __func__,
-		color.green, (int)(color.green * 255 + 0.5));
-	fprintf(stderr, "%s(): color.blue =%.4f  rgb=%02x\n", __func__,
-		color.blue, (int)(color.blue * 255 + 0.5));
-#endif
+	GDG_DEBUG("color.red =%.4f rgb=%02x", color.red, (int)(color.red * 255 + 0.5));
+	GDG_DEBUG("color.green=%.4f rgb=%02x", color.green, (int)(color.green * 255 + 0.5));
+	GDG_DEBUG("color.blue =%.4f rgb=%02x", color.blue, (int)(color.blue * 255 + 0.5));
 
 	if (gtk_color_chooser_get_use_alpha(GTK_COLOR_CHOOSER(widget))) {
 		sprintf(envvar, "#%02x%02x%02x|%u",
@@ -143,9 +122,7 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 
 	string = g_strdup(envvar);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -160,15 +137,11 @@ void widget_colorbutton_fileselect(
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -183,9 +156,7 @@ void widget_colorbutton_refresh(variable *var)
 	guint             alpha;
 	list_t           *values = NULL;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -226,18 +197,14 @@ void widget_colorbutton_refresh(variable *var)
 				 * This function doesn't like trailing whitespace so it
 				 * needs to be stripped first with g_strstrip() */ 
 				if (gdk_rgba_parse(g_strstrip(values->line[0]), &color)) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+					GDG_DEBUG("valid colour found");
 					gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
 				}
 			}
 			if (values->n_lines > 1) {
 				/* Read alpha as an unsigned decimal integer */
 				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
+					GDG_DEBUG("valid alpha=%u found", alpha);
 					/* This requires use-alpha="true" */
 					/* Alpha is now part of GdkRGBA, set via gtk_color_chooser_set_rgba */
 				}
@@ -264,9 +231,7 @@ void widget_colorbutton_refresh(variable *var)
 
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -278,16 +243,12 @@ void widget_colorbutton_removeselected(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -302,9 +263,7 @@ void widget_colorbutton_save(variable *var)
 	gchar            *act;
 	gchar            *filename = NULL;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -344,9 +303,7 @@ void widget_colorbutton_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -362,13 +319,9 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 	gint              count;
 	guint             alpha;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
-#endif
+	GDG_DEBUG("command: '%s'", command);
 
 	/* Opening pipe for reading... */
 	if (infile = widget_opencommand(command)) {
@@ -385,18 +338,14 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 				 * This function doesn't like trailing whitespace so it
 				 * needs to be stripped first with g_strstrip() */ 
 				if (gdk_rgba_parse(g_strstrip(values->line[0]), &color)) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+					GDG_DEBUG("valid colour found");
 					gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
 				}
 			}
 			if (values->n_lines > 1) {
 				/* Read alpha as an unsigned decimal integer */
 				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
+					GDG_DEBUG("valid alpha=%u found", alpha);
 					/* This requires use-alpha="true" */
 					/* Alpha is now part of GdkRGBA, set via gtk_color_chooser_set_rgba */
 				}
@@ -411,9 +360,7 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 			command);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -429,9 +376,7 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 	gint              count;
 	guint             alpha;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (infile = fopen(filename, "r")) {
 		/* Just one line */
@@ -447,18 +392,14 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 				 * This function doesn't like trailing whitespace so it
 				 * needs to be stripped first with g_strstrip() */ 
 				if (gdk_rgba_parse(g_strstrip(values->line[0]), &color)) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
+					GDG_DEBUG("valid colour found");
 					gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
 				}
 			}
 			if (values->n_lines > 1) {
 				/* Read alpha as an unsigned decimal integer */
 				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
+					GDG_DEBUG("valid alpha=%u found", alpha);
 					/* This requires use-alpha="true" */
 					/* Alpha is now part of GdkRGBA, set via gtk_color_chooser_set_rgba */
 				}
@@ -473,9 +414,7 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -487,13 +426,9 @@ static void widget_colorbutton_input_by_items(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }

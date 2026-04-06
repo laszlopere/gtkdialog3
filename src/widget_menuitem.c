@@ -1,7 +1,7 @@
 /*
  * widget_menuitem.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  Lï¿½szlï¿½ Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -31,10 +31,8 @@
 #include "tag_attributes.h"
 #include "widget_menuitem.h"
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
+#include "gdg_debug.h"
 /* Local function prototypes, located at file bottom */
 static void widget_menuitem_input_by_command(variable *var, char *command);
 static void widget_menuitem_input_by_file(variable *var, char *filename);
@@ -60,15 +58,11 @@ void widget_menuitem_clear(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -87,9 +81,7 @@ GtkWidget *widget_menu_create(
 	gint              n;
 	stackelement      s;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Create the menu shell */
 	menu = gtk_menu_new();
@@ -102,10 +94,7 @@ GtkWidget *widget_menu_create(
 	gtk_menu_set_accel_group(GTK_MENU(menu), accel_group);
 	accel_groups = g_list_append(accel_groups, accel_group);
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s: Appending accel_group=%p to GList\n",
-		__func__, accel_group);
-#endif
+	GDG_DEBUG("Appending accel_group=%p to GList", accel_group);
 
 	/* Pop the widgets that the menu shell will contain and add them */
 	s = pop();
@@ -127,9 +116,7 @@ GtkWidget *widget_menu_create(
 	/* This widget has one or more children which require registering */
 	widget_visibility_list_add(menu, attr);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -161,9 +148,7 @@ GtkWidget *widget_menuitem_create(
 	gint              width = -1, height = -1, size = 16;
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We need to decode exactly what it is the user is trying to create
 	 * and then make the right widget.
@@ -267,11 +252,9 @@ GtkWidget *widget_menuitem_create(
 					/* Create a random accel-path (yeah, this is fine) */
 					sprintf(accel_path, "<%i>/%i", rand(), rand());
 					custom_accel = TRUE;
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s: accel-key=%u\n", __func__, accel_key);
-					fprintf(stderr, "%s: accel-mods=%u\n", __func__, accel_mods);
-					fprintf(stderr, "%s: accel-path=%s\n", __func__, accel_path);
-#endif
+					GDG_DEBUG("accel-key=%u", accel_key);
+					GDG_DEBUG("accel-mods=%u", accel_mods);
+					GDG_DEBUG("accel-path=%s", accel_path);
 				}
 			}
 		}
@@ -396,9 +379,7 @@ GtkWidget *widget_menuitem_create(
 		gtk_menu_item_set_accel_path(GTK_MENU_ITEM(widget), accel_path);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -411,19 +392,13 @@ gchar *widget_menuitem_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): Hello.\n", __func__);
-#endif
+	GDG_DEBUG("Hello.");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -436,9 +411,7 @@ gchar *widget_menuitem_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(widget)) {
@@ -451,9 +424,7 @@ gchar *widget_menuitem_envvar_construct(GtkWidget *widget)
 		string = g_strdup("");
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -468,15 +439,11 @@ void widget_menuitem_fileselect(
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -493,9 +460,7 @@ void widget_menuitem_refresh(variable *var)
 	gint              initialised = FALSE;
 	gint              width = -1, height = -1;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -617,9 +582,7 @@ void widget_menuitem_refresh(variable *var)
 
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -631,16 +594,12 @@ void widget_menuitem_removeselected(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -655,9 +614,7 @@ void widget_menuitem_save(variable *var)
 	gchar            *filename = NULL;
 	gint              is_active;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
@@ -697,9 +654,7 @@ void widget_menuitem_save(variable *var)
 			__func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -712,9 +667,7 @@ static void widget_menuitem_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count, is_active;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
@@ -751,9 +704,7 @@ static void widget_menuitem_input_by_command(variable *var, char *command)
 			__func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -766,9 +717,7 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 	gint              count, is_active;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
@@ -804,9 +753,7 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 			__func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -818,13 +765,9 @@ static void widget_menuitem_input_by_items(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }

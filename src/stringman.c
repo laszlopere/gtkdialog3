@@ -38,6 +38,7 @@
 #include "stringman.h"
 #include "widgets.h"
 
+#include "gdg_debug.h"
 #define IN_TEXT         1
 #define IN_SEPARATOR    2
 
@@ -547,9 +548,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 			while ((*c1 == ' ' || *c1 == '\t') && *(c1 + 1)) c1++;
 			while ((*c2 == ' ' || *c2 == '\t') && *(c2 + 1)) c2++;
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): c1='%s' c2='%s'\n", __func__, c1, c2);
-#endif
+	GDG_DEBUG("c1='%s' c2='%s'", c1, c2);
 
 			/* Evaluate data being pointed to */
 			if ((*c1 >= '0' && *c1 <= '9')) {
@@ -598,9 +597,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 			/* At this point both c1 and c2 will be pointing to the next
 			 * character to process which could be the terminating zero */
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): c1val=%i c2val=%i c1='%s' c2='%s'\n", __func__, c1val, c2val, c1, c2);
-#endif
+	GDG_DEBUG("c1val=%i c2val=%i c1='%s' c2='%s'", c1val, c2val, c1, c2);
 
 			/* Not equal? */
 			if (c1val < c2val) {
@@ -625,9 +622,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 		}
 	}
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): retval=%i\n", __func__, retval);
-#endif
+	GDG_DEBUG("retval=%i", retval);
 
 	return retval;
 }

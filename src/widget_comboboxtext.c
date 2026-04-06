@@ -29,10 +29,8 @@
 #include "widgets.h"
 #include "signals.h"
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
+#include "gdg_debug.h"
 /* Local function prototypes, located at file bottom */
 static void widget_comboboxtext_input_by_command(variable *var, char *command);
 static void widget_comboboxtext_input_by_file(variable *var, char *filename);
@@ -54,9 +52,7 @@ void widget_comboboxtext_clear(variable *var)
 	gchar            *string;
 	gint              rowcount;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We'll manage signals ourselves */
 	GTKD_FUNCTION_SIGNALS_BLOCK;
@@ -67,18 +63,14 @@ void widget_comboboxtext_clear(variable *var)
 	} else {
 		strcpy(oldselected, "");
 	}
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): oldselected='%s'\n", __func__, oldselected);
-#endif
+	GDG_DEBUG("oldselected='%s'", oldselected);
 
 	model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
 	if (gtk_tree_model_get_iter_first(model, &iter)) {
 		/* Count the number of rows in the GtkComboBox */
 		rowcount = 1;
 		while (gtk_tree_model_iter_next(model, &iter)) rowcount++;
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): rowcount=%i\n", __func__, rowcount);
-#endif
+		GDG_DEBUG("rowcount=%i", rowcount);
 		/* Delete the rows */
 		while (rowcount--)
 			gtk_combo_box_text_remove(GTK_COMBO_BOX_TEXT(var->Widget), rowcount);
@@ -86,9 +78,7 @@ void widget_comboboxtext_clear(variable *var)
 	/* The comboboxtext functions also manage the comboboxentry:
 	 * clear the entry */
 	if (var->Type == WIDGET_COMBOBOXENTRY) {
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): clearing the entry\n", __func__);
-#endif
+		GDG_DEBUG("clearing the entry");
 		gtk_entry_set_text(
 			GTK_ENTRY(gtk_bin_get_child(GTK_BIN(var->Widget))), "");
 	}
@@ -101,14 +91,10 @@ void widget_comboboxtext_clear(variable *var)
 	 * isn't null then we'll emit a changed signal */
 	if (strcmp(oldselected, "")) {
 		g_signal_emit_by_name(G_OBJECT(var->Widget), "changed");
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): emitting 'changed' signal\n", __func__);
-#endif
+		GDG_DEBUG("emitting 'changed' signal");
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -120,9 +106,7 @@ GtkWidget *widget_comboboxtext_create(
 {
 	GtkWidget        *widget;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (Type == WIDGET_COMBOBOXTEXT) {
 		/* Thunor: gtk_combo_box_new_text() is deprecated but
@@ -133,9 +117,7 @@ GtkWidget *widget_comboboxtext_create(
 		widget = gtk_combo_box_text_new_with_entry();
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -153,9 +135,7 @@ gchar *widget_comboboxtext_envvar_all_construct(variable *var)
 	gchar            *text;
 	gint              index;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Thunor: I've noticed that the existing combobox widget isn't
 	 * completely dumped, but it's my new widget so I'll be thorough :) */
@@ -191,9 +171,7 @@ gchar *widget_comboboxtext_envvar_all_construct(variable *var)
 	string = g_strconcat(line, "\"\n", NULL);
 	g_free(line);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -206,17 +184,13 @@ gchar *widget_comboboxtext_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	string = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(widget));
 	if (string == NULL)
 		string = g_strdup("");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -230,24 +204,17 @@ void widget_comboboxtext_fileselect(
 {
 	gint              index;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	index = gtk_combo_box_get_active(GTK_COMBO_BOX(var->Widget));
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): index=%i name=%s value=%s\n", __func__, index, name,
-		value);
-#endif
+	GDG_DEBUG("index=%i name=%s value=%s", index, name, value);
 
 	if (index < 0) index = 0;
 	gtk_combo_box_text_insert_text(GTK_COMBO_BOX_TEXT(var->Widget), index, value);
 	gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget), index);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -269,9 +236,7 @@ void widget_comboboxtext_refresh(variable *var)
 	gint              initialised = FALSE;
 	gint              rowcount;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -287,9 +252,7 @@ void widget_comboboxtext_refresh(variable *var)
 	} else {
 		strcpy(oldselected, "");
 	}
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): oldselected='%s'\n", __func__, oldselected);
-#endif
+	GDG_DEBUG("oldselected='%s'", oldselected);
 
 	/* Clear the widget if it has been initialised */
 	if (initialised) {
@@ -298,9 +261,7 @@ void widget_comboboxtext_refresh(variable *var)
 			/* Count the number of rows in the GtkComboBox */
 			rowcount = 1;
 			while (gtk_tree_model_iter_next(model, &iter)) rowcount++;
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): rowcount=%i\n", __func__, rowcount);
-#endif
+			GDG_DEBUG("rowcount=%i", rowcount);
 			/* Delete the rows */
 			while (rowcount--)
 				gtk_combo_box_text_remove(GTK_COMBO_BOX_TEXT(var->Widget),
@@ -353,15 +314,11 @@ void widget_comboboxtext_refresh(variable *var)
 	} else {
 		strcpy(newselected, "");
 	}
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): newselected='%s'\n", __func__, newselected);
-#endif
+	GDG_DEBUG("newselected='%s'", newselected);
 	/* If the before and after selected items are different then
 	 * emit a changed signal */
 	if (strcmp(oldselected, newselected)) {
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): emitting 'changed' signal\n", __func__);
-#endif
+		GDG_DEBUG("emitting 'changed' signal");
 		g_signal_emit_by_name(G_OBJECT(var->Widget), "changed");
 	}
 
@@ -379,10 +336,7 @@ void widget_comboboxtext_refresh(variable *var)
 				found = FALSE;
 				do {
 					gtk_tree_model_get(model, &iter, 0, &text, -1);
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s(): string=%s text=%s\n", __func__,
-						string, text);
-#endif
+					GDG_DEBUG("string=%s text=%s", string, text);
 					if (strcmp(string, text) == 0) {
 						gtk_combo_box_set_active(GTK_COMBO_BOX(var->Widget),
 							index);
@@ -439,9 +393,7 @@ void widget_comboboxtext_refresh(variable *var)
 		}
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -455,9 +407,7 @@ void widget_comboboxtext_removeselected(variable *var)
 	gchar            *string;
 	gint              index;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Thunor: We'll manage signals ourselves */
 	GTKD_FUNCTION_SIGNALS_BLOCK;
@@ -468,9 +418,7 @@ void widget_comboboxtext_removeselected(variable *var)
 	} else {
 		strcpy(oldselected, "");
 	}
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): oldselected='%s'\n", __func__, oldselected);
-#endif
+	GDG_DEBUG("oldselected='%s'", oldselected);
 	/* Delete the selected item */
 	index = gtk_combo_box_get_active(GTK_COMBO_BOX(var->Widget));
 	if (index >= 0) {
@@ -495,21 +443,15 @@ void widget_comboboxtext_removeselected(variable *var)
 	} else {
 		strcpy(newselected, "");
 	}
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): newselected='%s'\n", __func__, newselected);
-#endif
+	GDG_DEBUG("newselected='%s'", newselected);
 	/* If the before and after selected items are different then
 	 * emit a changed signal */
 	if (strcmp(oldselected, newselected)) {
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): emitting 'changed' signal\n", __func__);
-#endif
+		GDG_DEBUG("emitting 'changed' signal");
 		g_signal_emit_by_name(G_OBJECT(var->Widget), "changed");
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -527,9 +469,7 @@ void widget_comboboxtext_save(variable *var)
 	gchar            *text;
 	gint              index;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Preferably we'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -558,9 +498,7 @@ void widget_comboboxtext_save(variable *var)
 	}
 #endif
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): filename=%s\n", __func__, filename);
-#endif
+	GDG_DEBUG("filename=%s", filename);
 
 	/* If we have a valid filename then open it and dump the
 	 * widget's data to it carefully not leaving a newline so
@@ -600,9 +538,7 @@ void widget_comboboxtext_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -615,13 +551,9 @@ static void widget_comboboxtext_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
-#endif
+	GDG_DEBUG("command: '%s'", command);
 
 	/* Opening pipe for reading... */
 	if (infile = widget_opencommand(command)) {
@@ -641,9 +573,7 @@ static void widget_comboboxtext_input_by_command(variable *var, char *command)
 			command);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -656,9 +586,7 @@ static void widget_comboboxtext_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 	gint              count;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (infile = fopen(filename, "r")) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
@@ -677,9 +605,7 @@ static void widget_comboboxtext_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -691,9 +617,7 @@ static void widget_comboboxtext_input_by_items(variable *var)
 	GList            *element;
 	gchar            *text;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	text = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
 	while (text) {
@@ -701,7 +625,5 @@ static void widget_comboboxtext_input_by_items(variable *var)
 		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }

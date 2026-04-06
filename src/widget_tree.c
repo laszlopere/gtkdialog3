@@ -34,10 +34,8 @@
 #include "stringman.h"
 #include "tag_attributes.h"
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
+#include "gdg_debug.h"
 /* Local variables */
 typedef enum {
 	ColumnPixbuf,
@@ -90,9 +88,7 @@ void widget_tree_clear(variable *var)
 {
 	GtkTreeModel     *model;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We drop all the lines here */
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
@@ -101,9 +97,7 @@ void widget_tree_clear(variable *var)
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model),
 		GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -129,9 +123,7 @@ GtkWidget *widget_tree_create(
 	GtkWidget         *widget;
 	gchar             *value;	
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We need a label so set a default if one wasn't declared */
 	if (!attributeset_is_avail(Attr, ATTR_LABEL))
@@ -167,9 +159,7 @@ GtkWidget *widget_tree_create(
 		}
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -188,9 +178,7 @@ gchar *widget_tree_envvar_all_construct(variable *var)
 	gint              column;
 	gint              index;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
 	gtk_tree_model_get_iter_first(model, &iter);
@@ -221,9 +209,7 @@ gchar *widget_tree_envvar_all_construct(variable *var)
 	string = g_strconcat(line, "\"\n", NULL);
 	g_free(line);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -251,20 +237,14 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 	gint64             valint64;
 	guint64            valuint64;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Searching the selected row */
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
 	selectionmode = gtk_tree_selection_get_mode(selection);
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): widget=%p selectionmode=%i\n", __func__,
-		widget, selectionmode);
-	fprintf(stderr, "%s(): widget=%p selected row count=%i\n", __func__,
-		widget, gtk_tree_selection_count_selected_rows(selection));
-#endif
+	GDG_DEBUG("widget=%p selectionmode=%i", widget, selectionmode);
+	GDG_DEBUG("widget=%p selected row count=%i", widget, gtk_tree_selection_count_selected_rows(selection));
 
 	if (selectionmode == GTK_SELECTION_NONE) {
 		string = g_strdup("");	/* Nothing is selected */
@@ -341,9 +321,7 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 			g_list_free(selectedrows);
 		}
 
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): line=%s\n", __func__, line);
-#endif
+		GDG_DEBUG("line=%s", line);
 
 		string = line;
 	} else {
@@ -399,9 +377,7 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 		}
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -416,15 +392,11 @@ void widget_tree_fileselect(
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -447,9 +419,7 @@ void widget_tree_refresh(variable *var)
 	gint              sort_column;
 	gint              sort_type;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get default icon from the custom tag attributes if available */
 	icon_name = stock_id = NULL;
@@ -498,24 +468,18 @@ void widget_tree_refresh(variable *var)
 		}
 
 		if (input_is_shell_command(act)) {
-#ifdef DEBUG_CONTENT
-			printf("%s(): 2: command='%s'\n", __func__, act);
-#endif
+			GDG_DEBUG("2: command='%s'", act);
 			widget_tree_input_by_command(var, act + 8, TRUE);
 		} else if (strncasecmp(act, "file:", 5) == 0 && strlen(act) > 5) {
 		/* input file stock = "File:", input file = "File:/path/to/file" */
-#ifdef DEBUG_CONTENT
-			printf("%s(): 1: command='%s'\n", __func__, act);
-#endif
+			GDG_DEBUG("1: command='%s'", act);
 			if (!initialised) {
 				/* Check for file-monitor and create if requested */
 				widget_file_monitor_try_create(var, act + 5);
 			}
 			widget_tree_input_by_file(var, act + 5);
 		} else {
-#ifdef DEBUG_CONTENT
-			printf("%s(): 3: command='%s'\n", __func__, act);
-#endif
+			GDG_DEBUG("3: command='%s'", act);
 			/* Thunor: These are shell commands without the "Command:",
 			 * but why is it missing? token_store_with_argument_attr()
 			 * manages that. Whoever wrote the widget_tree_refresh()
@@ -611,9 +575,7 @@ void widget_tree_refresh(variable *var)
 		}
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -629,9 +591,7 @@ void widget_tree_removeselected(variable *var)
 	GtkTreeSelection  *selection;
 	gint               selectionmode;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(var->Widget));
 	selectionmode = gtk_tree_selection_get_mode(selection);
@@ -684,9 +644,7 @@ void widget_tree_removeselected(variable *var)
 			gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -711,9 +669,7 @@ void widget_tree_save(variable *var)
 	gint64            valint64;
 	guint64           valuint64;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -795,9 +751,7 @@ void widget_tree_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -819,9 +773,7 @@ static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr,
 	list_t           *columns = NULL;
 	list_t           *column_type = NULL;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* We create as many columns as the label tag suggests */
 	label = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
@@ -859,11 +811,7 @@ static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr,
 			} else {
 				user_type = G_TYPE_STRING;
 			}
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): column_type=%p column_type->n_lines=%i \
-index-FirstDataColumn=%i user_type=%i\n", __func__, column_type,
-				column_type->n_lines, index - FirstDataColumn, user_type);
-#endif
+			GDG_DEBUG("column_type=%p column_type->n_lines=%i \ index-FirstDataColumn=%i user_type=%i", column_type, column_type->n_lines, index - FirstDataColumn, user_type);
 			types[index] = user_type;
 		}
 	}
@@ -874,9 +822,7 @@ index-FirstDataColumn=%i user_type=%i\n", __func__, column_type,
 	if (columns) list_t_free(columns);
 	if (column_type) list_t_free(column_type);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return treestore;
 }
@@ -901,9 +847,7 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 	list_t            *column_visible = NULL;
 	list_t            *columns = NULL;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	headline = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
 	columns = linecutter(headline, '|');
@@ -1007,9 +951,7 @@ sorting is compatible only with columns of type string.\n", __func__);
 	if (column_visible) list_t_free(column_visible);
 	if (columns) list_t_free(columns);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return tree_view;
 }
@@ -1034,9 +976,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 	gint              hiddencolumns;
 	gint              n, ncolumns;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (command_or_file) {
 		infile = widget_opencommand(filename);
@@ -1068,16 +1008,12 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 				/* If a default stock-id was declared then set it here */
 				gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 					ColumnStockId, stock_id, -1);
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s(): <tree stock-id='%s'>\n", __func__, stock_id);
-#endif
+				GDG_DEBUG("<tree stock-id='%s'>", stock_id);
 			} else if (icon_name) {
 				/* If a default icon-name was declared then set it here */
 				gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 					ColumnIconName, icon_name, -1);
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s(): <tree icon-name='%s'>\n", __func__, icon_name);
-#endif
+				GDG_DEBUG("<tree icon-name='%s'>", icon_name);
 			}
 
 			for (n = 0; columns[n] != NULL; ++n) {
@@ -1092,9 +1028,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 						ColumnStockId, columns[n], -1);
 					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 						ColumnIconName, NULL, -1);
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s(): <input stock-column=%i>\n", __func__, stock_column);
-#endif
+					GDG_DEBUG("<input stock-column=%i>", stock_column);
 					++hiddencolumns;
 				} else if (n == icon_column) {
 					g_strstrip(columns[n]);	/* Required */
@@ -1102,9 +1036,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 						ColumnStockId, NULL, -1);
 					gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 						ColumnIconName, columns[n], -1);
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s(): <input icon-column=%i>\n", __func__, icon_column);
-#endif
+					GDG_DEBUG("<input icon-column=%i>", icon_column);
 					++hiddencolumns;
 				} else {
 					coltype = gtk_tree_model_get_column_type(model,
@@ -1150,9 +1082,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 			__func__, filename);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1161,15 +1091,11 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 
 static void widget_tree_input_by_file(variable *var, char *filename)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	widget_tree_input_by_command(var, filename, FALSE);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1189,9 +1115,7 @@ static void widget_tree_input_by_items(variable *var)
 	gchar            *value;
 	gint              n, ncolumns;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
 
@@ -1211,9 +1135,7 @@ static void widget_tree_input_by_items(variable *var)
 			ATTR_ITEM, "stock_id"))) {
 			gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 				ColumnStockId, value, -1);
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): <item stock-id='%s'>\n", __func__, value);
-#endif
+			GDG_DEBUG("<item stock-id='%s'>", value);
 		} else if ((value = attributeset_get_this_tagattr(&element, var->Attributes,
 			ATTR_ITEM, "icon")) ||
 			(value = attributeset_get_this_tagattr(&element, var->Attributes,
@@ -1222,23 +1144,17 @@ static void widget_tree_input_by_items(variable *var)
 			ATTR_ITEM, "icon_name"))) {
 			gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 				ColumnIconName, value, -1);
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): <item icon-name='%s'>\n", __func__, value);
-#endif
+			GDG_DEBUG("<item icon-name='%s'>", value);
 		} else if (stock_id) {
 			/* If a default stock-id was declared then set it here */
 			gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 				ColumnStockId, stock_id, -1);
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): <tree stock-id='%s'>\n", __func__, stock_id);
-#endif
+			GDG_DEBUG("<tree stock-id='%s'>", stock_id);
 		} else if (icon_name) {
 			/* If a default icon-name was declared then set it here */
 			gtk_tree_store_set(GTK_TREE_STORE(model), &iter,
 				ColumnIconName, icon_name, -1);
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): <tree icon-name='%s'>\n", __func__, icon_name);
-#endif
+			GDG_DEBUG("<tree icon-name='%s'>", icon_name);
 		}
 
 		columns = g_strsplit(act, "|", 128);
@@ -1278,9 +1194,7 @@ static void widget_tree_input_by_items(variable *var)
 		act = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1295,38 +1209,26 @@ static void widget_tree_pixmap_column_cell_layout_function(
 	gchar            *icon_name;
 	gchar            *stock_id;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	gtk_tree_model_get(tree_model, iter, ColumnStockId, &stock_id,
 		ColumnIconName, &icon_name, -1);
 
 	if (stock_id != NULL) {
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): This row has a stock_id: '%s'\n",
-			__func__, stock_id);
-#endif
+		GDG_DEBUG("This row has a stock_id: '%s'", stock_id);
 		g_object_set(G_OBJECT(cell), "stock-id", stock_id, NULL);
 		g_object_set(G_OBJECT(cell), "icon-name", NULL, NULL);
 	} else if (icon_name != NULL) {
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): This row has an icon_name: '%s'\n",
-			__func__, icon_name);
-#endif
+		GDG_DEBUG("This row has an icon_name: '%s'", icon_name);
 		g_object_set(G_OBJECT(cell), "stock-id", NULL, NULL);
 		g_object_set(G_OBJECT(cell), "icon-name", icon_name, NULL);
 	} else {
-#ifdef DEBUG_CONTENT
-		fprintf(stderr, "%s(): This row has no icon set.\n", __func__);
-#endif
+		GDG_DEBUG("This row has no icon set.");
 		g_object_set(G_OBJECT(cell), "stock-id", NULL, NULL);
 		g_object_set(G_OBJECT(cell), "icon-name", NULL, NULL);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1336,21 +1238,14 @@ static void widget_tree_pixmap_column_cell_layout_function(
 gboolean widget_tree_changed_callback(GtkTreeSelection *treeselection,
 	variable *var)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): treeselection=%p var->Widget=%p\n", __func__,
-		treeselection, var->Widget);
-#endif
+	GDG_DEBUG("treeselection=%p var->Widget=%p", treeselection, var->Widget);
 
 	/* Pass the correct var->Widget which will be the GtkTreeView */
 	on_any_widget_changed_event(var->Widget, var->Attributes);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return TRUE;
 }
@@ -1378,22 +1273,16 @@ static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 	gchar            *r2 = NULL;
 	gint              retval;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	gtk_tree_model_get(model, a, (gint)user_data, &r1, -1);
 	gtk_tree_model_get(model, b, (gint)user_data, &r2, -1);
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): r1=\"%s\" r2=\"%s\"\n", __func__, r1, r2);
-#endif
+	GDG_DEBUG("r1=\"%s\" r2=\"%s\"", r1, r2);
 
 	retval = strnatcmp(r1, r2, sensitive);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return retval;
 }

@@ -80,6 +80,7 @@
 #undef WARNING
 #include "macros.h"
 
+#include "gdg_debug.h"
 #if HAVE_VTE
 #include <vte/vte.h>
 #endif
@@ -772,10 +773,7 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 			ypad = 0;
 			char_width = vte_terminal_get_char_width(VTE_TERMINAL(widget));
 			char_height = vte_terminal_get_char_height(VTE_TERMINAL(widget));
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): xpad=%i ypad=%i char_width=%li char_height=%li\n",
-				__func__, xpad, ypad, char_width, char_height);
-#endif
+			GDG_DEBUG("xpad=%i ypad=%i char_width=%li char_height=%li", xpad, ypad, char_width, char_height);
 			if (width != -1) width = width * char_width + xpad;
 			if (height != -1) height = height * char_height + ypad;
 			/* Set some defaults */

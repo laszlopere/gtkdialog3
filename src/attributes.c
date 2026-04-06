@@ -26,10 +26,8 @@
 #include "automaton.h"
 #include "tag_attributes.h"
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
+#include "gdg_debug.h"
 gchar *
 attribute_name(gint attribute) 
 {
@@ -200,14 +198,9 @@ gchar *attributeset_get_first(GList **element, AttributeSet *set, gint type)
 	Attribute        *attribute = NULL;
 	gchar            *text = NULL;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): *element=%p set=%p type=%i\n",
-		__func__, *element, set, type);
-#endif
+	GDG_DEBUG("*element=%p set=%p type=%i", *element, set, type);
 
 	if (set == NULL) {
 		fprintf(stderr, "%s(): set is NULL.\n", __func__);
@@ -218,14 +211,9 @@ gchar *attributeset_get_first(GList **element, AttributeSet *set, gint type)
 		text = attribute->text;
 	}
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): *element=%p set=%p type=%i text=%s\n",
-		__func__, *element, set, type, text);
-#endif
+	GDG_DEBUG("*element=%p set=%p type=%i text=%s", *element, set, type, text);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return text;
 }
@@ -240,14 +228,9 @@ gchar *attributeset_get_next(GList **element, AttributeSet *set, gint type)
 	Attribute        *attribute = NULL;
 	gchar            *text = NULL;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): *element=%p set=%p type=%i\n",
-		__func__, *element, set, type);
-#endif
+	GDG_DEBUG("*element=%p set=%p type=%i", *element, set, type);
 
 	if (*element == NULL) {
 		fprintf(stderr, "%s(): element is NULL.\n", __func__);
@@ -260,14 +243,9 @@ gchar *attributeset_get_next(GList **element, AttributeSet *set, gint type)
 		text = attribute->text;
 	}
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): *element=%p set=%p type=%i text=%s\n",
-		__func__, *element, set, type, text);
-#endif
+	GDG_DEBUG("*element=%p set=%p type=%i text=%s", *element, set, type, text);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return text;
 }
@@ -283,14 +261,9 @@ gchar *attributeset_get_this_tagattr(GList **element, AttributeSet *set,
 	Attribute        *attribute = NULL;
 	gchar            *value = NULL;	
 	
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): *element=%p set=%p type=%i name=%s\n",
-		__func__, *element, set, type, name);
-#endif
+	GDG_DEBUG("*element=%p set=%p type=%i name=%s", *element, set, type, name);
 
 	if (*element == NULL) {
 		fprintf(stderr, "%s(): element is NULL.\n", __func__);
@@ -303,14 +276,9 @@ gchar *attributeset_get_this_tagattr(GList **element, AttributeSet *set,
 		value = get_tag_attribute(attribute->tag_attributes, name);
 	}
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): *element=%p set=%p type=%i name=%s value=%s\n",
-		__func__, *element, set, type, name, value);
-#endif
+	GDG_DEBUG("*element=%p set=%p type=%i name=%s value=%s", *element, set, type, name, value);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return value;
 }
@@ -325,14 +293,9 @@ void attributeset_set_this_tagattr(
 {
 	Attribute        *attribute = NULL;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): *element=%p set=%p type=%i name=%s value=%s\n",
-		__func__, *element, set, type, name, value);
-#endif
+	GDG_DEBUG("*element=%p set=%p type=%i name=%s value=%s", *element, set, type, name, value);
 
 	if (*element == NULL) {
 		fprintf(stderr, "%s(): element is NULL.\n", __func__);
@@ -345,13 +308,8 @@ void attributeset_set_this_tagattr(
 		add_tag_attribute(attribute->tag_attributes, name, value);
 	}
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): *element=%p set=%p type=%i name=%s value=%s\n",
-		__func__, *element, set, type, name, value);
-#endif
+	GDG_DEBUG("*element=%p set=%p type=%i name=%s value=%s", *element, set, type, name, value);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 

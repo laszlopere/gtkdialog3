@@ -30,10 +30,8 @@
 #include "signals.h"
 #include "tag_attributes.h"
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
+#include "gdg_debug.h"
 /* Local function prototypes, located at file bottom */
 static void widget_button_input_by_command(variable *var, char *command);
 static void widget_button_input_by_file(variable *var, char *filename);
@@ -53,15 +51,11 @@ void widget_button_clear(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -96,30 +90,7 @@ GtkWidget *widget_button_create(
 	gint              buttontype = TYPE_BUTTON;
 	gint              width = -1, height = -1;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
-
-#ifdef DEBUG_CONTENT
-	GtkIconInfo *info = NULL;
-	gchar **path = NULL;
-	gint count;
-	static gint init = TRUE;
-	gint n_elements;
-
-	if (init) {
-		init = FALSE;
-		icon_theme = gtk_icon_theme_get_default();
-		gtk_icon_theme_get_search_path(icon_theme, &path, &n_elements);
-		for (count = 0; count < n_elements; count++)
-			fprintf(stderr, "%s(): path='%s'\n", __func__, path[count]);
-		if (path) g_strfreev(path);
-		info = gtk_icon_theme_lookup_icon(icon_theme, "gnumeric", 16, 0 );
-		fprintf(stderr, "%s(): gnumeric filename='%s'\n", __func__,
-			gtk_icon_info_get_filename(info));
-		if (info) gtk_icon_info_free(info);
-	}
-#endif
+	GDG_DEBUG("Entering.");
 
 	switch (Type) {
 		case WIDGET_CANCELBUTTON:
@@ -194,10 +165,7 @@ GtkWidget *widget_button_create(
 							/* pixbuf is no longer required and should be unreferenced */
 							g_object_unref(pixbuf);
 						} else {
-#ifdef DEBUG_CONTENT
-							fprintf(stderr, "%s(): error='%s'\n", __func__,
-								error->message);
-#endif
+							GDG_DEBUG("error='%s'", error->message);
 							/* pixbuf is null (file not found) so by using this
 							 * function gtk will substitute a broken image icon */
 							icon = gtk_image_new_from_file("");
@@ -226,10 +194,7 @@ GtkWidget *widget_button_create(
 				act = attributeset_get_next(&element, Attr, ATTR_INPUT);
 			}
 
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): buttontype=%i labeldirective=%s\n",
-				__func__, buttontype, labeldirective);
-#endif
+			GDG_DEBUG("buttontype=%i labeldirective=%s", buttontype, labeldirective);
 
 			/* Create the button */
 			switch (buttontype) {
@@ -369,9 +334,7 @@ GtkWidget *widget_button_create(
 	widget_visibility_list_add(icon, attr);
 	widget_visibility_list_add(label, attr);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -384,15 +347,11 @@ gchar *widget_button_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -405,9 +364,7 @@ gchar *widget_button_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (GTK_IS_TOGGLE_BUTTON(widget)) {
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
@@ -419,9 +376,7 @@ gchar *widget_button_envvar_construct(GtkWidget *widget)
 		string = g_strdup("");
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -436,15 +391,11 @@ void widget_button_fileselect(
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -458,9 +409,7 @@ void widget_button_refresh(variable *var)
 	gint              initialised = FALSE;
 	gint              is_active;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -537,9 +486,7 @@ void widget_button_refresh(variable *var)
 		}
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -551,16 +498,12 @@ void widget_button_removeselected(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -575,9 +518,7 @@ void widget_button_save(variable *var)
 	gchar            *filename = NULL;
 	gint              is_active;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (var->Type == WIDGET_TOGGLEBUTTON) {
 		/* We'll use the output file filename if available */
@@ -610,9 +551,7 @@ void widget_button_save(variable *var)
 		fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -625,13 +564,9 @@ static void widget_button_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count, is_active;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
-#endif
+	GDG_DEBUG("command: '%s'", command);
 
 	if (var->Type == WIDGET_TOGGLEBUTTON) {
 		/* Opening pipe for reading... */
@@ -661,9 +596,7 @@ static void widget_button_input_by_command(variable *var, char *command)
 		fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -679,9 +612,7 @@ static void widget_button_input_by_file(variable *var, char *filename)
 	GList            *element;
 	gint              width = -1, height = -1;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 		width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
@@ -726,9 +657,7 @@ static void widget_button_input_by_file(variable *var, char *filename)
 		btnchildren = NULL;
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -740,13 +669,9 @@ static void widget_button_input_by_items(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }

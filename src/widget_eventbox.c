@@ -30,10 +30,8 @@
 #include "signals.h"
 #include "tag_attributes.h"
 
-/* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 
+#include "gdg_debug.h"
 /* Local function prototypes, located at file bottom */
 static void widget_eventbox_input_by_command(variable *var, char *command);
 static void widget_eventbox_input_by_file(variable *var, char *filename);
@@ -50,15 +48,11 @@ void widget_eventbox_clear(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -70,9 +64,7 @@ GtkWidget *widget_eventbox_create(
 	GtkWidget        *widget;
 	stackelement      s;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Create the eventbox widget */
 	widget = gtk_event_box_new();
@@ -81,9 +73,7 @@ GtkWidget *widget_eventbox_create(
 	s = pop();
 	gtk_container_add(GTK_CONTAINER(widget), s.widgets[0]);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -96,19 +86,13 @@ gchar *widget_eventbox_envvar_all_construct(variable *var)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-#ifdef DEBUG_CONTENT
-	fprintf(stderr, "%s(): Hello.\n", __func__);
-#endif
+	GDG_DEBUG("Hello.");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -121,15 +105,11 @@ gchar *widget_eventbox_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	string = g_strdup("");
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -144,15 +124,11 @@ void widget_eventbox_fileselect(
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -164,9 +140,7 @@ void widget_eventbox_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -212,9 +186,7 @@ void widget_eventbox_refresh(variable *var)
 
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -226,16 +198,12 @@ void widget_eventbox_removeselected(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -252,9 +220,7 @@ void widget_eventbox_save(variable *var)
 	gchar            *filename = NULL;
 	gchar             string[32];
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if 0	/* Pointless since loading doesn't work at run-time */
 	/* We'll use the output file filename if available */
@@ -299,9 +265,7 @@ void widget_eventbox_save(variable *var)
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -313,15 +277,11 @@ static void widget_eventbox_input_by_command(variable *var, char *command)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -335,9 +295,7 @@ static void widget_eventbox_input_by_file(variable *var, char *filename)
 	gint              count;
 	list_t           *sliced;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 #if 0	/* At run-time this has no effect -- shame */
 	if (infile = fopen(filename, "r")) {
@@ -350,29 +308,20 @@ static void widget_eventbox_input_by_file(variable *var, char *filename)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 
 			sliced = linecutter(g_strdup(line), '|');
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): line=%s\n", __func__, line);
-			fprintf(stderr, "%s(): sliced->n_lines=%i\n", __func__,
-				sliced->n_lines);
-			fprintf(stderr, "%s(): sliced->line[0]=%s\n", __func__,
-				sliced->line[0]);
-			fprintf(stderr, "%s(): sliced->line[1]=%s\n", __func__,
-				sliced->line[1]);
-#endif
+			GDG_DEBUG("line=%s", line);
+			GDG_DEBUG("sliced->n_lines=%i", sliced->n_lines);
+			GDG_DEBUG("sliced->line[0]=%s", sliced->line[0]);
+			GDG_DEBUG("sliced->line[1]=%s", sliced->line[1]);
 			for (count = 0; count < sliced->n_lines; count++) {
 				if ((strcasecmp(sliced->line[count], "true") == 0) ||
 					(strcasecmp(sliced->line[count], "yes") == 0) ||
 					(atoi(sliced->line[count]) == 1)) {
 					if (count == 0) {
-#ifdef DEBUG_CONTENT
-fprintf(stderr, "%s(): setting count=%i TRUE\n", __func__, count);
-#endif
+GDG_DEBUG("setting count=%i TRUE", count);
 						gtk_event_box_set_above_child(GTK_EVENT_BOX(
 							var->Widget), TRUE);
 					} else {
-#ifdef DEBUG_CONTENT
-fprintf(stderr, "%s(): setting count=%i TRUE\n", __func__, count);
-#endif
+GDG_DEBUG("setting count=%i TRUE", count);
 						gtk_event_box_set_visible_window(GTK_EVENT_BOX(
 							var->Widget), TRUE);
 					}
@@ -380,15 +329,11 @@ fprintf(stderr, "%s(): setting count=%i TRUE\n", __func__, count);
 					(strcasecmp(sliced->line[count], "no") == 0) ||
 					(strcasecmp(sliced->line[count], "0") == 0)) {
 					if (count == 0) {
-#ifdef DEBUG_CONTENT
-fprintf(stderr, "%s(): setting count=%i FALSE\n", __func__, count);
-#endif
+GDG_DEBUG("setting count=%i FALSE", count);
 						gtk_event_box_set_above_child(GTK_EVENT_BOX(
 							var->Widget), FALSE);
 					} else {
-#ifdef DEBUG_CONTENT
-fprintf(stderr, "%s(): setting count=%i FALSE\n", __func__, count);
-#endif
+GDG_DEBUG("setting count=%i FALSE", count);
 						gtk_event_box_set_visible_window(GTK_EVENT_BOX(
 							var->Widget), FALSE);
 					}
@@ -407,9 +352,7 @@ fprintf(stderr, "%s(): setting count=%i FALSE\n", __func__, count);
 
 	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -421,13 +364,9 @@ static void widget_eventbox_input_by_items(variable *var)
 	gchar            *var1;
 	gint              var2;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }

@@ -70,9 +70,8 @@
 #include "tag_attributes.h"
 #include "macros.h"
 
+#include "gdg_debug.h"
 /* Defines */
-//#define DEBUG_CONTENT
-//#define DEBUG_TRANSITS
 #undef DEBUG
 #undef WARNING
 
@@ -422,9 +421,7 @@ char *widgets_to_str(int itype)
 
 gboolean widget_connect_signals(GtkWidget *widget, AttributeSet *Attr)
 {
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	g_return_val_if_fail(GTK_IS_WIDGET(widget), FALSE);
 
@@ -461,9 +458,7 @@ gboolean widget_connect_signals(GtkWidget *widget, AttributeSet *Attr)
 	g_signal_connect(G_OBJECT(widget), "destroy-event",
 		G_CALLBACK(on_any_widget_destroy_event), (gpointer)Attr);
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 
 	return TRUE;
 }
@@ -478,9 +473,7 @@ void widget_visibility_list_add(GtkWidget *widget, tag_attr *attr)
 	gchar            *value;
 	gint              visible = TRUE;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	if (widget) {
 		if (attr) {
@@ -499,9 +492,7 @@ void widget_visibility_list_add(GtkWidget *widget, tag_attr *attr)
 		}
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -519,18 +510,13 @@ void widget_show_all(void)
 {
 	GList            *element;
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Entering.\n", __func__);
-#endif
+	GDG_DEBUG("Entering.");
 
 	/* Show visible widgets */
 	if (widget_show_list) {
 		element = widget_show_list;
 		while (element) {
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): showing Name='%s'\n",
-				__func__, find_variable_by_widget(element->data)->Name);
-#endif
+			GDG_DEBUG("showing Name='%s'", find_variable_by_widget(element->data)->Name);
 			gtk_widget_show(element->data);
 			element = element->next;
 		}
@@ -544,10 +530,7 @@ void widget_show_all(void)
 	if (widget_hide_list) {
 		element = widget_hide_list;
 		while (element) {
-#ifdef DEBUG_CONTENT
-			fprintf(stderr, "%s(): showing then hiding Name='%s'\n",
-				__func__, find_variable_by_widget(element->data)->Name);
-#endif
+			GDG_DEBUG("showing then hiding Name='%s'", find_variable_by_widget(element->data)->Name);
 			gtk_widget_show(element->data);
 			gtk_widget_hide(element->data);
 			element = element->next;
@@ -558,7 +541,5 @@ void widget_show_all(void)
 		widget_hide_list = NULL;
 	}
 
-#ifdef DEBUG_TRANSITS
-	fprintf(stderr, "%s(): Exiting.\n", __func__);
-#endif
+	GDG_DEBUG("Exiting.");
 }
