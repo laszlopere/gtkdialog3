@@ -58,6 +58,8 @@ extern gboolean option_print_ir;
 //
 // Function declarations
 //
+int gtkdialog_lex(void);
+int gtkdialog_error(char *c);
 int yywarning(char *c);
 void yyerror_simple(char *c);
 

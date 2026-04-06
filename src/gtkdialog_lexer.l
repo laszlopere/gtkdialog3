@@ -43,6 +43,9 @@
 #include "attributes.h"
 #include "gtkdialog_parser.h"
 
+int getnextchar(void);
+int gtkdialog_error(char *c);
+
 static gchar *process_string(gchar *str);
 
 extern int linenumber;

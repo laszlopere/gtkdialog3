@@ -81,6 +81,7 @@
 #include "macros.h"
 
 #include "gdg_debug.h"
+#include <glib/gprintf.h>
 #if HAVE_VTE
 #include <vte/vte.h>
 #endif
@@ -99,10 +100,12 @@ GtkWidget *window = NULL;
 /*
  * Static function definitions.
  */
-static int 
-instruction_execute_push(token Token, 
-		AttributeSet *Attr, 
+static int
+instruction_execute_push(token Token,
+		AttributeSet *Attr,
 		tag_attr *tag_attributes);
+
+int instruction_execute(instruction command);
 
 void print_command(instruction command)
 {
