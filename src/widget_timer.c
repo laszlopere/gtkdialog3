@@ -27,6 +27,7 @@
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
+#include "signals.h"
 #include "tag_attributes.h"
 
 
@@ -168,7 +169,7 @@ void widget_timer_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(var->Widget), "_initialised"));
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -214,7 +215,7 @@ void widget_timer_refresh(variable *var)
 				interval, widget_timer_timer_callback, (gpointer)var);
 		}
 		/* Store the timer_id as a piece of widget data */
-		g_object_set_data(G_OBJECT(var->Widget), "_timer-id", (gpointer)timer_id);
+		g_object_set_data(G_OBJECT(var->Widget), "_timer-id", GINT_TO_POINTER(timer_id));
 		/* Set the text of the label to its variable name */
 		sprintf(text,
 			"<span fgcolor='white' bgcolor='darkred'> %s </span>",

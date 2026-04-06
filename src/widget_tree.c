@@ -286,12 +286,12 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 					case G_TYPE_INT64:
 						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 							index, &valint64, -1);
-						string = g_strdup_printf("%lli", valint64);
+						string = g_strdup_printf("%" G_GINT64_FORMAT, valint64);
 						break;
 					case G_TYPE_UINT64:
 						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 							index, &valuint64, -1);
-						string = g_strdup_printf("%llu", valuint64);
+						string = g_strdup_printf("%" G_GUINT64_FORMAT, valuint64);
 						break;
 					case G_TYPE_DOUBLE:
 						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
@@ -299,8 +299,8 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 						string = g_strdup_printf("%f", valdouble);
 						break;
 					default:
-						fprintf(stderr, "%s(): Unsupported column-type %i\n",
-							__func__, coltype);
+						fprintf(stderr, "%s(): Unsupported column-type %lu\n",
+							__func__, (unsigned long)coltype);
 						string = g_strdup("");
 				}
 				if (initialrow) {
@@ -355,12 +355,12 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 				case G_TYPE_INT64:
 					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 						index, &valint64, -1);
-					string = g_strdup_printf("%lli", valint64);
+					string = g_strdup_printf("%" G_GINT64_FORMAT, valint64);
 					break;
 				case G_TYPE_UINT64:
 					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 						index, &valuint64, -1);
-					string = g_strdup_printf("%llu", valuint64);
+					string = g_strdup_printf("%" G_GUINT64_FORMAT, valuint64);
 					break;
 				case G_TYPE_DOUBLE:
 					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
@@ -368,8 +368,8 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 					string = g_strdup_printf("%f", valdouble);
 					break;
 				default:
-					fprintf(stderr, "%s(): Unsupported column-type %i\n",
-						__func__, coltype);
+					fprintf(stderr, "%s(): Unsupported column-type %lu\n",
+						__func__, (unsigned long)coltype);
 					string = g_strdup("");
 			}
 		} else {
@@ -434,7 +434,7 @@ void widget_tree_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(var->Widget), "_initialised"));
 
 	/* We drop all the lines here */
 	/* Thunor: I'd like to stop doing this but some applications (pbackup,
@@ -705,12 +705,12 @@ void widget_tree_save(variable *var)
 						case G_TYPE_INT64:
 							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 								column, &valint64, -1);
-							string = g_strdup_printf("%lli", valint64);
+							string = g_strdup_printf("%" G_GINT64_FORMAT, valint64);
 							break;
 						case G_TYPE_UINT64:
 							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 								column, &valuint64, -1);
-							string = g_strdup_printf("%llu", valuint64);
+							string = g_strdup_printf("%" G_GUINT64_FORMAT, valuint64);
 							break;
 						case G_TYPE_DOUBLE:
 							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
@@ -718,8 +718,8 @@ void widget_tree_save(variable *var)
 							string = g_strdup_printf("%f", valdouble);
 							break;
 						default:
-							fprintf(stderr, "%s(): Unsupported column-type %i\n",
-								__func__, coltype);
+							fprintf(stderr, "%s(): Unsupported column-type %lu\n",
+								__func__, (unsigned long)coltype);
 							string = g_strdup("");
 					}
 					if (column == ColumnIconName) {
@@ -931,11 +931,11 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 					if (function == 1) {
 						gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(store),
 							index + FirstDataColumn, widget_tree_natcmp,
-							(gpointer)(index + FirstDataColumn), NULL);
+							GINT_TO_POINTER(index + FirstDataColumn), NULL);
 					} else {
 						gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(store),
 							index + FirstDataColumn, widget_tree_natcasecmp,
-							(gpointer)(index + FirstDataColumn), NULL);
+							GINT_TO_POINTER(index + FirstDataColumn), NULL);
 					}
 				} else {
 					fprintf(stderr, "%s(): column-sort-function: natural \
@@ -1063,8 +1063,8 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 								strtod(columns[n], NULL), -1);
 							break;
 						default:
-							fprintf(stderr, "%s(): Unsupported column-type %i\n",
-								__func__, coltype);
+							fprintf(stderr, "%s(): Unsupported column-type %lu\n",
+								__func__, (unsigned long)coltype);
 					}
 				}
 			}
@@ -1185,8 +1185,8 @@ static void widget_tree_input_by_items(variable *var)
 						strtod(columns[n], NULL), -1);
 					break;
 				default:
-					fprintf(stderr, "%s(): Unsupported column-type %i\n",
-						__func__, coltype);
+					fprintf(stderr, "%s(): Unsupported column-type %lu\n",
+						__func__, (unsigned long)coltype);
 			}
 		}
 		g_strfreev(columns);
@@ -1275,8 +1275,8 @@ static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 
 	GDG_DEBUG("Entering.");
 
-	gtk_tree_model_get(model, a, (gint)user_data, &r1, -1);
-	gtk_tree_model_get(model, b, (gint)user_data, &r2, -1);
+	gtk_tree_model_get(model, a, GPOINTER_TO_INT(user_data), &r1, -1);
+	gtk_tree_model_get(model, b, GPOINTER_TO_INT(user_data), &r2, -1);
 
 	GDG_DEBUG("r1=\"%s\" r2=\"%s\"", r1, r2);
 

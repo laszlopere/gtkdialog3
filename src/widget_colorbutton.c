@@ -160,7 +160,7 @@ void widget_colorbutton_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(var->Widget), "_initialised"));
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -196,7 +196,7 @@ void widget_colorbutton_refresh(variable *var)
 				/* Parse the RGB value to create the necessary GdkColor.
 				 * This function doesn't like trailing whitespace so it
 				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_rgba_parse(g_strstrip(values->line[0]), &color)) {
+				if (gdk_rgba_parse(&color, g_strstrip(values->line[0]))) {
 					GDG_DEBUG("valid colour found");
 					gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
 				}
@@ -337,7 +337,7 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 				/* Parse the RGB value to create the necessary GdkColor.
 				 * This function doesn't like trailing whitespace so it
 				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_rgba_parse(g_strstrip(values->line[0]), &color)) {
+				if (gdk_rgba_parse(&color, g_strstrip(values->line[0]))) {
 					GDG_DEBUG("valid colour found");
 					gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
 				}
@@ -391,7 +391,7 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 				/* Parse the RGB value to create the necessary GdkColor.
 				 * This function doesn't like trailing whitespace so it
 				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_rgba_parse(g_strstrip(values->line[0]), &color)) {
+				if (gdk_rgba_parse(&color, g_strstrip(values->line[0]))) {
 					GDG_DEBUG("valid colour found");
 					gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
 				}

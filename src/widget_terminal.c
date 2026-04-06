@@ -113,7 +113,7 @@ GtkWidget *widget_terminal_create(
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_rgba_parse(g_strstrip(value), &color)) {
+			if (gdk_rgba_parse(&color, g_strstrip(value))) {
 				GDG_DEBUG("valid colour found");
 				/* background tint removed in VTE 2.91 */
 			}
@@ -130,7 +130,7 @@ GtkWidget *widget_terminal_create(
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_rgba_parse(g_strstrip(value), &color)) {
+			if (gdk_rgba_parse(&color, g_strstrip(value))) {
 				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_background(VTE_TERMINAL(widget), &color);  /* Uses GdkRGBA in VTE 2.91 */
 			}
@@ -141,7 +141,7 @@ GtkWidget *widget_terminal_create(
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_rgba_parse(g_strstrip(value), &color)) {
+			if (gdk_rgba_parse(&color, g_strstrip(value))) {
 				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_foreground(VTE_TERMINAL(widget), &color);
 			}
@@ -152,7 +152,7 @@ GtkWidget *widget_terminal_create(
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_rgba_parse(g_strstrip(value), &color)) {
+			if (gdk_rgba_parse(&color, g_strstrip(value))) {
 				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_bold(VTE_TERMINAL(widget), &color);
 			}
@@ -163,7 +163,7 @@ GtkWidget *widget_terminal_create(
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_rgba_parse(g_strstrip(value), &color)) {
+			if (gdk_rgba_parse(&color, g_strstrip(value))) {
 				GDG_DEBUG("valid colour found");
 				/* vte_terminal_set_color_dim removed in VTE 2.91 */
 			}
@@ -174,7 +174,7 @@ GtkWidget *widget_terminal_create(
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_rgba_parse(g_strstrip(value), &color)) {
+			if (gdk_rgba_parse(&color, g_strstrip(value))) {
 				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_cursor(VTE_TERMINAL(widget), &color);
 			}
@@ -185,7 +185,7 @@ GtkWidget *widget_terminal_create(
 			/* Parse the RGB value to create the necessary GdkColor.
 			 * This function doesn't like trailing whitespace so it
 			 * needs to be stripped first with g_strstrip() */ 
-			if (gdk_rgba_parse(g_strstrip(value), &color)) {
+			if (gdk_rgba_parse(&color, g_strstrip(value))) {
 				GDG_DEBUG("valid colour found");
 				vte_terminal_set_color_highlight(VTE_TERMINAL(widget), &color);
 			}
@@ -314,7 +314,7 @@ gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
-	sprintf(envvar, "%i", (gint)g_object_get_data(G_OBJECT(widget), "_pid"));
+	sprintf(envvar, "%i", GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "_pid")));
 	string = g_strdup(envvar);
 #else
 	string = g_strdup("");
@@ -355,7 +355,7 @@ void widget_terminal_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(var->Widget), "_initialised"));
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);

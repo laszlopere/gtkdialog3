@@ -1,7 +1,7 @@
 /*
  * widget_progressbar.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  Lï¿½szlï¿½ Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -169,7 +169,7 @@ void widget_progressbar_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(var->Widget), "_initialised"));
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -346,10 +346,6 @@ static gpointer widget_progressbar_thread_entry(progr_descr *descr)
 		if (descr->fraction > 1.0)
 			descr->fraction = 1.0;
 		/*
-		 * Entering critical region.
-		 */
-		gdk_threads_enter();
-		/*
 		 * Updating the screen, for this we need a progress bar.
 		 */
 		G_LOCK(any_progress_bar);
@@ -384,11 +380,6 @@ static gpointer widget_progressbar_thread_entry(progr_descr *descr)
 		 */
 		while (gtk_events_pending()) 
 			gtk_main_iteration_do(FALSE);
-		/*
-		 * Leaving critical region.
-		 */
-		gdk_threads_leave();
-
 		if (descr->widget == NULL)
 			break;
 
@@ -453,7 +444,7 @@ void widget_progressbar_realized_callback(GtkWidget *widget, AttributeSet *Attr)
 	/*
 	 * Now we can fire up the reader thread.
 	 */
-	descr->thread = g_thread_create(
-			(GThreadFunc) widget_progressbar_thread_entry, 
-			descr, FALSE, NULL);
+	descr->thread = g_thread_new("progress",
+			(GThreadFunc) widget_progressbar_thread_entry,
+			descr);
 }

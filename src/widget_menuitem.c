@@ -131,12 +131,7 @@ GtkWidget *widget_menuitem_create(
 	#define           TYPE_MENUITEM_CHECK 4
 	#define           TYPE_MENUITEM_RADIO 5
 	#define           TYPE_MENUITEM_SEPARATOR 6
-	GdkPixbuf        *pixbuf;
-	GError           *error = NULL;
 	GList            *element;
-	GtkAccelGroup    *accel_group = NULL;
-	GtkIconTheme     *icon_theme;
-	GtkWidget        *image;
 	GtkWidget        *widget;
 	gchar             accel_path[64];
 	gchar            *active;
@@ -145,7 +140,7 @@ GtkWidget *widget_menuitem_create(
 	gchar            *value;
 	gint              is_active;
 	gint              menuitemtype = TYPE_MENUITEM;
-	gint              width = -1, height = -1, size = 16;
+	gint              width = -1, height = -1;
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 
 	GDG_DEBUG("Entering.");
@@ -266,72 +261,19 @@ GtkWidget *widget_menuitem_create(
 			widget = gtk_separator_menu_item_new();
 			break;
 		case TYPE_MENUITEM_IMAGE_STOCK:
-			/* Create the GtkImageMenuItem from stock without stock
-			 * accelerator */
-			widget = gtk_image_menu_item_new_from_stock(stock_id, NULL);
-#if 0
-			/* Thunor: Unfortunately I can't enable stock accelerators
-			 * by default as all existing applications will then get key
-			 * combinations redirected to menuitems which might have
-			 * unforseen consequences, but I'll leave this here anyway */
-
-			/* Who is going to set the accelerator? */
-			if (custom_accel) {
-				/* Create the GtkImageMenuItem from stock without stock
-				 * accelerator */
-				widget = gtk_image_menu_item_new_from_stock(stock_id, NULL);
-			} else {
-				/* Create an accelerator group for this stock item and
-				 * add it to the accelerator groups list which will get
-				 * added to the window later */
-				accel_group = gtk_accel_group_new();
-				accel_groups = g_list_append(accel_groups, accel_group);
-				/* Create the GtkImageMenuItem from stock with stock accelerator */
-				widget = gtk_image_menu_item_new_from_stock(stock_id, accel_group);
-			}
-#endif
+			/* Stock icons are gone in GTK3; create a plain menu item
+			 * with the stock_id as the label text */
+			widget = gtk_menu_item_new_with_label(stock_id);
 			break;
 		case TYPE_MENUITEM_IMAGE_ICON:
-			icon_theme = gtk_icon_theme_get_default();
-			/* Use the height or width dimension to override the default size */
-			if (height > -1) size = height;
-			else if (width > -1) size = width;
-			pixbuf = gtk_icon_theme_load_icon(icon_theme, icon_name,
-				size, 0, &error);
-			if (pixbuf) {
-				image = gtk_image_new_from_pixbuf(pixbuf);
-				/* pixbuf is no longer required and should be unreferenced */
-				g_object_unref(pixbuf);
-			} else {
-				/* pixbuf is null (file not found) so by using this
-				 * function gtk will substitute a broken image icon */
-				image = gtk_image_new_from_file("");
-			}
-			/* Create the GtkImageMenuItem using an image from the theme */
-			widget = gtk_image_menu_item_new_with_label(label);
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(widget), image);
+			/* GtkImageMenuItem is deprecated in GTK3; create a plain
+			 * menu item (the icon is not displayed) */
+			widget = gtk_menu_item_new_with_label(label);
 			break;
 		case TYPE_MENUITEM_IMAGE_FILE:
-			if (width == -1 && height == -1) {
-				/* Handle unscaled images */
-				image = gtk_image_new_from_file(find_pixmap(image_name));
-			} else {
-				/* Handle scaled images */
-				pixbuf = gdk_pixbuf_new_from_file_at_size(
-					find_pixmap(image_name), width, height, NULL);
-				if (pixbuf) {
-					image = gtk_image_new_from_pixbuf(pixbuf);
-					/* pixbuf is no longer required and should be unreferenced */
-					g_object_unref(pixbuf);
-				} else {
-					/* pixbuf is null (file not found) so by using this
-					* function gtk will substitute a broken image icon */
-					image = gtk_image_new_from_file("");
-				}
-			}
-			/* Create the GtkImageMenuItem using an image from a file */
-			widget = gtk_image_menu_item_new_with_label(label);
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(widget), image);
+			/* GtkImageMenuItem is deprecated in GTK3; create a plain
+			 * menu item (the image is not displayed) */
+			widget = gtk_menu_item_new_with_label(label);
 			break;
 		case TYPE_MENUITEM_CHECK:
 			/* Create the GtkCheckMenuItem */
@@ -452,60 +394,28 @@ void widget_menuitem_fileselect(
 
 void widget_menuitem_refresh(variable *var)
 {
-	GdkPixbuf        *pixbuf;
 	GList            *element;
-	GtkWidget        *image;
 	gchar            *act;
 	gchar            *value, *image_name;
 	gint              initialised = FALSE;
-	gint              width = -1, height = -1;
 
 	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(var->Widget), "_initialised"));
 
 	/* tag_attr="value"... */
-	/* Only image menuitems from file support this.
-	 * GTK+ destroys the original image when a new one is set */
-	if (GTK_IS_IMAGE_MENU_ITEM(var->Widget)) {
-		if (var->widget_tag_attr &&
-			((image_name = get_tag_attribute(var->widget_tag_attr, "image-name")) ||
-			(image_name = get_tag_attribute(var->widget_tag_attr, "image-file")))) {
-			if (!initialised) {
-				/* Check for file-monitor and create if requested */
-				widget_file_monitor_try_create(var, image_name);
-			}
-			/* Don't refresh images on the first call otherwise they
-			 * get created and then immediately refreshed at start-up */
-			if (initialised) {
-				if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
-					width = atoi(attributeset_get_first(&element,
-						var->Attributes, ATTR_WIDTH));
-				if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
-					height = atoi(attributeset_get_first(&element,
-						var->Attributes, ATTR_HEIGHT));
-				if (width == -1 && height == -1) {
-					/* Handle unscaled images */
-					image = gtk_image_new_from_file(find_pixmap(image_name));
-				} else {
-					/* Handle scaled images */
-					pixbuf = gdk_pixbuf_new_from_file_at_size(
-						find_pixmap(image_name), width, height, NULL);
-					if (pixbuf) {
-						image = gtk_image_new_from_pixbuf(pixbuf);
-						/* pixbuf is no longer required and should be unreferenced */
-						g_object_unref(pixbuf);
-					} else {
-						/* pixbuf is null (file not found) so by using this
-						* function gtk will substitute a broken image icon */
-						image = gtk_image_new_from_file("");
-					}
-				}
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(
-					var->Widget), image);
-			}
+	/* GtkImageMenuItem is deprecated in GTK3. Image menuitems are now
+	 * plain GtkMenuItems, so image refresh is no longer supported.
+	 * We still create file monitors for the image-name/image-file
+	 * tag attributes if present. */
+	if (var->widget_tag_attr &&
+		((image_name = get_tag_attribute(var->widget_tag_attr, "image-name")) ||
+		(image_name = get_tag_attribute(var->widget_tag_attr, "image-file")))) {
+		if (!initialised) {
+			/* Check for file-monitor and create if requested */
+			widget_file_monitor_try_create(var, image_name);
 		}
 	}
 

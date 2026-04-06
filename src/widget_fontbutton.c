@@ -1,7 +1,7 @@
 /*
  * widget_fontbutton.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  Lï¿½szlï¿½ Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -100,7 +100,7 @@ gchar *widget_fontbutton_envvar_construct(GtkWidget *widget)
 
 	GDG_DEBUG("Entering.");
 
-	string = g_strdup(gtk_font_button_get_font_name(GTK_FONT_BUTTON(widget)));
+	string = gtk_font_chooser_get_font(GTK_FONT_CHOOSER(widget));
 
 	GDG_DEBUG("Exiting.");
 
@@ -138,7 +138,7 @@ void widget_fontbutton_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(var->Widget), "_initialised"));
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -168,7 +168,7 @@ void widget_fontbutton_refresh(variable *var)
 				__func__);
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
 			value = attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT);
-			gtk_font_button_set_font_name(GTK_FONT_BUTTON(var->Widget), value);
+			gtk_font_chooser_set_font(GTK_FONT_CHOOSER(var->Widget), value);
 		}
 		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
 			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
@@ -236,7 +236,9 @@ void widget_fontbutton_save(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 
-			fprintf(outfile, "%s", gtk_font_button_get_font_name(GTK_FONT_BUTTON(var->Widget)));
+			gchar *font = gtk_font_chooser_get_font(GTK_FONT_CHOOSER(var->Widget));
+			fprintf(outfile, "%s", font);
+			g_free(font);
 
 			/* Close the file */
 			fclose(outfile);
@@ -275,7 +277,7 @@ static void widget_fontbutton_input_by_command(variable *var, char *command)
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 
-			gtk_font_button_set_font_name(GTK_FONT_BUTTON(var->Widget), line);
+			gtk_font_chooser_set_font(GTK_FONT_CHOOSER(var->Widget), line);
 
 		}
 		/* Close the file */
@@ -309,7 +311,7 @@ static void widget_fontbutton_input_by_file(variable *var, char *filename)
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 
-			gtk_font_button_set_font_name(GTK_FONT_BUTTON(var->Widget), line);
+			gtk_font_chooser_set_font(GTK_FONT_CHOOSER(var->Widget), line);
 
 		}
 		/* Close the file */
