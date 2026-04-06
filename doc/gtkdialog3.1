@@ -1,0 +1,301 @@
+.TH GTKDIALOG3 1 "April 2026" "gtkdialog3 0.9.0" "User Commands"
+.SH NAME
+gtkdialog3 \- create GTK3 dialog boxes from shell scripts
+.SH SYNOPSIS
+.B gtkdialog3
+.RI [ OPTION ]...
+.SH DESCRIPTION
+.B gtkdialog3
+is a utility for building GTK3 graphical user interfaces from shell scripts.
+Users define the interface using an XML\-like markup language, which is parsed
+and rendered as native GTK3 widgets at runtime.
+The dialog description can be supplied via an environment variable, a file,
+standard input, or an event\-driven program file.
+Widget values are exported as shell environment variables when the dialog
+closes, making it easy to capture user input in scripts.
+.SH OPTIONS
+.TP
+.BR \-v ", " \-\-version
+Print version information and exit.
+.TP
+.BR \-d ", " \-\-debug
+Debug mode; prints the processed characters.
+.TP
+.BR \-p ", " \-\-program =\fIVARIABLE\fR
+Get the GUI description from the named environment variable.
+.TP
+.BR \-g ", " \-\-glade\-xml =\fIFILENAME\fR
+Get the GUI description from a Glade XML file.
+Ignored if built without Glade library support.
+.TP
+.BR \-f ", " \-\-file =\fIFILENAME\fR
+Get the GUI description from a regular file.
+.TP
+.BR \-i ", " \-\-include =\fIFILENAME\fR
+Include (source) the given file before executing action commands.
+.TP
+.BR \-e ", " \-\-event\-driven =\fIFILENAME\fR
+Execute the file as an event\-driven program.
+.TP
+.BR \-s ", " \-\-stdin
+Get the GUI description from standard input.
+.TP
+.BR \-w ", " \-\-no\-warning
+Suppress warning messages.
+.TP
+.BR \-G ", " \-\-geometry =\fI[XxY][+W+H]\fR
+Set the placement and size of the window.
+.TP
+.BR \-c ", " \-\-center
+Center the windows on the screen.
+.TP
+.B \-\-print\-ir
+Print the internal representation of the parsed program and exit.
+.TP
+.BR \-\-space\-expand =\fISTATE\fR
+Set the default "expand" packing state for all widgets.
+.TP
+.BR \-\-space\-fill =\fISTATE\fR
+Set the default "fill" packing state for all widgets.
+.SH USAGE
+.SS Environment variable (most common)
+Store the dialog description in an exported environment variable and pass
+its name with
+.BR \-p :
+.PP
+.EX
+#!/bin/bash
+export MAIN_DIALOG='
+<window>
+  <vbox>
+    <text><label>Hello, World!</label></text>
+    <hbox>
+      <button ok></button>
+      <button cancel></button>
+    </hbox>
+  </vbox>
+</window>'
+
+gtkdialog3 \-\-program=MAIN_DIALOG
+.EE
+.SS Capturing widget output
+When the dialog closes,
+.B gtkdialog3
+prints one
+.IB VARIABLE = value
+assignment per line to standard output, plus an
+.B EXIT
+variable indicating which button was pressed.
+Evaluate the output to import the values into the calling script:
+.PP
+.EX
+I=$IFS; IFS=""
+for STATEMENTS in $(gtkdialog3 \-\-program=DIALOG); do
+  eval $STATEMENTS
+done
+IFS=$I
+
+if [ "$EXIT" = "OK" ]; then
+  echo "You entered: $ENTRY."
+fi
+.EE
+.SS Standalone file
+A file containing only the dialog description can be executed directly
+with a shebang line:
+.PP
+.EX
+#!/usr/local/bin/gtkdialog3 \-f
+<window>
+  <vbox>
+    <entry><variable>NAME</variable></entry>
+    <button ok></button>
+  </vbox>
+</window>
+.EE
+.PP
+Or invoked explicitly:
+.PP
+.EX
+gtkdialog3 \-\-file=dialog.xml
+.EE
+.SS Standard input
+Pipe the dialog description via stdin:
+.PP
+.EX
+echo '<window><vbox><button ok></button></vbox></window>' | gtkdialog3 \-s
+.EE
+.SS Event\-driven program
+Execute a script as an event\-driven program:
+.PP
+.EX
+gtkdialog3 \-\-event\-driven=program.sh
+.EE
+.SS Including function libraries
+Source a shell script before executing action commands, making its
+functions available to
+.B <action>
+handlers:
+.PP
+.EX
+gtkdialog3 \-\-include=functions.sh \-\-program=MAIN_DIALOG
+.EE
+.SS Multiple windows
+Define each window in a separate exported variable.
+Windows can launch or close each other using function actions:
+.PP
+.EX
+export winMain='
+<window>
+  <vbox>
+    <button><label>Open</label>
+      <action function="launch">winSecond</action>
+    </button>
+  </vbox>
+  <variable>winMain</variable>
+</window>'
+
+export winSecond='
+<window>
+  <vbox>
+    <text><label>Second window</label></text>
+    <button><label>Close</label>
+      <action function="closewindow">winSecond</action>
+    </button>
+  </vbox>
+  <variable>winSecond</variable>
+</window>'
+
+gtkdialog3 \-\-program=winMain
+.EE
+.\" ---------------------------------------------------------------
+.SH LANGUAGE
+The dialog description language is an XML\-like markup.
+A dialog consists of a
+.B <window>
+element containing nested containers and widgets.
+Each widget may have attribute sub\-elements that control its label,
+value, actions, and other properties.
+.SS Document structure
+.PP
+.EX
+document     = window ;
+window       = "<window" [tagattr] ">" wlist "</window>" ;
+wlist        = { container | widget } ;
+container    = vbox | hbox | notebook | frame
+             | eventbox | expander ;
+.EE
+.PP
+Each container follows the same pattern as
+.BR window :
+an opening tag with optional inline attributes, a body of nested
+containers and widgets, attribute sub\-elements, and a closing tag.
+.SS Container widgets
+.TS
+l l.
+Tag	Purpose
+_
+<vbox>	Vertical box layout
+<hbox>	Horizontal box layout
+<notebook>	Tabbed notebook
+<frame \fILabel\fR>	Labeled frame (label in opening tag)
+<eventbox>	Invisible event\-catching container
+<expander>	Collapsible container
+.TE
+.SS Leaf widgets
+.PP
+.I Input
+.RS
+entry, edit, text, tree, chooser
+.RE
+.PP
+.I Buttons
+.RS
+button, checkbox, radiobutton, togglebutton,
+colorbutton, fontbutton
+.RE
+.PP
+.I Predefined buttons
+.RS
+.BR "<button ok>" ,
+.BR "<button cancel>" ,
+.BR "<button help>" ,
+.BR "<button yes>" ,
+.BR "<button no>"
+.RE
+.PP
+.I Selection
+.RS
+combobox, comboboxtext, comboboxentry, list, table
+.RE
+.PP
+.I Display
+.RS
+pixmap, progressbar, statusbar, terminal
+.RE
+.PP
+.I Separators and scales
+.RS
+hseparator, vseparator, hscale, vscale, spinbutton, timer
+.RE
+.SS Menu widgets
+Menus have their own nesting hierarchy:
+.PP
+.EX
+<menubar>
+  <menu>
+    <menuitem> ... </menuitem>
+    <menuitemseparator></menuitemseparator>
+    <menuitem> ... </menuitem>
+  </menu>
+</menubar>
+.EE
+.SS Attribute sub\-elements
+Attribute elements appear as children of any widget or container:
+.PP
+.TS
+l l.
+Element	Purpose
+_
+<label>	Display text
+<default>	Initial/default value
+<variable>	Shell variable name for this widget
+<input>	Shell command whose output sets the value
+<input file>	File whose contents set the value
+<output file>	File to write the value to
+<action>	Shell command to run on widget events
+<item>	List/menu item entry
+<sensitive>	Enable/disable state
+<width>	Widget width
+<height>	Widget height
+.TE
+.SS Tag attributes
+Opening tags may carry inline attributes:
+.PP
+.EX
+<window title="My App" width\-request="400">
+<entry visible="false">
+<action signal="clicked" type="shell">command</action>
+.EE
+.PP
+The general form is:
+.PP
+.EX
+<\fItag\fR \fIkey\fR="\fIvalue\fR" [\fIkey\fR="\fIvalue\fR" ...]>
+.EE
+.SS Imperative extensions
+The language includes simple imperative constructs for dynamic behaviour:
+.PP
+.TS
+l l.
+Construct	Purpose
+_
+<command>	Variable assignment (var := expr)
+<if condition="...">	Conditional widget inclusion
+<while condition="...">	Repeated widget inclusion
+<show/>	Force widget display
+.TE
+.PP
+Expressions in conditions support variables, numbers, and the operators
+.BR + ", " \- ", " * ", " / ", " = ", " != .
+.SH AUTHORS
+Laszlo Pere <pipas@linux.pte.hu>, Thunor <thunorsif@hotmail.com>.

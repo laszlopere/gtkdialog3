@@ -1,4 +1,2 @@
 
-pdf_TEXINFOS=gtkdialog.texi
-info_TEXINFOS=gtkdialog.texi
-
+man_MANS = gtkdialog3.1
