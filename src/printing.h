@@ -45,13 +45,13 @@ typedef enum {
  *                                                                       *
  *                                                                       *
  *************************************************************************/
-inline void
+void
 pip_message_print_debug(
 		const gchar *function,
 		const gchar *message,
 		...);
 
-inline void
+void
 pip_message_print_warning(
 		const gchar *function,
 		const gchar *message,

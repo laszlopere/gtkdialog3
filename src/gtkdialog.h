@@ -64,5 +64,7 @@ void reset_program_source(void);
 gint get_program_from_variable(gchar *name);
 void set_program_name(gchar *name);
 gchar *get_program_name(void);
+int gtkdialog_parse(void);
+int yywarning(char *c);
 
 #endif

@@ -324,7 +324,8 @@ gint get_program_from_variable(gchar *name)
 static gint 
 get_program_from_file(char *name)
 {
-	int tmp, result;
+	size_t tmp;
+	int result;
 	
 	PIP_DEBUG("Start.");
 	

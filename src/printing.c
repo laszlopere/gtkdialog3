@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <glib/gprintf.h>
 #include "gtkdialog.h"
 #include "printing.h"
 
@@ -40,14 +41,14 @@
  *                                                                       *
  *                                                                       *
  *************************************************************************/
-inline void
+void
 pip_message_print_debug(
 		const gchar *function,
 		const gchar *format,
 		...)
 {
 	va_list args;
-	
+
 	va_start (args, format);
 	printf("\033[1;32m%32s()\033[0;39m: ", function);
 	g_vprintf(format, args);
@@ -56,7 +57,7 @@ pip_message_print_debug(
 	fflush(stdout);
 }
 
-inline void
+void
 pip_message_print_warning(
 		const gchar *function,
 		const gchar *format,
