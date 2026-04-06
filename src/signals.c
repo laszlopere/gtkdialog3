@@ -29,6 +29,10 @@
 #include "signals.h"
 #include "tag_attributes.h"
 #include "widgets.h"
+#include "widget_button.h"
+#include "widget_checkbox.h"
+#include "widget_colorbutton.h"
+#include "widget_comboboxtext.h"
 #include "gdg_debug.h"
 #if HAVE_VTE
 #include <vte/vte.h>

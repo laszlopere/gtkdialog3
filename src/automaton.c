@@ -662,22 +662,22 @@ instruction_execute(instruction command)
 			    printf("(number '%s')", Argument);
 			    break;
 			case OP_ADD:
-			    printf("(pop() + pop())", Argument);
+			    printf("(pop() + pop())");
 			    break;
 			case OP_SUBST:
-			    printf("(pop() - pop())", Argument);
+			    printf("(pop() - pop())");
 			    break;
 			case OP_MULT:
-			    printf("(pop() * pop())", Argument);
+			    printf("(pop() * pop())");
 			    break;
 			case OP_DIV:
-			    printf("(pop() / pop())", Argument);
+			    printf("(pop() / pop())");
 			    break;
 			case REL_EQ:
-			    printf("(pop() = pop())", Argument);
+			    printf("(pop() = pop())");
 			    break;
 			case REL_NE:
-			    printf("(pop() != pop())", Argument);
+			    printf("(pop() != pop())");
 			    break;
 			default:
 			    printf("(Unknown Parameter: %d)", Widget_Type);
