@@ -175,5 +175,7 @@ gboolean token_store_with_tag_attributes(token command, GList *attr);
 
 gint instruction_get_pc(void);
 void instruction_set_jump(gint from, gint where);
+void run_program(void);
+void print_program(void);
 
 #endif

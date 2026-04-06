@@ -627,7 +627,7 @@ variable *variables_refresh(const char *name)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(var->Widget), "_initialised"));
 
 	/* If the custom attribute "block-function-signals" is true
 	 * then block signals whilst performing this function */
@@ -1113,7 +1113,7 @@ static gint do_variables_count_widgets(variable *actual, gint n)
 		actual = root;
 
 	if (actual == NULL)
-		return;
+		return 0;
 
 	if (actual->left != NULL)
 		n = do_variables_count_widgets(actual->left, n);
@@ -1150,7 +1150,7 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 	gint              fd, wd;
 #else
 	GFileMonitor     *monitor;
-	gchar             name[16];
+	gchar             name[24];
 #endif
 
 #ifdef DEBUG
