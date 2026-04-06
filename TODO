@@ -29,3 +29,42 @@ Thunor: These still remain:
      to use gtk_main_quit() and a single main loop would fix AT-SPI and
      allow proper automated testing of multi-window examples.
      See examples/languages/bash_script_multi_window.
+
+Unsupported GTK3 widgets:
+-------------------------
+(16) Add GtkDialog support (base dialog with standard button area).
+(17) Add GtkAboutDialog support (application info and credits).
+(18) Add GtkFileChooserDialog support (file open/save picker).
+(19) Add GtkColorChooserDialog support (color picker dialog).
+(20) Add GtkFontChooserDialog support (font picker dialog).
+(21) Add GtkMessageDialog support (alerts and confirmations).
+(22) Add GtkAssistant support (multi-step wizard).
+(23) Add GtkGrid support (flexible row/column grid layout).
+(24) Add GtkFixed support (pixel-positioned children).
+(25) Add GtkFlowBox support (reflowing wrap layout).
+(26) Add GtkHeaderBar support (CSD header with title and buttons).
+(27) Add GtkStack and GtkStackSwitcher support (one-visible-child with switcher).
+(28) Add GtkPaned support (resizable split pane).
+(29) Add GtkOverlay support (layered widget stacking).
+(30) Add GtkRevealer support (animated show/hide).
+(31) Add GtkInfoBar support (in-window notification bar).
+(32) Add GtkButtonBox support (specialized button container).
+(33) Add GtkPopover support (popup attached to a widget).
+(34) Add GtkSearchEntry support (entry with search icon/clearing).
+(35) Add GtkSwitch support (on/off toggle).
+(36) Add GtkCalendar support (date picker).
+(37) Add GtkScaleButton and GtkVolumeButton support (button with popup slider).
+(38) Add GtkImage support (general image display, replacing limited pixmap).
+(39) Add GtkDrawingArea support (custom Cairo drawing canvas).
+(40) Add GtkGLArea support (OpenGL rendering).
+(41) Add GtkSpinner support (animated activity indicator).
+(42) Add GtkLevelBar support (segmented level/progress indicator).
+(43) Add GtkAccelLabel support (label showing keyboard shortcuts).
+(44) Add GtkLinkButton support (clickable URL).
+(45) Add GtkListBox support (vertical list with arbitrary row widgets).
+(46) Add GtkIconView support (icon grid from TreeModel).
+(47) Add GtkToolbar support (toolbar container).
+(48) Add GtkToolButton, GtkToggleToolButton, GtkRadioToolButton support.
+(49) Add GtkMenuButton support (button with attached menu/popover).
+(50) Add GtkApplicationWindow support (app window with GAction integration).
+(51) Add GtkShortcutsWindow support (keyboard shortcuts overlay).
