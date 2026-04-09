@@ -346,26 +346,24 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 
 \<frame\/\> {
 	Token="<frame/>";
-	gtkdialog_lval.cval = "";
 	pending_close_token = EFRAME;
 	return(FRAME);
 }
 
 \<frame\> {
 	Token="<frame>";
-	gtkdialog_lval.cval = "";
 	return(FRAME);
 }
 
-\<frame\ [^\>]+\> {
+\<frame[ ]+ {
 	Token="<frame>";
-	gtkdialog_lval.cval=strdup(&yytext[7]);  
-	gtkdialog_lval.cval[strlen(gtkdialog_lval.cval)-1] = 0;
-	return FRAME; 
+	BEGIN(ST_TAG_ATTR);
+	current_close_token = EFRAME;
+	return(PART_FRAME);
 }
 
-\<\/frame\> { 
-	Token="</frame>"; 
+\<\/frame\> {
+	Token="</frame>";
 	return(EFRAME);
 }
 

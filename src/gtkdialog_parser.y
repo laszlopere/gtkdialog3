@@ -89,10 +89,9 @@ start_up(void)
 %token         VBOX PART_VBOX EVBOX
 %token         HBOX PART_HBOX EHBOX
 %token         NOTEBOOK ENOTEBOOK PART_NOTEBOOK
-%token <cval>  FRAME
+%token         FRAME PART_FRAME EFRAME
 %token <cval>  TAG_ATTR_NAME
 %type  <nvval> tagattr
-%token         EFRAME
 %token         ENTRY EENTRY PART_ENTRY
 %token         MENUBAR PART_MENUBAR EMENUBAR
 %token         MENU PART_MENU EMENU
@@ -270,14 +269,25 @@ wlist
 		token_store_attr(PUSH | WIDGET_NOTEBOOK, $3);
 		token_store(SUM);      
 	}
-  | FRAME wlist attr EFRAME { 
-		token_store_with_argument(SET|ATTR_LABEL, $1); 
-		token_store(PUSH | WIDGET_FRAME); 
+  | FRAME wlist attr EFRAME {
+		token_store(PUSH | WIDGET_FRAME);
 	}
-  | wlist FRAME wlist attr EFRAME { 
-		token_store_with_argument(SET|ATTR_LABEL, $2); 
-		token_store(PUSH | WIDGET_FRAME); 
-		token_store(SUM);      
+  | wlist FRAME wlist attr EFRAME {
+		token_store(PUSH | WIDGET_FRAME);
+		token_store(SUM);
+	}
+  | PART_FRAME tagattr '>' wlist attr EFRAME {
+		char *title = get_tag_attribute($2, "title");
+		if (title)
+			token_store_with_argument(SET|ATTR_LABEL, title);
+		token_store_attr(PUSH | WIDGET_FRAME, $2);
+	}
+  | wlist PART_FRAME tagattr '>' wlist attr EFRAME {
+		char *title = get_tag_attribute($3, "title");
+		if (title)
+			token_store_with_argument(SET|ATTR_LABEL, title);
+		token_store_attr(PUSH | WIDGET_FRAME, $3);
+		token_store(SUM);
 	}
   ;
 
