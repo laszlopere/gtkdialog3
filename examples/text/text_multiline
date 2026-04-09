@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# Demonstrates multi-line labels using the <text> widget.
+#
+# Lines can be embedded literally between <label> tags.
+# Quoted labels (wrapped in double quotes) preserve whitespace
+# and allow mixing with attributes like justify and use-markup.
+
+GTKDIALOG=gtkdialog3
+
+MAIN_DIALOG='
+<window title="Multi-line Label Demo">
+	<vbox border-width="20" spacing="10">
+		<text>
+			<label>"GtkDialog allows you to build graphical interfaces
+using a simple XML-like markup language. Each widget
+is described by a tag, and properties are set either
+as tag attributes or as child elements. This makes it
+easy to create dialogs directly from shell scripts
+without writing any C code."</label>
+		</text>
+		<hseparator></hseparator>
+		<text justify="2">
+			<label>"The text widget supports several justification modes.
+This paragraph is centre-justified, meaning every line
+is aligned to the horizontal middle of the label. You can
+also choose left, right, or fill justification depending
+on how you want the text to appear within the available
+space of the window."</label>
+		</text>
+		<hseparator></hseparator>
+		<text use-markup="true">
+			<label>"Pango markup lets you <b>emphasise key words</b> or
+<i>set apart references and titles</i> within a block
+of running text. You can <u>underline important terms</u>,
+or combine <b><i>bold and italic</i></b> styles to draw
+the reader to specific parts of the message."</label>
+		</text>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button use-stock="true" label="gtk-ok" has-focus="true"></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
