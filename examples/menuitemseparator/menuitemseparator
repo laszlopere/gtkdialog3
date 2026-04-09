@@ -1,28 +1,37 @@
 #!/bin/sh
 
+# Demonstrates menu items with icons, separators, and keyboard accelerators.
+# Uses freedesktop named icons instead of deprecated GTK2 stock IDs.
+
 GTKDIALOG=gtkdialog3
 
 MAIN_DIALOG='
-<window title="MenuItemSeparator" resizable="false" width-request="360" height-request="240"  border-width="0">
+<window title="MenuItemSeparator" resizable="false" width-request="360" height-request="240" border-width="0">
 	<vbox spacing="0">
 		<menubar>
 			<menu use-underline="true">
-				<menuitem stock-id="gtk-new" accel-key="0x4e" accel-mods="4">
+				<menuitem icon-name="document-new" accel-key="0x4e" accel-mods="4">
+					<label>"_New"</label>
 				</menuitem>
 				<menuitemseparator></menuitemseparator>
-				<menuitem stock-id="gtk-open" accel-key="0x4f" accel-mods="4">
+				<menuitem icon-name="document-open" accel-key="0x4f" accel-mods="4">
+					<label>"_Open"</label>
 				</menuitem>
 				<menuitemseparator></menuitemseparator>
-				<menuitem stock-id="gtk-save" accel-key="0x53" accel-mods="4">
+				<menuitem icon-name="document-save" accel-key="0x53" accel-mods="4">
+					<label>"_Save"</label>
 				</menuitem>
 				<menuitemseparator></menuitemseparator>
-				<menuitem stock-id="gtk-print" accel-key="0x50" accel-mods="4">
+				<menuitem icon-name="document-print" accel-key="0x50" accel-mods="4">
+					<label>"_Print"</label>
 				</menuitem>
 				<menuitemseparator></menuitemseparator>
-				<menuitem stock-id="gtk-close" label="Close Ot_her Documents">
+				<menuitem icon-name="window-close">
+					<label>"Close Ot_her Documents"</label>
 				</menuitem>
 				<menuitemseparator></menuitemseparator>
-				<menuitem stock-id="gtk-quit" accel-key="0x51" accel-mods="4">
+				<menuitem icon-name="application-exit" accel-key="0x51" accel-mods="4">
+					<label>"_Quit"</label>
 					<action>exit:Quit</action>
 				</menuitem>
 				<label>"_File"</label>
