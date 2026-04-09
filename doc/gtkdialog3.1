@@ -268,7 +268,7 @@ _
 <default>	Initial/default value
 <variable>	Shell variable name for this widget
 <input>	Shell command whose output sets the value
-<input file>	File whose contents set the value
+<input file="\fIpath\fR">	File whose contents set the value
 <output file>	File to write the value to
 <action>	Shell command to run on widget events
 <item>	List/menu item entry
@@ -276,6 +276,21 @@ _
 <width>	Widget width
 <height>	Widget height
 .TE
+.PP
+The
+.B <input>
+element supports tag attributes for icons and files:
+.PP
+.EX
+<input stock="\fIicon\-name\fR">   stock icon by name
+<input icon="\fIicon\-name\fR">    theme icon by name
+<input file="\fIpath\fR">          read value from file
+.EE
+.PP
+The legacy syntax
+.B "<input file>"
+(with \fBfile\fR as a keyword rather than an attribute) is still
+accepted for backward compatibility.
 .SS Tag attributes
 Opening tags may carry inline attributes:
 .PP
@@ -326,6 +341,17 @@ border\-width	int	Padding inside the container
 homogeneous	boolean	Give all children equal size
 space\-expand	boolean	Override default expand packing
 space\-fill	boolean	Override default fill packing
+.TE
+.PP
+Button\-specific properties:
+.TS
+l l l.
+Attribute	Type	Purpose
+_
+border\-width	int	Inner padding between button frame and content
+spacing	int	Gap between icon and label (default 6)
+image\-position	int/string	Icon position: 0/left, 1/right, 2/top, 3/bottom
+homogeneous	boolean	Equal space for icon and label
 .TE
 .SS Imperative extensions
 The language includes simple imperative constructs for dynamic behaviour:
