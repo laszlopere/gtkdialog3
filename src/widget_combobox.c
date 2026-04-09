@@ -227,10 +227,31 @@ void widget_combobox_save(variable *var)
 
 static void widget_combobox_input_by_command(variable *var, char *command)
 {
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 	GDG_DEBUG("Entering.");
 
-	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
+	GDG_DEBUG("command: '%s'", command);
+
+	/* Opening pipe for reading... */
+	if ((infile = widget_opencommand(command))) {
+		/* Read the file one line at a time (trailing [CR]LFs are read too) */
+		while (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(var->Widget), line);
+		}
+		/* Close the file */
+		pclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			command);
+	}
 
 	GDG_DEBUG("Exiting.");
 }
@@ -241,10 +262,28 @@ static void widget_combobox_input_by_command(variable *var, char *command)
 
 static void widget_combobox_input_by_file(variable *var, char *filename)
 {
+	FILE             *infile;
+	gchar             line[512];
+	gint              count;
 
 	GDG_DEBUG("Entering.");
 
-	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
+	if ((infile = fopen(filename, "r"))) {
+		/* Read the file one line at a time (trailing [CR]LFs are read too) */
+		while (fgets(line, 512, infile)) {
+			/* Enforce end of string in case of max chars read */
+			line[512 - 1] = 0;
+			/* Remove the trailing [CR]LFs */
+			for (count = strlen(line) - 1; count >= 0; count--)
+				if (line[count] == 13 || line[count] == 10) line[count] = 0;
+			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(var->Widget), line);
+		}
+		/* Close the file */
+		fclose(infile);
+	} else {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
+			filename);
+	}
 
 	GDG_DEBUG("Exiting.");
 }
