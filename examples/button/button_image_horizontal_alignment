@@ -3,63 +3,63 @@
 GTKDIALOG=gtkdialog3
 
 funcbtnCreate() {
-	echo '<button image-position="'$1'" homogeneous="'$2'">
-					<label>'$3'</label>
-					<input file stock="'$3'"></input>
-					<action>""</action>
-				</button>'
+	echo "<button image-position='$1' homogeneous='$2'>
+					<label>$3</label>
+					<input file stock='$3'></input>
+					<action>echo $3</action>
+				</button>"
 }
 
-MAIN_DIALOG='
-<window title="Button Image Horizontal Alignment">
+MAIN_DIALOG="
+<window title='Button Image Horizontal Alignment'>
 	<vbox>
-		<hbox homogeneous="true">
+		<hbox homogeneous='true'>
 			<vbox>
 				<text><label>\<button\></label></text>
-				'"`funcbtnCreate 0 false gtk-print`"'
-				'"`funcbtnCreate 0 false gtk-orientation-landscape`"'
-				'"`funcbtnCreate 0 false gtk-undelete`"'
-				'"`funcbtnCreate 0 false gtk-select-color`"'
-				'"`funcbtnCreate 0 false gtk-cut`"'
+				`funcbtnCreate 0 false gtk-print`
+				`funcbtnCreate 0 false gtk-orientation-landscape`
+				`funcbtnCreate 0 false gtk-undelete`
+				`funcbtnCreate 0 false gtk-select-color`
+				`funcbtnCreate 0 false gtk-cut`
 			</vbox>
 			<vbox>
-				<text><label>\<button homogeneous="true"\></label></text>
-				'"`funcbtnCreate 0 true gtk-print`"'
-				'"`funcbtnCreate 0 true gtk-orientation-landscape`"'
-				'"`funcbtnCreate 0 true gtk-undelete`"'
-				'"`funcbtnCreate 0 true gtk-select-color`"'
-				'"`funcbtnCreate 0 true gtk-cut`"'
+				<text><label>\<button homogeneous='true'\></label></text>
+				`funcbtnCreate 0 true gtk-print`
+				`funcbtnCreate 0 true gtk-orientation-landscape`
+				`funcbtnCreate 0 true gtk-undelete`
+				`funcbtnCreate 0 true gtk-select-color`
+				`funcbtnCreate 0 true gtk-cut`
 			</vbox>
 		</hbox>
 		<hseparator/>
-		<hbox homogeneous="true">
+		<hbox homogeneous='true'>
 			<vbox>
-				<text><label>\<button image-position="1"\></label></text>
-				'"`funcbtnCreate 1 false gtk-print`"'
-				'"`funcbtnCreate 1 false gtk-orientation-landscape`"'
-				'"`funcbtnCreate 1 false gtk-undelete`"'
-				'"`funcbtnCreate 1 false gtk-select-color`"'
-				'"`funcbtnCreate 1 false gtk-cut`"'
+				<text><label>\<button image-position='1'\></label></text>
+				`funcbtnCreate 1 false gtk-print`
+				`funcbtnCreate 1 false gtk-orientation-landscape`
+				`funcbtnCreate 1 false gtk-undelete`
+				`funcbtnCreate 1 false gtk-select-color`
+				`funcbtnCreate 1 false gtk-cut`
 			</vbox>
 			<vbox>
-				<text><label>\<button image-position="1" homogeneous="true"\></label></text>
-				'"`funcbtnCreate 1 true gtk-print`"'
-				'"`funcbtnCreate 1 true gtk-orientation-landscape`"'
-				'"`funcbtnCreate 1 true gtk-undelete`"'
-				'"`funcbtnCreate 1 true gtk-select-color`"'
-				'"`funcbtnCreate 1 true gtk-cut`"'
+				<text><label>\<button image-position='1' homogeneous='true'\></label></text>
+				`funcbtnCreate 1 true gtk-print`
+				`funcbtnCreate 1 true gtk-orientation-landscape`
+				`funcbtnCreate 1 true gtk-undelete`
+				`funcbtnCreate 1 true gtk-select-color`
+				`funcbtnCreate 1 true gtk-cut`
 			</vbox>
 		</hbox>
 		<hseparator/>
-		<hbox homogeneous="true" space-expand="false" space-fill="false">
-			<button border-width="8">
+		<hbox homogeneous='true' space-expand='false' space-fill='false'>
+			<button border-width='8'>
 				<label>Quit</label>
-				<input stock="application-exit"></input>
+				<input stock='application-exit'></input>
 			</button>
 		</hbox>
 	</vbox>
 </window>
-'
+"
 export MAIN_DIALOG
 
 case $1 in
