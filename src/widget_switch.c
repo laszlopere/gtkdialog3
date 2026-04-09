@@ -292,7 +292,7 @@ static void widget_switch_input_by_command(variable *var, char *command)
 			}
 			gtk_switch_set_active(GTK_SWITCH(var->Widget), is_active);
 		}
-		pclose(infile);
+		widget_closecommand(infile);
 	} else {
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			command);

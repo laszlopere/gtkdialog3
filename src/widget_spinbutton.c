@@ -420,7 +420,7 @@ static void widget_spinbutton_input_by_command(variable *var, char *command)
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(var->Widget), atof(line));
 		}
 		/* Close the file */
-		pclose(infile);
+		widget_closecommand(infile);
 	} else {
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			command);

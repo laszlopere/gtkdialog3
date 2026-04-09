@@ -317,7 +317,7 @@ static void widget_notebook_input_by_command(variable *var, char *command)
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(var->Widget), atoi(line));
 		}
 		/* Close the file */
-		pclose(infile);
+		widget_closecommand(infile);
 	} else {
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			command);

@@ -348,7 +348,7 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 			if (values) list_t_free(values);
 		}
 		/* Close the file */
-		pclose(infile);
+		widget_closecommand(infile);
 	} else {
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			command);

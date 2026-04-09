@@ -247,7 +247,7 @@ static void widget_combobox_input_by_command(variable *var, char *command)
 			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(var->Widget), line);
 		}
 		/* Close the file */
-		pclose(infile);
+		widget_closecommand(infile);
 	} else {
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			command);

@@ -356,7 +356,7 @@ static void widget_list_input_by_command(variable *var, char *filename,
 		}
 		/* Close the file */
 		if (command_or_file)
-			pclose(infile);
+			widget_closecommand(infile);
 		else
 			fclose(infile);
 	} else {

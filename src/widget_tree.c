@@ -1069,7 +1069,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 		}
 
 		if (command_or_file) {
-			pclose(infile);
+			widget_closecommand(infile);
 		} else {
 			fclose(infile);
 		}

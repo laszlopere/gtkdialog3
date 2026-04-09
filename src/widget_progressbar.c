@@ -373,7 +373,7 @@ static gpointer widget_progressbar_thread_entry(progr_descr *descr)
 
 	}
 
-	pclose(descr->pipe);
+	widget_closecommand(descr->pipe);
 	return NULL;
 }
 

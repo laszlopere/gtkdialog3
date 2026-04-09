@@ -581,7 +581,7 @@ static void widget_button_input_by_command(variable *var, char *command)
 				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(var->Widget), is_active);
 			}
 			/* Close the file */
-			pclose(infile);
+			widget_closecommand(infile);
 		} else {
 			fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 				command);

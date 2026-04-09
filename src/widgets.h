@@ -40,6 +40,7 @@
 
 char *widget_get_text_value(GtkWidget *widget, int type);
 FILE *widget_opencommand(const char *command);
+int   widget_closecommand(FILE *fp);
 char *widgets_to_str(int itype);
 gboolean widget_connect_signals(GtkWidget *widget, AttributeSet *Attr);
 void widget_visibility_list_add(GtkWidget *widget, tag_attr *attr);

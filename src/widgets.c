@@ -33,6 +33,7 @@
 
 #include <gtk/gtk.h>
 #include <math.h>
+#include <sys/wait.h>
 #include "gtkdialog.h"
 #include "widgets.h"
 #include "stringman.h"
@@ -252,10 +253,16 @@ char *widget_get_text_value(GtkWidget *widget, int type)
  *                                                                     *
  ***********************************************************************/
 
+/* Hash table mapping FILE* -> child PID for widget_closecommand */
+static GHashTable *command_pids = NULL;
+
 FILE *widget_opencommand(const char *command)
 {
 	char *the_line;
 	FILE *infile;
+	const char *shell;
+	int pipefd[2];
+	pid_t pid;
 
 	PIP_DEBUG("Opening command: '%s'", command);
 
@@ -264,16 +271,85 @@ FILE *widget_opencommand(const char *command)
 		the_line = g_strdup_printf("source %s; %s", */
 		the_line = g_strdup_printf(". %s; %s",
 				option_include_file, command);
-		infile = popen(the_line, "r");
-		g_free(the_line);
 	} else {
-		infile = popen(command, "r");
+		the_line = g_strdup(command);
 	}
-	
-	if (infile == NULL) 
-		g_warning("%s(): %m", __func__);
-	
+
+	/* Use the user's $SHELL instead of /bin/sh so that bash exported
+	 * functions (export -f) are available to input commands, matching
+	 * the behavior of action commands (see run_shell_command). */
+	shell = getenv("SHELL");
+	if (shell == NULL)
+		shell = "/bin/sh";
+
+	if (pipe(pipefd) == -1) {
+		g_warning("%s(): pipe: %m", __func__);
+		g_free(the_line);
+		return NULL;
+	}
+
+	pid = fork();
+	if (pid == -1) {
+		g_warning("%s(): fork: %m", __func__);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		g_free(the_line);
+		return NULL;
+	}
+
+	if (pid == 0) {
+		/* Child: redirect stdout to pipe, exec the user's shell */
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+		execl(shell, shell, "-c", the_line, (char *)NULL);
+		_exit(127);
+	}
+
+	/* Parent: read from pipe */
+	close(pipefd[1]);
+	g_free(the_line);
+
+	infile = fdopen(pipefd[0], "r");
+	if (infile == NULL) {
+		g_warning("%s(): fdopen: %m", __func__);
+		close(pipefd[0]);
+		return NULL;
+	}
+
+	/* Remember the child PID so widget_closecommand can wait for it */
+	if (command_pids == NULL)
+		command_pids = g_hash_table_new(g_direct_hash, g_direct_equal);
+	g_hash_table_insert(command_pids, infile, GINT_TO_POINTER(pid));
+
 	return infile;
+}
+
+/***********************************************************************
+ * Close a command opened by widget_opencommand.                       *
+ * Replaces pclose() for commands opened via fork/exec.                *
+ ***********************************************************************/
+
+int widget_closecommand(FILE *fp)
+{
+	pid_t pid;
+	int status;
+
+	if (fp == NULL)
+		return -1;
+
+	pid = GPOINTER_TO_INT(
+		g_hash_table_lookup(command_pids, fp));
+	g_hash_table_remove(command_pids, fp);
+	fclose(fp);
+
+	if (pid <= 0)
+		return -1;
+
+	if (waitpid(pid, &status, 0) == -1)
+		return -1;
+
+	return status;
 }
 
 /***********************************************************************

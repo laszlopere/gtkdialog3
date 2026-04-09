@@ -1431,7 +1431,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 					}
 
 					/* Close the file */
-					pclose(infile);
+					widget_closecommand(infile);
 				} else {
 					fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 						argument);
