@@ -558,10 +558,16 @@ gchar *Token;
 \<\/eventbox\>				{ Token="</eventbox>"; return(EEVENTBOX); }
 
 \<expander\>				{ Token="<expander>"; return(EXPANDER); }
-\<expander[ ]+				{ Token="<expander>"; 
+\<expander[ ]+				{ Token="<expander>";
 					  BEGIN(ST_TAG_ATTR);
 					  return(PART_EXPANDER); }
 \<\/expander\>				{ Token="</expander>"; return(EEXPANDER); }
+
+\<switch\>				{ Token="<switch>"; return(SWITCH); }
+\<switch[ ]+				{ Token="<switch>";
+					  BEGIN(ST_TAG_ATTR);
+					  return(PART_SWITCH); }
+\<\/switch\>				{ Token="</switch>"; return(ESWITCH); }
 
 
 

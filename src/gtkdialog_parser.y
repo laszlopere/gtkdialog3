@@ -159,8 +159,9 @@ start_up(void)
 %token         TERMINAL PART_TERMINAL ETERMINAL
 %token         EVENTBOX PART_EVENTBOX EEVENTBOX
 %token         EXPANDER PART_EXPANDER EEXPANDER
+%token         SWITCH ESWITCH PART_SWITCH
 
-%% 
+%%
 window
   : attr wlist { 
     		token_store(PUSH | WIDGET_WINDOW); 
@@ -295,6 +296,7 @@ widget
   | colorbutton
   | fontbutton
   | terminal
+  | switch
   ;
 
 entry
@@ -376,6 +378,18 @@ checkbox
 	}
   | CHECKBOX attr CHECKBOX  {
 		yyerror("</checkbox> expected instead of <checkbox>.");
+	}
+  ;
+
+switch
+  : SWITCH attr ESWITCH {
+		token_store(PUSH | WIDGET_SWITCH);
+	}
+  | PART_SWITCH tagattr '>' attr ESWITCH {
+		token_store_attr(PUSH | WIDGET_SWITCH, $2);
+	}
+  | SWITCH attr SWITCH  {
+		yyerror("</switch> expected instead of <switch>.");
 	}
   ;
 

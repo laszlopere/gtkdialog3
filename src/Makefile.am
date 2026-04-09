@@ -47,6 +47,7 @@ gtkdialog3_SOURCES = \
 	widget_radiobutton.c widget_radiobutton.h \
 	widget_spinbutton.c widget_spinbutton.h \
 	widget_statusbar.c widget_statusbar.h \
+	widget_switch.c widget_switch.h \
 	widget_table.c widget_table.h \
 	widget_terminal.c widget_terminal.h \
 	widget_text.c widget_text.h \
