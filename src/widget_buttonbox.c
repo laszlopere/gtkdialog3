@@ -68,6 +68,7 @@ GtkWidget *widget_buttonbox_create(
 	}
 
 	widget = gtk_button_box_new(orientation);
+	gtk_box_set_spacing(GTK_BOX(widget), 6);
 
 	/* Support layout attribute */
 	if (attr &&
@@ -93,7 +94,7 @@ GtkWidget *widget_buttonbox_create(
 
 	/* Pack the widgets into the container */
 	s = pop();
-	for (n = s.nwidgets - 1; n >= 0; --n) {
+	for (n = 0; n < s.nwidgets; ++n) {
 		gtk_container_add(GTK_CONTAINER(widget), s.widgets[n]);
 	}
 
