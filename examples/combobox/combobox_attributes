@@ -13,38 +13,40 @@ GTKDIALOG=gtkdialog3
 
 MAIN_DIALOG='
 <window>
-	<vbox>
+	<vbox spacing="10" border-width="10">
 		<text>
 			<label>"Combobox attribute demo.
 
-The first combobox has case-sensitive and value-in-list set:
-only items already in the list are accepted, matching case-insensitively.
+The first combobox has case-sensitive and
+value-in-list set: only list items are accepted.
 
-The second combobox adds allow-empty set to false:
+The second adds allow-empty set to false:
 the entry cannot be left blank."</label>
 		</text>
-		<hbox>
-			<text>
-				<label>value-in-list:</label>
-			</text>
-			<combobox case-sensitive="false" value-in-list="true">
-				<variable>COMBOBOX1</variable>
-				<item>First</item>
-				<item>Second</item>
-				<item>Third</item>
-			</combobox>
-		</hbox>
-		<hbox>
-			<text>
-				<label>allow-empty:</label>
-			</text>
-			<combobox allow-empty="false" value-in-list="true">
-				<variable>COMBOBOX2</variable>
-				<item>First</item>
-				<item>Second</item>
-				<item>Third</item>
-			</combobox>
-		</hbox>
+		<frame Combobox widgets>
+			<hbox homogeneous="true">
+				<text space-expand="true" space-fill="true" xalign="1">
+					<label>value-in-list:</label>
+				</text>
+				<combobox case-sensitive="false" value-in-list="true" space-expand="true" space-fill="true">
+					<variable>COMBOBOX1</variable>
+					<item>First</item>
+					<item>Second</item>
+					<item>Third</item>
+				</combobox>
+			</hbox>
+			<hbox homogeneous="true">
+				<text space-expand="true" space-fill="true" xalign="1">
+					<label>allow-empty:</label>
+				</text>
+				<combobox allow-empty="false" value-in-list="true" space-expand="true" space-fill="true">
+					<variable>COMBOBOX2</variable>
+					<item>First</item>
+					<item>Second</item>
+					<item>Third</item>
+				</combobox>
+			</hbox>
+		</frame>
 		<hbox>
 			<button ok></button>
 			<button cancel></button>
