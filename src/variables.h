@@ -70,6 +70,10 @@ void print_variables(variable *actual);
 int append_fromto_variable(const char *from, const char *to);
 variable *variables_clear(const char *name);
 int remove_selected_variable(const char *name);
+void variables_cut(const char *name);
+void variables_copy(const char *name);
+void variables_paste(const char *name);
+void variables_selectall(const char *name);
 gboolean variables_is_avail_by_name(const char *name);
 
 #endif

@@ -795,6 +795,67 @@ variable *variables_enable(const char *name)
 }
 
 /***********************************************************************
+ * Clipboard and selection operations for edit (GtkTextView) widgets   *
+ ***********************************************************************/
+
+void variables_cut(const char *name)
+{
+	variable *var = _tree_find(name, NULL);
+	if (var == NULL || var->Widget == NULL) return;
+	if (GTK_IS_TEXT_VIEW(var->Widget)) {
+		GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
+		GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+		gtk_text_buffer_cut_clipboard(buf, clip, TRUE);
+	} else {
+		fprintf(stderr, "%s(): Widget '%s' is not an edit widget.\n",
+			__func__, name);
+	}
+}
+
+void variables_copy(const char *name)
+{
+	variable *var = _tree_find(name, NULL);
+	if (var == NULL || var->Widget == NULL) return;
+	if (GTK_IS_TEXT_VIEW(var->Widget)) {
+		GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
+		GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+		gtk_text_buffer_copy_clipboard(buf, clip);
+	} else {
+		fprintf(stderr, "%s(): Widget '%s' is not an edit widget.\n",
+			__func__, name);
+	}
+}
+
+void variables_paste(const char *name)
+{
+	variable *var = _tree_find(name, NULL);
+	if (var == NULL || var->Widget == NULL) return;
+	if (GTK_IS_TEXT_VIEW(var->Widget)) {
+		GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
+		GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+		gtk_text_buffer_paste_clipboard(buf, clip, NULL, TRUE);
+	} else {
+		fprintf(stderr, "%s(): Widget '%s' is not an edit widget.\n",
+			__func__, name);
+	}
+}
+
+void variables_selectall(const char *name)
+{
+	variable *var = _tree_find(name, NULL);
+	if (var == NULL || var->Widget == NULL) return;
+	if (GTK_IS_TEXT_VIEW(var->Widget)) {
+		GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
+		GtkTextIter start, end;
+		gtk_text_buffer_get_bounds(buf, &start, &end);
+		gtk_text_buffer_select_range(buf, &start, &end);
+	} else {
+		fprintf(stderr, "%s(): Widget '%s' is not an edit widget.\n",
+			__func__, name);
+	}
+}
+
+/***********************************************************************
  *                                                                     *
  ***********************************************************************/
 

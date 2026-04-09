@@ -1,7 +1,7 @@
 /*
  * stringman.h: Special string manipulation functions
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  Lï¿½szlï¿½ Pere <pipas@linux.pte.hu>
  * Copyright (C) 2012       Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,11 @@ typedef enum {
 	CommandRemoveSelected    = 15,
 	CommandBreak             = 16,
 	CommandInsert            = 17,
-	CommandAppend            = 18
+	CommandAppend            = 18,
+	CommandCut               = 19,
+	CommandCopy              = 20,
+	CommandPaste             = 21,
+	CommandSelectAll         = 22
 } CommandType;
 
 #ifdef G_OS_WIN32

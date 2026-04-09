@@ -541,6 +541,30 @@ void action_removeselected(GtkWidget *widget, char *string)
 }
 
 /***********************************************************************
+ * Action cut/copy/paste/selectall                                     *
+ ***********************************************************************/
+
+void action_cut(GtkWidget *widget, char *string)
+{
+	variables_cut(string);
+}
+
+void action_copy(GtkWidget *widget, char *string)
+{
+	variables_copy(string);
+}
+
+void action_paste(GtkWidget *widget, char *string)
+{
+	variables_paste(string);
+}
+
+void action_selectall(GtkWidget *widget, char *string)
+{
+	variables_selectall(string);
+}
+
+/***********************************************************************
  *                                                                     *
  ***********************************************************************/
 
@@ -784,6 +808,22 @@ int execute_action(GtkWidget *widget, const char *command, const char *type)
 
 			case CommandAppend:
 				action_append(widget, command_string);
+				break;
+
+			case CommandCut:
+				action_cut(widget, command_string);
+				break;
+
+			case CommandCopy:
+				action_copy(widget, command_string);
+				break;
+
+			case CommandPaste:
+				action_paste(widget, command_string);
+				break;
+
+			case CommandSelectAll:
+				action_selectall(widget, command_string);
 				break;
 
 			default:
