@@ -16,8 +16,8 @@ MAIN_DIALOG='
 			</hbox>
 		</frame>
 		<hbox>
-			<button cancel></button>
-			<button help></button>
+			<button stock="cancel"/>
+			<button stock="help"/>
 		</hbox>
 	</vbox>
 </window>

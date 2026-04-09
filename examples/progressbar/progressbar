@@ -16,7 +16,7 @@ MAIN_DIALOG='
 			</progressbar>
 		</frame>
 		<hbox>
-			<button cancel></button>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

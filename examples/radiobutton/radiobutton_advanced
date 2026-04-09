@@ -66,8 +66,8 @@ i.e. the notebook, vbox, hbox and frame widgets."</label>
 		</hbox>
 		<hseparator></hseparator>
 		<hbox homogeneous="true">
-			<button cancel><variable>btnCancel</variable></button>
-			<button ok><variable>btnOK</variable></button>
+			<button stock="cancel"><variable>btnCancel</variable></button>
+			<button stock="ok"><variable>btnOK</variable></button>
 		</hbox>
 	</vbox>
 </window>

@@ -11,8 +11,8 @@ MAIN_DIALOG='
 			<action>echo "The chosen item is \"$LIST\""</action>
 		</list>
 		<hbox>
-			<button cancel></button>
-			<button ok></button>
+			<button stock="cancel"/>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>

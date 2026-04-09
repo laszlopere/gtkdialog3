@@ -11,8 +11,8 @@ MAIN_DIALOG='
 			</text>
 		</frame>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>
@@ -33,8 +33,8 @@ MAIN_DIALOG='
 			</text>
 		</frame>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>
@@ -55,8 +55,8 @@ MAIN_DIALOG='
 			</text>
 		</frame>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>
@@ -77,8 +77,8 @@ MAIN_DIALOG='
 			</text>
 		</frame>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>
@@ -99,8 +99,8 @@ MAIN_DIALOG='
 			</text>
 		</frame>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>
@@ -121,8 +121,8 @@ MAIN_DIALOG='
 			</text>
 		</frame>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

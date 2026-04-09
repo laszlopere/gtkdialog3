@@ -2,24 +2,24 @@
 
 GTKDIALOG=gtkdialog3
 
-MAIN_DIALOG='
+MAIN_DIALOG="
 <window>
 	<vbox>
 		<hbox>
 			<text><label>Label1</label></text>
-			<entry></entry>
+			<entry/>
 		</hbox>
 		<hbox>
 			<text><label>Label2</label></text>
-			<entry></entry>
+			<entry/>
 		</hbox>
 		<hbox>
-			<button cancel></button>
-			<button help></button>
+			<button stock='cancel'/>
+			<button stock='help'/>
 		</hbox>
 	</vbox>
 </window>
-'
+"
 export MAIN_DIALOG
 
 case $1 in

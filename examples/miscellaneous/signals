@@ -42,7 +42,7 @@ MAIN_DIALOG='
 			</entry>
 		</frame>
 		<hbox>
-			<button ok>
+			<button stock="ok">
 				<action signal="button-press-event">echo Button: button-press_event</action>
 				<action signal="button-release-event">echo Button: button-release-event</action>
 				<action signal="configure-event">echo Button: configure-event</action>

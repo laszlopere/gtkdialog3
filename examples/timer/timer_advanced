@@ -89,7 +89,7 @@ export MAIN_DIALOG='
 		<hbox>
 			'"`funcbtnCreate gtk-no disable`"'
 			'"`funcbtnCreate gtk-yes enable`"'
-			<button ok></button>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>

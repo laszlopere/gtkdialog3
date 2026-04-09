@@ -100,7 +100,7 @@ export MAIN_DIALOG='
     </frame>
 
     <hbox homogeneous="true">
-      <button ok></button>
+      <button stock="ok"/>
     </hbox>
   </vbox>
 </window>

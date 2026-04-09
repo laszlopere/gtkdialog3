@@ -27,8 +27,8 @@ MAIN_DIALOG='
 			<action signal="realize">echo "LIST=\"$LIST\" - realize"</action>
 		</list>
 		<hbox>
-			<button cancel></button>
-			<button ok></button>
+			<button stock="cancel"/>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>

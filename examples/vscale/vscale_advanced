@@ -93,7 +93,7 @@ MAIN_DIALOG='
 			</frame>
 		</hbox>
 		<hbox homogeneous="true">
-			<button ok></button>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>

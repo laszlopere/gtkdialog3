@@ -103,7 +103,7 @@ export MAIN_DIALOG='
 				<action>if [ ! -f '"$TMPDIR"'/image.svg ]; then bash -c funcimgCreate; else rm '"$TMPDIR"'/image.svg; fi</action>
 				<action>refresh:btnimgControl</action>
 			</button>
-			<button ok></button>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>

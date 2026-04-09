@@ -36,8 +36,8 @@ MAIN_DIALOG='
 			<default>cursor-visible is false</default>
 		</edit>
 		<hbox>
-			<button cancel></button>
-			<button ok></button>
+			<button stock="cancel"/>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>

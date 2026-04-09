@@ -27,12 +27,12 @@ int main(int argc, char *argv[]) {
 	/* frame 1 - default buttons & static text (label) */
 	"<frame Command buttons (defaults)>"
 		"<hbox>"
-			"<button ok></button>"
-			"<button cancel></button>"
+			"<button stock=\"ok\"/>"
+			"<button stock=\"cancel\"/>"
 		"</hbox>"
 		"<hbox>"
 			"<text><label>this is a Label - static text in one string (nothing more)</label></text>"
-			"<button help></button>"
+			"<button stock=\"help\"/>"
 		"</hbox>"
 	"</frame>"
 	/* frame 2 */

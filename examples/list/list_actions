@@ -40,8 +40,8 @@ MAIN_DIALOG='
 		</hbox>
 		<hseparator space-expand="false" space-fill="false"></hseparator>
 		<hbox space-expand="false" space-fill="false">
-			<button cancel></button>
-			<button ok></button>
+			<button stock="cancel"/>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>

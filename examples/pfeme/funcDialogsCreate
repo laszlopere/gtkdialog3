@@ -26,7 +26,7 @@ Do you want to save it now?
 			</text>
 		</hbox>
 		<hbox homogeneous="true">
-			<button cancel>
+			<button stock="cancel">
 				<action>closewindow:winProfileNotSavedOnChange</action>
 			</button>
 			<button use-underline="true">
@@ -69,7 +69,7 @@ Do you want to save it now?
 			</text>
 		</hbox>
 		<hbox homogeneous="true">
-			<button cancel>
+			<button stock="cancel">
 				<action>closewindow:winProfileNotSavedOnQuit</action>
 			</button>
 			<button use-underline="true">
@@ -109,7 +109,7 @@ Do you want to restart now?
 			</text>
 		</hbox>
 		<hbox homogeneous="true">
-			<button cancel>
+			<button stock="cancel">
 				<action>. functmpSet; functmpSet ApplicationRestart false</action>
 				<action>closewindow:winReadmeApplyRestartRequired</action>
 			</button>

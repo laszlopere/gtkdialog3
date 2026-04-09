@@ -18,8 +18,8 @@ shell eval works correctly."</label>
 			<default>He said "hello"</default>
 		</entry>
 		<hbox homogeneous="true">
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

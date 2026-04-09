@@ -115,7 +115,7 @@ funcnbkMainCreate() {
 					<action>refresh:nbkMain</action>'
 		fi
 		echo '</button>
-				<button ok></button>
+				<button stock="ok"/>
 			</hbox>
 		</vbox>'
 	done

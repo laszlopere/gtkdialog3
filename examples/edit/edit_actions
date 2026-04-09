@@ -88,8 +88,8 @@ The text is loaded from a file and can be saved back."</label>
 			</hbox>
 		</frame>
 		<hbox homogeneous="true">
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

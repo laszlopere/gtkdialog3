@@ -41,7 +41,7 @@ export BAR_DIALOG='
 			</progressbar>
 		</frame>
 		<hbox>
-			<button cancel>
+			<button stock="cancel">
 				<action function="closewindow">BAR_DIALOG</action>
 			</button>
 		</hbox>
@@ -58,7 +58,7 @@ export MAIN_DIALOG='
 			<input>date</input>
 		</entry>
 		<hbox>
-			<button cancel></button>
+			<button stock="cancel"/>
 			<button>
 				<label>Launch</label>
 				<action function="launch">BAR_DIALOG</action>

@@ -48,8 +48,8 @@ the entry cannot be left blank."</label>
 			</hbox>
 		</frame>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

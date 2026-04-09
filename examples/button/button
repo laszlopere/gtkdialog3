@@ -19,27 +19,27 @@ MAIN_DIALOG='
 			</button>
 		</hbox>
 		<hbox>
-			<button yes>
+			<button stock="yes">
 				<action>echo You pressed the Yes button.</action>
 			</button>
-			<button no>
+			<button stock="no">
 				<action>echo You pressed the No button.</action>
 			</button>
 		</hbox>
 		<hbox>
-			<button ok>
+			<button stock="ok">
 				<action>echo You pressed the OK button.</action>
 			</button>
-			<button cancel>
+			<button stock="cancel">
 				<action>echo You pressed the Cancel button.</action>
 			</button>
-			<button help>
+			<button stock="help">
 				<action>echo You pressed the Help button.</action>
 			</button>
 		</hbox>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

@@ -14,8 +14,8 @@ MAIN_DIALOG='
 			<entry></entry>
 		</hbox>
 		<hbox>
-			<button cancel></button>
-			<button help></button>
+			<button stock="cancel"/>
+			<button stock="help"/>
 		</hbox>
 	</vbox>
 </window>

@@ -30,8 +30,8 @@ MAIN_DIALOG='
 			<action when="update-preview">echo update-preview</action>
 		</chooser>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

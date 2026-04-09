@@ -32,8 +32,8 @@ MAIN_DIALOG='
 			</hbox>    
 		</frame>
 		<hbox>
-			<button cancel></button>
-			<button ok></button>
+			<button stock="cancel"/>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>

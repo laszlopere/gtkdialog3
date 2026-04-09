@@ -10,8 +10,8 @@ MAIN_DIALOG='
 			<variable>ENTRY</variable>
 		</entry>
 		<hbox>
-			<button ok></button>
-			<button cancel></button>
+			<button stock="ok"/>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

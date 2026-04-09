@@ -30,11 +30,11 @@ MAIN_DIALOG='
 			</hbox>
 		</frame>
 		<hbox>
-			<button cancel>
+			<button stock="cancel">
 				<action signal="enter">echo Do you really want to exit?</action>
 				<action function="exit">Cancel</action>
 			</button>
-			<button ok>
+			<button stock="ok">
 				<action signal="enter">echo Do you really want to exit?</action>
 				<action function="exit">OK</action>
 			</button>

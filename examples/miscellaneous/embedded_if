@@ -21,10 +21,10 @@ MAIN_DIALOG='
 			</while>
 		</frame>
 		<hbox>
-			<button ok>
+			<button stock="ok">
 				<variable>OKBUTTON</variable>
 			</button>
-			<button cancel></button>
+			<button stock="cancel"/>
 		</hbox>
 	</vbox>
 </window>

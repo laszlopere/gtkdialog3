@@ -83,7 +83,7 @@ MAIN_DIALOG='
 			<hseparator></hseparator>
 		</vbox>
 		<hbox homogeneous="true" space-expand="false" space-fill="false">
-			<button ok></button>
+			<button stock="ok"/>
 		</hbox>
 	</vbox>
 </window>
