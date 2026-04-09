@@ -20,7 +20,7 @@ progress_fast() {
 		[ "$i" -le 3000 ] && echo "Start..."
 		[ "$i" -le 6000 -a "$i" -gt 3000 ] && echo "Middle..."
 		[ "$i" -gt 6000 ] && echo "End..."
-		#sleep 0.1
+		sleep 0.1
 	done; 
 }; export -f progress_fast
 
