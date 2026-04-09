@@ -256,11 +256,30 @@ GtkWidget *widget_menuitem_create(
 			 * Use the <label> if provided, otherwise derive from stock_id */
 			const gchar *use_icon = NULL;
 			const gchar *use_label = label;
+			gchar *derived_label = NULL;
 			GtkWidget *box, *image, *accel_lbl;
 
 			/* Map common stock IDs to named icons */
 			if (g_str_has_prefix(stock_id, "gtk-")) {
 				use_icon = stock_id;
+				/* If label is the default "menuitem", derive from stock_id
+				 * e.g. "gtk-quit" -> "Quit", "gtk-save-as" -> "Save As" */
+				if (strcmp(label, "menuitem") == 0) {
+					gchar *p;
+					derived_label = g_strdup(stock_id + 4);
+					/* Capitalize first letter */
+					if (derived_label[0])
+						derived_label[0] = g_ascii_toupper(derived_label[0]);
+					/* Replace hyphens with spaces and capitalize following letters */
+					for (p = derived_label; *p; p++) {
+						if (*p == '-') {
+							*p = ' ';
+							if (*(p + 1))
+								*(p + 1) = g_ascii_toupper(*(p + 1));
+						}
+					}
+					use_label = derived_label;
+				}
 			}
 			widget = gtk_menu_item_new();
 			box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
@@ -276,6 +295,7 @@ GtkWidget *widget_menuitem_create(
 			gtk_box_pack_start(GTK_BOX(box), accel_lbl, TRUE, TRUE, 0);
 			gtk_container_add(GTK_CONTAINER(widget), box);
 			gtk_widget_show_all(box);
+			g_free(derived_label);
 			break;
 		}
 		case TYPE_MENUITEM_IMAGE_ICON: {
