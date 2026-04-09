@@ -78,7 +78,7 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 %option noinput
 
 %x EMBEDDED
-%x ST_TAG_ATTR ST_QUOTED_TAGATTR
+%x ST_TAG_ATTR ST_QUOTED_TAGATTR ST_SQUOTED_TAGATTR
 %x ST_STRING ST_QUOTED_STRING
 
 %%
@@ -144,7 +144,7 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 <ST_TAG_ATTR>\" 			{
 					  Token = "double quote";
 					  BEGIN(ST_QUOTED_TAGATTR);				}
-					  
+
 <ST_QUOTED_TAGATTR>[^\\"]+		{
 					  Token = "string";
 					  yymore();						}
@@ -152,8 +152,24 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 <ST_QUOTED_TAGATTR>("\\\"")		{
 					  Token = "string";
 					  yymore();						}
-					  
+
 <ST_QUOTED_TAGATTR>\"			{
+					  Token = yytext;
+					  gtkdialog_lval.cval = g_strdup(yytext);
+					  gtkdialog_lval.cval[strlen(gtkdialog_lval.cval) - 1] = '\0';
+					  BEGIN(ST_TAG_ATTR);
+					  return STRING;
+					  							}
+
+<ST_TAG_ATTR>\x27 			{
+					  Token = "single quote";
+					  BEGIN(ST_SQUOTED_TAGATTR);				}
+
+<ST_SQUOTED_TAGATTR>[^\x27]+		{
+					  Token = "string";
+					  yymore();						}
+
+<ST_SQUOTED_TAGATTR>\x27		{
 					  Token = yytext;
 					  gtkdialog_lval.cval = g_strdup(yytext);
 					  gtkdialog_lval.cval[strlen(gtkdialog_lval.cval) - 1] = '\0';
