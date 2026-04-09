@@ -1,0 +1,86 @@
+#!/bin/sh
+
+# Demonstrates plain menu items without icons,
+# with separators and keyboard accelerators.
+
+GTKDIALOG=gtkdialog3
+
+MAIN_DIALOG='
+<window title="Menu Without Icons" resizable="false" width-request="360" height-request="240" border-width="0">
+	<vbox spacing="0">
+		<menubar>
+			<menu use-underline="true">
+				<menuitem accel-key="0x4e" accel-mods="4">
+					<label>"_New"</label>
+					<action>echo "file:new"</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem accel-key="0x4f" accel-mods="4">
+					<label>"_Open"</label>
+					<action>echo "file:open"</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem accel-key="0x53" accel-mods="4">
+					<label>"_Save"</label>
+					<action>echo "file:save"</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem accel-key="0x50" accel-mods="4">
+					<label>"_Print"</label>
+					<action>echo "file:print"</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem>
+					<label>"Close Ot_her Documents"</label>
+					<action>echo "file:close-other"</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem accel-key="0x51" accel-mods="4">
+					<label>"_Quit"</label>
+					<action>exit:Quit</action>
+				</menuitem>
+				<label>"_File"</label>
+			</menu>
+			<menu use-underline="true">
+				<menuitem accel-key="0x5a" accel-mods="4">
+					<label>"_Undo"</label>
+					<action>echo "edit:undo"</action>
+				</menuitem>
+				<menuitem accel-key="0x59" accel-mods="4">
+					<label>"_Redo"</label>
+					<action>echo "edit:redo"</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem accel-key="0x58" accel-mods="4">
+					<label>"Cu_t"</label>
+					<action>echo "edit:cut"</action>
+				</menuitem>
+				<menuitem accel-key="0x43" accel-mods="4">
+					<label>"_Copy"</label>
+					<action>echo "edit:copy"</action>
+				</menuitem>
+				<menuitem accel-key="0x56" accel-mods="4">
+					<label>"_Paste"</label>
+					<action>echo "edit:paste"</action>
+				</menuitem>
+				<menuitem>
+					<label>"_Delete"</label>
+					<action>echo "edit:delete"</action>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem accel-key="0x41" accel-mods="4">
+					<label>"Select _All"</label>
+					<action>echo "edit:select-all"</action>
+				</menuitem>
+				<label>"_Edit"</label>
+			</menu>
+		</menubar>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac

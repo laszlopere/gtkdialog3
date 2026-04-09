@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# Demonstrates menu items with freedesktop named icons,
+# separators, and keyboard accelerators.
+
+GTKDIALOG=gtkdialog3
+
+MAIN_DIALOG='
+<window title="Menu With Icons" resizable="false" width-request="360" height-request="240" border-width="0">
+	<vbox spacing="0">
+		<menubar>
+			<menu use-underline="true">
+				<menuitem icon-name="document-new" accel-key="0x4e" accel-mods="4">
+					<label>"_New"</label>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem icon-name="document-open" accel-key="0x4f" accel-mods="4">
+					<label>"_Open"</label>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem icon-name="document-save" accel-key="0x53" accel-mods="4">
+					<label>"_Save"</label>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem icon-name="document-print" accel-key="0x50" accel-mods="4">
+					<label>"_Print"</label>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem icon-name="window-close">
+					<label>"Close Ot_her Documents"</label>
+				</menuitem>
+				<menuitemseparator></menuitemseparator>
+				<menuitem icon-name="application-exit" accel-key="0x51" accel-mods="4">
+					<label>"_Quit"</label>
+					<action>exit:Quit</action>
+				</menuitem>
+				<label>"_File"</label>
+			</menu>
+		</menubar>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
