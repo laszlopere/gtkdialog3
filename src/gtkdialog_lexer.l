@@ -892,6 +892,11 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 					  yymore();
 												}
 
+<ST_STRING>\n				{
+					  ++linenumber;
+					  yymore();
+												}
+
 <ST_STRING>"<"				{
 					  gchar *tmp = g_strdup(yytext);
 					  tmp[strlen(tmp) - 1] = '\0';
