@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Demonstrates the GtkSwitch widget for on/off toggles.
+
+GTKDIALOG=gtkdialog3
+
+MAIN_DIALOG='
+<window title="Switch Demo">
+	<vbox spacing="10" border-width="10">
+		<text>
+			<label>"The switch widget provides a simple
+on/off toggle control."</label>
+		</text>
+		<frame Settings>
+			<hbox homogeneous="true">
+				<text space-expand="true" space-fill="true" xalign="1">
+					<label>Enable notifications:</label>
+				</text>
+				<switch>
+					<variable>NOTIFICATIONS</variable>
+					<default>true</default>
+				</switch>
+			</hbox>
+			<hbox homogeneous="true">
+				<text space-expand="true" space-fill="true" xalign="1">
+					<label>Dark mode:</label>
+				</text>
+				<switch>
+					<variable>DARKMODE</variable>
+					<default>false</default>
+				</switch>
+			</hbox>
+		</frame>
+		<hbox homogeneous="true">
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
