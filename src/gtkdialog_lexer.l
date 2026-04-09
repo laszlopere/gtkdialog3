@@ -538,6 +538,14 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 }
 
 
+\<buttonbox\/\>				{ Token="<buttonbox/>"; pending_close_token = EBUTTONBOX; return(BUTTONBOX); }
+\<buttonbox\>				{ Token="<buttonbox>"; return(BUTTONBOX);		}
+\<\/buttonbox\>				{ Token="</buttonbox>"; return(EBUTTONBOX);		}
+\<buttonbox[ ]+				{ Token="<buttonbox>";
+					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EBUTTONBOX;
+					  return(PART_BUTTONBOX);				}
+
 \<checkbox\/\>				{ Token="<checkbox/>"; pending_close_token = ECHECKBOX; return(CHECKBOX); }
 \<checkbox\>				{ Token="<checkbox>"; return(CHECKBOX);       		}
 \<\/checkbox\>  			{ Token="</checkbox>"; return(ECHECKBOX);     		}

@@ -103,7 +103,8 @@ start_up(void)
 %token         CHOOSER PART_CHOOSER ECHOOSER
 %token         LABEL ELABEL
 %token         ITEM EITEM PART_ITEM
-%token         BUTTON PART_BUTTON EBUTTON 
+%token         BUTTON PART_BUTTON EBUTTON
+%token         BUTTONBOX PART_BUTTONBOX EBUTTONBOX
 %token         CHECKBOX ECHECKBOX PART_CHECKBOX
 %token         RADIO ERADIO PART_RADIO
 %token         PROGRESSBAR EPROGRESSBAR PART_PROGRESSBAR
@@ -210,8 +211,22 @@ wlist
 		token_store_attr(PUSH | WIDGET_HBOX, $2); 
 	}
   | wlist PART_HBOX tagattr '>' wlist attr EHBOX {
-		token_store_attr(PUSH | WIDGET_HBOX, $3); 
-		token_store(SUM);      
+		token_store_attr(PUSH | WIDGET_HBOX, $3);
+		token_store(SUM);
+	}
+  | BUTTONBOX wlist attr EBUTTONBOX {
+		token_store(PUSH | WIDGET_BUTTONBOX);
+	}
+  | wlist BUTTONBOX wlist attr EBUTTONBOX {
+		token_store(PUSH | WIDGET_BUTTONBOX);
+		token_store(SUM);
+	}
+  | PART_BUTTONBOX tagattr '>' wlist attr EBUTTONBOX {
+		token_store_attr(PUSH | WIDGET_BUTTONBOX, $2);
+	}
+  | wlist PART_BUTTONBOX tagattr '>' wlist attr EBUTTONBOX {
+		token_store_attr(PUSH | WIDGET_BUTTONBOX, $3);
+		token_store(SUM);
 	}
   | EVENTBOX wlist attr EEVENTBOX   { 
 		token_store(PUSH | WIDGET_EVENTBOX); 

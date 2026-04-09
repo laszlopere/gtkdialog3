@@ -54,6 +54,7 @@
 #include "widget_expander.h"
 #include "widget_switch.h"
 #include "widget_fontbutton.h"
+#include "widget_buttonbox.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
 #include "widget_hscale.h"
@@ -181,6 +182,9 @@ void print_command(instruction command)
 			break;
 		case WIDGET_FRAME:
 			printf("(new frame(pop()))");
+			break;
+		case WIDGET_BUTTONBOX:
+			printf("(new buttonbox(pop()))");
 			break;
 		case WIDGET_HBOX:
 			printf("(new hbox(pop()))");
@@ -487,6 +491,9 @@ void print_token(token Token)
 			break;
 		case WIDGET_FONTBUTTON:
 			printf("(FONTBUTTON)");
+			break;
+		case WIDGET_BUTTONBOX:
+			printf("(BUTTONBOX)");
 			break;
 		case WIDGET_FRAME:
 			printf("(FRAME)");
@@ -1007,6 +1014,11 @@ instruction_execute_push(
 			Widget = widget_frame_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			/* Creating this widget closes any open group */
+			lastradiowidget = NULL;
+			break;
+		case WIDGET_BUTTONBOX:
+			Widget = widget_buttonbox_create(Attr, tag_attributes, Widget_Type);
+			push_widget(Widget, Widget_Type);
 			lastradiowidget = NULL;
 			break;
 		case WIDGET_HBOX:

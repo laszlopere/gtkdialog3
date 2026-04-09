@@ -48,6 +48,7 @@
 #include "widget_expander.h"
 #include "widget_switch.h"
 #include "widget_fontbutton.h"
+#include "widget_buttonbox.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
 #include "widget_hscale.h"
@@ -149,6 +150,10 @@ char *widget_get_text_value(GtkWidget *widget, int type)
 			break;
 		case WIDGET_FRAME:
 			string = widget_frame_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_BUTTONBOX:
+			string = widget_buttonbox_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_HBOX:
@@ -413,6 +418,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_FRAME:
 			type = "FRAME";
+			break;
+		case WIDGET_BUTTONBOX:
+			type = "BUTTONBOX";
 			break;
 		case WIDGET_HBOX:
 			type = "HBOX";

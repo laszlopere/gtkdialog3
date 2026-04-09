@@ -96,6 +96,7 @@ typedef struct actioncommand {
 #define WIDGET_EVENTBOX          0x00B10000
 #define WIDGET_EXPANDER          0x00B20000
 #define WIDGET_SWITCH            0x00B30000
+#define WIDGET_BUTTONBOX         0x00B40000
 
 /*
  * Imperative stuff.

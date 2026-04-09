@@ -34,6 +34,7 @@
 #include "widget_expander.h"
 #include "widget_switch.h"
 #include "widget_fontbutton.h"
+#include "widget_buttonbox.h"
 #include "widget_frame.h"
 #include "widget_hbox.h"
 #include "widget_hscale.h"
@@ -409,6 +410,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_FRAME:
 			widget_frame_fileselect(toset, name, value);
 			break;
+		case WIDGET_BUTTONBOX:
+			widget_buttonbox_fileselect(toset, name, value);
+			break;
 		case WIDGET_HBOX:
 			widget_hbox_fileselect(toset, name, value);
 			break;
@@ -538,6 +542,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_FRAME:
 			widget_frame_save(var);
+			break;
+		case WIDGET_BUTTONBOX:
+			widget_buttonbox_save(var);
 			break;
 		case WIDGET_HBOX:
 			widget_hbox_save(var);
@@ -688,6 +695,9 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_FRAME:
 			widget_frame_refresh(var);
+			break;
+		case WIDGET_BUTTONBOX:
+			widget_buttonbox_refresh(var);
 			break;
 		case WIDGET_HBOX:
 			widget_hbox_refresh(var);
@@ -1838,6 +1848,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_FRAME:
 			widget_frame_clear(toclear);
 			break;
+		case WIDGET_BUTTONBOX:
+			widget_buttonbox_clear(toclear);
+			break;
 		case WIDGET_HBOX:
 			widget_hbox_clear(toclear);
 			break;
@@ -1987,6 +2000,9 @@ int remove_selected_variable(const char *name)
 			break;
 		case WIDGET_FRAME:
 			widget_frame_removeselected(toclear);
+			break;
+		case WIDGET_BUTTONBOX:
+			widget_buttonbox_removeselected(toclear);
 			break;
 		case WIDGET_HBOX:
 			widget_hbox_removeselected(toclear);

@@ -33,6 +33,7 @@ gtkdialog3_SOURCES = \
 	widget_entry.c widget_entry.h \
 	widget_eventbox.c widget_eventbox.h \
 	widget_expander.c widget_expander.h \
+	widget_buttonbox.c widget_buttonbox.h \
 	widget_fontbutton.c widget_fontbutton.h \
 	widget_frame.c widget_frame.h \
 	widget_hbox.c widget_hbox.h \
