@@ -537,11 +537,6 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 	return PART_BUTTON;
 }
 
-\<button\ ok\>      			{ Token="<button>"; return(BUTTONOK);  			}
-\<button\ cancel\>  			{ Token="<button>"; return(BUTTONCANCEL);  		}
-\<button\ help\>    			{ Token="<button>"; return(BUTTONHELP);  		}
-\<button\ yes\>     			{ Token="<button>"; return(BUTTONYES);  		}
-\<button\ no\>      			{ Token="<button>"; return(BUTTONNO);  			}
 
 \<checkbox\/\>				{ Token="<checkbox/>"; pending_close_token = ECHECKBOX; return(CHECKBOX); }
 \<checkbox\>				{ Token="<checkbox>"; return(CHECKBOX);       		}

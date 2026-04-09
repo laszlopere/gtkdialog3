@@ -104,7 +104,6 @@ start_up(void)
 %token         LABEL ELABEL
 %token         ITEM EITEM PART_ITEM
 %token         BUTTON PART_BUTTON EBUTTON 
-%token         BUTTONOK BUTTONCANCEL BUTTONHELP BUTTONYES BUTTONNO
 %token         CHECKBOX ECHECKBOX PART_CHECKBOX
 %token         RADIO ERADIO PART_RADIO
 %token         PROGRESSBAR EPROGRESSBAR PART_PROGRESSBAR
@@ -359,13 +358,21 @@ text
 button
   : BUTTON attr EBUTTON       {token_store(PUSH | WIDGET_BUTTON);  }
   | PART_BUTTON tagattr '>' attr EBUTTON {
-                token_store_attr(PUSH | WIDGET_BUTTON, $2);
+		char *stock = get_tag_attribute($2, "stock");
+		if (stock != NULL) {
+			token widget;
+			if (strcmp(stock, "ok") == 0) widget = WIDGET_OKBUTTON;
+			else if (strcmp(stock, "cancel") == 0) widget = WIDGET_CANCELBUTTON;
+			else if (strcmp(stock, "help") == 0) widget = WIDGET_HELPBUTTON;
+			else if (strcmp(stock, "yes") == 0) widget = WIDGET_YESBUTTON;
+			else if (strcmp(stock, "no") == 0) widget = WIDGET_NOBUTTON;
+			else { yyerror("Unknown stock button type"); widget = WIDGET_BUTTON; }
+			kill_tag_attribute($2, "stock");
+			token_store_attr(PUSH | widget, $2);
+		} else {
+			token_store_attr(PUSH | WIDGET_BUTTON, $2);
+		}
 	}
-  | BUTTONOK attr EBUTTON     {token_store(PUSH | WIDGET_OKBUTTON);}
-  | BUTTONCANCEL attr EBUTTON {token_store(PUSH | WIDGET_CANCELBUTTON);}
-  | BUTTONHELP attr EBUTTON   {token_store(PUSH | WIDGET_HELPBUTTON);}
-  | BUTTONNO attr EBUTTON     {token_store(PUSH | WIDGET_NOBUTTON);}
-  | BUTTONYES attr EBUTTON    {token_store(PUSH | WIDGET_YESBUTTON);}
   ;
 
 checkbox
