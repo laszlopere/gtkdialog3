@@ -13,13 +13,16 @@ Thunor: I've fixed these or found them to have already been fixed:
      parameter showing what kind of command has to be executed.
 (10) The tree widget is virtually unhandled.
 (12) Segmentation fault when the table has no variable name.
+(13) Unpaired " in variable output broke shell eval. Fixed by escaping
+     double quotes and backslashes in print_variables().
+     See examples/entry/entry_quote_in_value and its test
+     tests/ft_entry_quote_in_value/ft_entry_quote_in_value.py.
 
 Thunor: These still remain:
 ---------------------------
 (9)  Opening multiple window with the same name leads to confusion.
 (11) At the creation of the widgets the initialization should be sorted
      as the dependencies are dictating.
-(13) Unpaired " is printed to the standard output, which is very problematic.
 (14) The <text wrap="true" width-chars="40"> label is not wrapping long text.
      See examples/languages/bash_script_event_driven and its test
      tests/ft_bash_script_event_driven/ft_bash_script_event_driven.py.
