@@ -1,0 +1,112 @@
+#!/bin/sh
+
+# Simple spinbutton example demonstrating all supported properties.
+
+GTKDIALOG=gtkdialog3
+
+export MAIN_DIALOG='
+<window title="SpinButton Properties" resizable="false">
+  <vbox border-width="10" spacing="10">
+
+    <frame Range>
+      <vbox border-width="5" spacing="5">
+        <text xalign="0"><label>range-min, range-max, range-step, range-value</label></text>
+        <hbox spacing="10">
+          <spinbutton range-min="-50" range-max="50" range-step="5" range-value="10">
+            <variable>SPB_RANGE</variable>
+          </spinbutton>
+          <text xalign="0"><label>min=-50, max=50, step=5, value=10</label></text>
+        </hbox>
+      </vbox>
+    </frame>
+
+    <frame Decimal digits>
+      <vbox border-width="5" spacing="5">
+        <text xalign="0"><label>digits (number of decimal places displayed)</label></text>
+        <hbox spacing="10">
+          <spinbutton range-min="0" range-max="1" range-step="0.001"
+            range-value="0.5" digits="3">
+            <variable>SPB_DIGITS</variable>
+          </spinbutton>
+          <text xalign="0"><label>digits=3, step=0.001</label></text>
+        </hbox>
+      </vbox>
+    </frame>
+
+    <frame Wrapping>
+      <vbox border-width="5" spacing="5">
+        <text xalign="0"><label>wrap (value wraps around at min/max)</label></text>
+        <hbox spacing="10">
+          <spinbutton range-min="0" range-max="23" range-step="1"
+            range-value="0" wrap="true">
+            <variable>SPB_WRAP</variable>
+          </spinbutton>
+          <text xalign="0"><label>wrap=true (0-23, like hours)</label></text>
+        </hbox>
+      </vbox>
+    </frame>
+
+    <frame Numeric and snap-to-ticks>
+      <vbox border-width="5" spacing="5">
+        <text xalign="0"><label>numeric (reject non-numeric input), snap-to-ticks</label></text>
+        <hbox spacing="10">
+          <spinbutton range-min="0" range-max="100" range-step="10"
+            range-value="50" numeric="true" snap-to-ticks="true">
+            <variable>SPB_SNAP</variable>
+          </spinbutton>
+          <text xalign="0"><label>numeric=true, snap-to-ticks=true, step=10</label></text>
+        </hbox>
+      </vbox>
+    </frame>
+
+    <frame Update policy>
+      <vbox border-width="5" spacing="5">
+        <text xalign="0"><label>update-policy (0=always, 1=if-valid only)</label></text>
+        <hbox spacing="10">
+          <spinbutton range-min="0" range-max="10" range-step="1"
+            range-value="5" update-policy="1">
+            <variable>SPB_POLICY</variable>
+          </spinbutton>
+          <text xalign="0"><label>update-policy=1 (if-valid)</label></text>
+        </hbox>
+      </vbox>
+    </frame>
+
+    <frame Entry properties>
+      <vbox border-width="5" spacing="5">
+        <text xalign="0"><label>editable, xalign, width-chars, max-length</label></text>
+        <hbox spacing="10">
+          <spinbutton range-min="0" range-max="999" range-step="1"
+            range-value="42" editable="false" xalign="1"
+            width-chars="6" max-length="3">
+            <variable>SPB_ENTRY</variable>
+          </spinbutton>
+          <text xalign="0"><label>editable=false, xalign=1, width-chars=6, max-length=3</label></text>
+        </hbox>
+      </vbox>
+    </frame>
+
+    <frame Default value and tooltip>
+      <vbox border-width="5" spacing="5">
+        <text xalign="0"><label>default (initial value via tag), tooltip-text</label></text>
+        <hbox spacing="10">
+          <spinbutton tooltip-text="This spinbutton starts at 7 via the default tag">
+            <default>7</default>
+            <variable>SPB_DEFAULT</variable>
+          </spinbutton>
+          <text xalign="0"><label>default=7 (hover for tooltip)</label></text>
+        </hbox>
+      </vbox>
+    </frame>
+
+    <hbox homogeneous="true">
+      <button ok></button>
+    </hbox>
+  </vbox>
+</window>
+'
+
+case $1 in
+  -d | --dump) echo "$MAIN_DIALOG" ;;
+  *) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
