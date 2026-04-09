@@ -1,10 +1,28 @@
 #!/bin/sh
 
+# Demonstrates combobox tag attributes passed as GObject properties.
+#
+# case-sensitive="false" - Text matching for value-in-list is
+#                          case-insensitive (e.g. "first" matches "First").
+# value-in-list="true"  - Restricts the entry so only values present in
+#                          the dropdown list are accepted.
+# allow-empty="false"   - When combined with value-in-list, prevents the
+#                          user from leaving the entry empty.
+
 GTKDIALOG=gtkdialog3
 
 MAIN_DIALOG='
 <window>
 	<vbox>
+		<text>
+			<label>Combobox attribute demo.
+
+The first combobox has case-sensitive="false" and value-in-list="true":
+only items already in the list are accepted, matching case-insensitively.
+
+The second combobox adds allow-empty="false":
+the entry cannot be left blank.</label>
+		</text>
 		<hbox>
 			<text>
 				<label>value-in-list:</label>
