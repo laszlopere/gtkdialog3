@@ -7,7 +7,7 @@ Verifies:
 2. Menu bar with File and Edit menus is present
 3. All menu items are present with correct labels
 4. Clicking menu items prints correct action IDs to stdout
-5. Quit menu item closes the dialog
+5. Quit menu item closes the dialog with EXIT="Quit"
 """
 
 import subprocess
@@ -58,6 +58,14 @@ def find_widgets(node, role=None):
     return results
 
 
+def find_widget_by_name(node, role, name):
+    """Find a widget by role and name."""
+    for w in find_widgets(node, role):
+        if (w.get_name() or '') == name:
+            return w
+    return None
+
+
 def do_action(widget, action_name=''):
     """Invoke an action on a widget."""
     ai = widget.get_action_iface()
@@ -70,12 +78,36 @@ def do_action(widget, action_name=''):
     return False
 
 
-def find_menu_item(items, name):
-    """Find a menu item by its label."""
-    for mi in items:
-        if (mi.get_name() or '') == name:
-            return mi
-    return None
+def click_menu_item(window, menu_name, item_name):
+    """Open a menu by name, then click an item within it.
+    Uses mouse events so the highlight visually tracks the pointer."""
+    menu = find_widget_by_name(window, Atspi.Role.MENU, menu_name)
+    if menu is None:
+        return False
+    do_action(menu, 'click')
+    time.sleep(0.3)
+    item = find_widget_by_name(window, Atspi.Role.MENU_ITEM, item_name)
+    if item is None:
+        return False
+    # Move pointer to the center of the menu item to trigger highlight.
+    # The abs warp alone doesn't generate GTK motion events, so a small
+    # relative nudge is needed to make the highlight follow the cursor.
+    comp = item.get_component_iface()
+    if comp:
+        rect = comp.get_extents(Atspi.CoordType.SCREEN)
+        cx = rect.x + rect.width // 2
+        cy = rect.y + rect.height // 2
+        Atspi.generate_mouse_event(cx, cy, 'abs')
+        time.sleep(0.05)
+        Atspi.generate_mouse_event(1, 0, 'rel')
+        time.sleep(0.05)
+        Atspi.generate_mouse_event(-1, 0, 'rel')
+        time.sleep(0.3)
+        Atspi.generate_mouse_event(cx, cy, 'b1c')
+    else:
+        do_action(item, 'click')
+    time.sleep(0.5)
+    return True
 
 
 t = TestRunner()
@@ -120,54 +152,55 @@ t.check('Edit' in menu_names, "Edit menu is present")
 t.begin("testFileMenuItems")
 file_items = ['New', 'Open', 'Save', 'Print', 'Close Other Documents', 'Quit']
 for name in file_items:
-    t.check(find_menu_item(items, name) is not None,
+    t.check(find_widget_by_name(window, Atspi.Role.MENU_ITEM, name) is not None,
             f"File menu has '{name}' item")
 
 # --- Test 3: Edit menu items ---
 t.begin("testEditMenuItems")
 edit_items = ['Undo', 'Redo', 'Cut', 'Copy', 'Paste', 'Delete', 'Select All']
 for name in edit_items:
-    t.check(find_menu_item(items, name) is not None,
+    t.check(find_widget_by_name(window, Atspi.Role.MENU_ITEM, name) is not None,
             f"Edit menu has '{name}' item")
 
 # --- Test 4: Menu item actions print correct IDs ---
 t.begin("testMenuActions")
 test_clicks = [
-    ('Save', 'file:save'),
-    ('Print', 'file:print'),
-    ('Cut', 'edit:cut'),
-    ('Copy', 'edit:copy'),
+    ('File', 'New', 'file:new'),
+    ('File', 'Open', 'file:open'),
+    ('File', 'Save', 'file:save'),
+    ('File', 'Print', 'file:print'),
+    ('File', 'Close Other Documents', 'file:close-other'),
+    ('Edit', 'Undo', 'edit:undo'),
+    ('Edit', 'Redo', 'edit:redo'),
+    ('Edit', 'Cut', 'edit:cut'),
+    ('Edit', 'Copy', 'edit:copy'),
+    ('Edit', 'Paste', 'edit:paste'),
+    ('Edit', 'Delete', 'edit:delete'),
+    ('Edit', 'Select All', 'edit:select-all'),
 ]
-for item_name, expected_output in test_clicks:
-    mi = find_menu_item(items, item_name)
-    if mi:
-        do_action(mi, 'click')
-        time.sleep(0.3)
+for menu_name, item_name, expected_output in test_clicks:
+    t.log(f"Clicking {menu_name} > {item_name}...")
+    click_menu_item(window, menu_name, item_name)
 
 # --- Test 5: Quit closes the dialog ---
 t.begin("testQuit")
-quit_item = find_menu_item(items, 'Quit')
-if quit_item:
-    do_action(quit_item, 'click')
-    time.sleep(1)
+click_menu_item(window, 'File', 'Quit')
+time.sleep(1)
 
-    retcode = proc.poll()
-    if t.check(retcode is not None,
-               f"Dialog closed after Quit (exit code {retcode})"
-               if retcode is not None
-               else "Dialog should have closed after Quit"):
-        stdout = proc.stdout.read().decode()
-        t.log(f"stdout: {repr(stdout)}")
+retcode = proc.poll()
+if t.check(retcode is not None,
+           f"Dialog closed after Quit (exit code {retcode})"
+           if retcode is not None
+           else "Dialog should have closed after Quit"):
+    stdout = proc.stdout.read().decode()
+    t.log(f"stdout: {repr(stdout)}")
 
-        for item_name, expected_output in test_clicks:
-            t.check(expected_output in stdout,
-                    f"'{expected_output}' found in output")
-        t.check('EXIT="Quit"' in stdout,
-                "EXIT is 'Quit' in output")
-    else:
-        proc.kill()
+    for menu_name, item_name, expected_output in test_clicks:
+        t.check(expected_output in stdout,
+                f"'{expected_output}' found in output")
+    t.check('EXIT="Quit"' in stdout,
+            "EXIT is 'Quit' in output")
 else:
-    t.check(False, "Quit menu item not found")
     proc.kill()
 
 t.summary()
