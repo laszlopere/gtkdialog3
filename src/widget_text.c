@@ -81,8 +81,8 @@ GtkWidget *widget_text_create(
 	/* Enable line wrapping by default.
 	 * In GTK3's height-for-width geometry, a wrapping label requests
 	 * only its minimum width (longest word) by default, causing the
-	 * window to be too narrow. Set width-chars to the longest line
-	 * length so the label requests enough space for its content. */
+	 * window to be too narrow. Measure the actual pixel width of the
+	 * longest line using Pango and set that as the minimum width. */
 	gtk_label_set_line_wrap(GTK_LABEL(widget), TRUE);
 	{
 		const gchar *label_text;
@@ -90,26 +90,32 @@ GtkWidget *widget_text_create(
 
 		label_text = gtk_label_get_text(GTK_LABEL(widget));
 		if (label_text) {
-			/* Strip Pango markup if present to get visible text length */
+			/* Strip Pango markup if present to get visible text */
 			if (gtk_label_get_use_markup(GTK_LABEL(widget)))
 				pango_parse_markup(label_text, -1, 0,
 					NULL, &plain_text, NULL, NULL);
 
-			const gchar *p = plain_text ? plain_text : label_text;
-			gint max_len = 0, cur_len = 0;
-			while (*p) {
-				if (*p == '\n') {
-					if (cur_len > max_len) max_len = cur_len;
-					cur_len = 0;
-				} else {
-					cur_len++;
-				}
-				p++;
+			const gchar *text = plain_text ? plain_text : label_text;
+			PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
+			PangoAttrList *attrs = gtk_label_get_attributes(GTK_LABEL(widget));
+			if (attrs)
+				pango_layout_set_attributes(layout, attrs);
+
+			/* Measure each line and find the widest */
+			gint max_width_px = 0;
+			gchar **lines = g_strsplit(text, "\n", -1);
+			for (gint i = 0; lines[i]; i++) {
+				gint w;
+				pango_layout_set_text(layout, lines[i], -1);
+				pango_layout_get_pixel_size(layout, &w, NULL);
+				if (w > max_width_px) max_width_px = w;
 			}
-			if (cur_len > max_len) max_len = cur_len;
-			if (max_len > 0)
-				gtk_label_set_width_chars(GTK_LABEL(widget), max_len);
+			g_strfreev(lines);
+			g_object_unref(layout);
 			g_free(plain_text);
+
+			if (max_width_px > 0)
+				gtk_widget_set_size_request(widget, max_width_px, -1);
 		}
 	}
 
