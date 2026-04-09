@@ -31,7 +31,7 @@ MAIN_DIALOG='
 				'"`funcbtnCreate 0 true gtk-cut`"'
 			</vbox>
 		</hbox>
-		<hseparator></hseparator>
+		<hseparator/>
 		<hbox homogeneous="true">
 			<vbox>
 				<text><label>"<button image-position='"'1'"'>"</label></text>
@@ -50,7 +50,7 @@ MAIN_DIALOG='
 				'"`funcbtnCreate 1 true gtk-cut`"'
 			</vbox>
 		</hbox>
-		<hseparator></hseparator>
+		<hseparator/>
 		<hbox homogeneous="true" space-expand="false" space-fill="false">
 			<button border-width="8">
 				<label>Quit</label>
