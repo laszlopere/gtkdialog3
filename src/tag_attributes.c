@@ -155,10 +155,29 @@ static gboolean try_set_property(GtkWidget *widget, namevalue  *nameval)
 			if (!option_no_warning)
 			g_warning("%s(): Unhandled G_TYPE_UINT64", __func__);
 			break;
-		case G_TYPE_ENUM:
-			if (!option_no_warning)
-			g_warning("%s(): Unhandled G_TYPE_ENUM", __func__);
+		case G_TYPE_ENUM: {
+			GEnumClass *enum_class;
+			GEnumValue *enum_val;
+			gint        int_value;
+
+			enum_class = G_ENUM_CLASS(
+				g_type_class_ref(paramspec->value_type));
+			/* Try lookup by nick (e.g. "start", "center", "end") */
+			enum_val = g_enum_get_value_by_nick(enum_class,
+				nameval->value);
+			if (enum_val == NULL)
+				/* Try lookup by name (e.g. "GTK_ALIGN_START") */
+				enum_val = g_enum_get_value_by_name(enum_class,
+					nameval->value);
+			if (enum_val != NULL)
+				int_value = enum_val->value;
+			else
+				int_value = atoi(nameval->value);
+			g_object_set(G_OBJECT(widget),
+				nameval->name, int_value, NULL);
+			g_type_class_unref(enum_class);
 			break;
+		}
 		case G_TYPE_FLAGS:
 			if (!option_no_warning)
 			g_warning("%s(): Unhandled G_TYPE_FLAGS", __func__);
