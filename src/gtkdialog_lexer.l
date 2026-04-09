@@ -48,6 +48,8 @@ int gtkdialog_error(char *c);
 
 extern int linenumber;
 gchar *Token;
+static int pending_close_token = 0;
+static int current_close_token = 0;
 
 %}
 
@@ -67,6 +69,18 @@ gchar *Token;
 	#ifdef DEBUG
 		g_message("%s(): Start", __func__);
 	#endif
+
+	/*
+	 * Self-closing tag support: if a previous rule queued a
+	 * closing token (from <widget/> or <widget attr="val"/>),
+	 * return it now before scanning further input.
+	 */
+	if (pending_close_token) {
+		int t = pending_close_token;
+		pending_close_token = 0;
+		Token = "self-closing tag end";
+		return t;
+	}
 
 ">"       				{ Token=">"; return(yytext[0]); 			}
 <*>$[ \t\n]* 				{ Token="indent chars"; 				}
@@ -91,8 +105,18 @@ gchar *Token;
 					  Token="=";
 					  return '=';
 												}
+<ST_TAG_ATTR>\/\> 			{
+					  #ifdef DEBUG
+					  g_message(" -> self-close: '%s'", yytext);
+					  #endif
+					  Token="/>";
+					  pending_close_token = current_close_token;
+					  BEGIN(0);
+					  return '>';
+												}
+
 <ST_TAG_ATTR>\> 			{
-					  #ifdef DEBUG 
+					  #ifdef DEBUG
 					  g_message(" -> spec char: '%s'", yytext);
 					  #endif
 					  Token=">";
@@ -191,15 +215,22 @@ gchar *Token;
 	/*
 	 * The widget tags.
 	 */
-\<window\> { 
-	Token="<window>"; 
+\<window\/\> {
+	Token="<window/>";
+	pending_close_token = EWINDOW;
 	return(WINDOW);
 }
 
-\<window[ ]+ { 
-	Token="<window>"; 
+\<window\> {
+	Token="<window>";
+	return(WINDOW);
+}
+
+\<window[ ]+ {
+	Token="<window>";
 	BEGIN(ST_TAG_ATTR);
-	return(PART_WINDOW);  		
+	current_close_token = EWINDOW;
+	return(PART_WINDOW);
 }
 
 \<\/window\> { 
@@ -208,14 +239,21 @@ gchar *Token;
 }
 
 
-\<notebook\> { 
-	Token="<notebook>"; 
+\<notebook\/\> {
+	Token="<notebook/>";
+	pending_close_token = ENOTEBOOK;
 	return(NOTEBOOK);
 }
 
-\<notebook[ ]+ { 
+\<notebook\> {
+	Token="<notebook>";
+	return(NOTEBOOK);
+}
+
+\<notebook[ ]+ {
 	Token="<notebook>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = ENOTEBOOK;
 	return(PART_NOTEBOOK);
 }
 
@@ -225,14 +263,21 @@ gchar *Token;
 }
 
 
-\<vbox\> { 
-	Token="<vbox>"; 
+\<vbox\/\> {
+	Token="<vbox/>";
+	pending_close_token = EVBOX;
 	return(VBOX);
 }
 
-\<vbox[ ]+ { 
-	Token="<vbox>"; 
+\<vbox\> {
+	Token="<vbox>";
+	return(VBOX);
+}
+
+\<vbox[ ]+ {
+	Token="<vbox>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = EVBOX;
 	return(PART_VBOX);
 }
 
@@ -242,14 +287,21 @@ gchar *Token;
 }
 
 
-\<hbox\> { 
-	Token="<hbox>"; 
+\<hbox\/\> {
+	Token="<hbox/>";
+	pending_close_token = EHBOX;
 	return(HBOX);
 }
 
-\<hbox[ ]+ { 
+\<hbox\> {
+	Token="<hbox>";
+	return(HBOX);
+}
+
+\<hbox[ ]+ {
 	Token="<hbox>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = EHBOX;
 	return(PART_HBOX);
 }
 
@@ -259,10 +311,17 @@ gchar *Token;
 }
 
 
-\<frame\> { 
-	Token="<frame>"; 
-	gtkdialog_lval.cval = "";  
-	return(FRAME); 	
+\<frame\/\> {
+	Token="<frame/>";
+	gtkdialog_lval.cval = "";
+	pending_close_token = EFRAME;
+	return(FRAME);
+}
+
+\<frame\> {
+	Token="<frame>";
+	gtkdialog_lval.cval = "";
+	return(FRAME);
 }
 
 \<frame\ [^\>]+\> {
@@ -278,14 +337,21 @@ gchar *Token;
 }
 
 
-\<text\> { 
-	Token="<text>"; 
+\<text\/\> {
+	Token="<text/>";
+	pending_close_token = ETEXT;
 	return(TEXT);
 }
 
-\<text[ ]+ { 
-	Token="<text>"; 
+\<text\> {
+	Token="<text>";
+	return(TEXT);
+}
+
+\<text[ ]+ {
+	Token="<text>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = ETEXT;
 	return(PART_TEXT);
 }
 
@@ -295,48 +361,69 @@ gchar *Token;
 }
 
 
-\<pixmap\> { 
-	Token="<pixmap>"; 
+\<pixmap\/\> {
+	Token="<pixmap/>";
+	pending_close_token = EPIXMAP;
 	return(PIXMAP);
 }
 
-\<\/pixmap\> { 
-	Token="</pixmap>"; 
-	return(EPIXMAP); 
+\<pixmap\> {
+	Token="<pixmap>";
+	return(PIXMAP);
 }
 
-\<pixmap[ ]+ { 
-	Token="<pixmap>"; 
+\<\/pixmap\> {
+	Token="</pixmap>";
+	return(EPIXMAP);
+}
+
+\<pixmap[ ]+ {
+	Token="<pixmap>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = EPIXMAP;
 	return(PART_PIXMAP);
 }
 
 
-\<entry\> { 
-	Token="<entry>"; 
+\<entry\/\> {
+	Token="<entry/>";
+	pending_close_token = EENTRY;
 	return(ENTRY);
 }
 
-\<\/entry\> { 
-	Token="</entry>"; 
+\<entry\> {
+	Token="<entry>";
+	return(ENTRY);
+}
+
+\<\/entry\> {
+	Token="</entry>";
 	return(EENTRY);
 }
 
-\<entry[ ]+ { 
-	Token="<entry>"; 
+\<entry[ ]+ {
+	Token="<entry>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = EENTRY;
 	return(PART_ENTRY);
 }
 
 
-\<edit\> { 
-	Token="<edit>"; 
+\<edit\/\> {
+	Token="<edit/>";
+	pending_close_token = EEDIT;
 	return(EDIT);
 }
 
-\<edit[ ]+ { 
-	Token="<entry>"; 
+\<edit\> {
+	Token="<edit>";
+	return(EDIT);
+}
+
+\<edit[ ]+ {
+	Token="<entry>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = EEDIT;
 	return(PART_EDIT);
 }
 
@@ -346,14 +433,21 @@ gchar *Token;
 }
 
 
-\<tree\> { 
-	Token="<tree>";  
+\<tree\/\> {
+	Token="<tree/>";
+	pending_close_token = ETREE;
+	return(TREE);
+}
+
+\<tree\> {
+	Token="<tree>";
 	return  TREE;
 }
 
-\<tree[ ]+ { 
-	Token="<tree>";  
+\<tree[ ]+ {
+	Token="<tree>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = ETREE;
 	return PART_TREE;
 }
 
@@ -363,37 +457,50 @@ gchar *Token;
 }
 
 
-\<chooser\> { 
-	Token="<chooser>"; 
+\<chooser\/\> {
+	Token="<chooser/>";
+	pending_close_token = ECHOOSER;
 	return(CHOOSER);
 }
 
-\<\/chooser\> { 
-	Token="</chooser>"; 
+\<chooser\> {
+	Token="<chooser>";
+	return(CHOOSER);
+}
+
+\<\/chooser\> {
+	Token="</chooser>";
 	return(ECHOOSER);
 }
 
-\<chooser[ ]+ { 
-	Token="<chooser>";  
+\<chooser[ ]+ {
+	Token="<chooser>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = ECHOOSER;
 	return PART_CHOOSER;
 }
 
 
-\<button\> { 
-	Token="<button>"; 
+\<button\/\> {
+	Token="<button/>";
+	pending_close_token = EBUTTON;
 	return(BUTTON);
 }
 
-\<\/button\> { 
-	Token="</button>"; 
+\<button\> {
+	Token="<button>";
+	return(BUTTON);
+}
+
+\<\/button\> {
+	Token="</button>";
 	return(EBUTTON);
 }
 
-\<button[ ]+/([-a-zA-Z_]*=) { 
-	//g_message("PART_BUTTON: '%s'", yytext);
-	Token="<button>";  
+\<button[ ]+/([-a-zA-Z_]*=) {
+	Token="<button>";
 	BEGIN(ST_TAG_ATTR);
+	current_close_token = EBUTTON;
 	return PART_BUTTON;
 }
 
@@ -403,169 +510,223 @@ gchar *Token;
 \<button\ yes\>     			{ Token="<button>"; return(BUTTONYES);  		}
 \<button\ no\>      			{ Token="<button>"; return(BUTTONNO);  			}
 
+\<checkbox\/\>				{ Token="<checkbox/>"; pending_close_token = ECHECKBOX; return(CHECKBOX); }
 \<checkbox\>				{ Token="<checkbox>"; return(CHECKBOX);       		}
 \<\/checkbox\>  			{ Token="</checkbox>"; return(ECHECKBOX);     		}
-\<checkbox[ ]+  			{ Token="<checkbox>"; 
+\<checkbox[ ]+  			{ Token="<checkbox>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ECHECKBOX;
 					  return(PART_CHECKBOX);  				}
 
+\<radiobutton\/\>			{ Token="<radiobutton/>"; pending_close_token = ERADIO; return(RADIO); }
 \<radiobutton\>    			{ Token="<radiobutton>"; return(RADIO);      		}
 \<\/radiobutton\>  			{ Token="</radiobutton>"; return(ERADIO);    		}
-\<radiobutton[ ]+  			{ Token="<radiobutton>"; 
+\<radiobutton[ ]+  			{ Token="<radiobutton>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ERADIO;
 					  return(PART_RADIO);  					}
 
+\<progressbar\/\>			{ Token="<progressbar/>"; pending_close_token = EPROGRESSBAR; return(PROGRESSBAR); }
 \<progressbar\>    			{ Token="<progressbar>"; return(PROGRESSBAR);      	}
 \<\/progressbar\>  			{ Token="</progressbar>"; return(EPROGRESSBAR);    	}
-\<progressbar[ ]+  			{ Token="<progressbar>"; 
+\<progressbar[ ]+  			{ Token="<progressbar>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EPROGRESSBAR;
 					  return(PART_PROGRESSBAR);  				}
 
 
+\<radio\/\>				{ Token="<radio/>"; pending_close_token = ERADIO; return(RADIO); }
 \<radio\>    				{ Token="<radio>"; return(RADIO);  			}
 \<\/radio\>  				{ Token="</radio>"; return(ERADIO);  			}
 
+\<gvim\/\>				{ Token="<gvim/>"; pending_close_token = EGVIM; return(GVIM); }
 \<gvim\>     				{ Token="<gvim>"; return(GVIM);  			}
 \<\/gvim\>   				{ Token="</gvim>"; return(EGVIM);  			}
 
+\<combobox\/\>				{ Token="<combobox/>"; pending_close_token = ECOMBOBOX; return(COMBOBOX); }
 \<combobox\>    			{ Token="<combobox>"; return(COMBOBOX);		}
-\<combobox[ ]+  			{ Token="<combobox>"; 
+\<combobox[ ]+  			{ Token="<combobox>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ECOMBOBOX;
 					  return(PART_COMBOBOX); 					}
 \<\/combobox\>  			{ Token="</combobox>"; return(ECOMBOBOX);	}
 
+\<list\/\>				{ Token="<list/>"; pending_close_token = ELIST; return(LIST); }
 \<list\>    				{ Token="<list>";  return(LIST);  			}
-\<list[ ]+      			{ Token="<list>";  
+\<list[ ]+      			{ Token="<list>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ELIST;
 					  return(PART_LIST); 					}
 \<\/list\>  				{ Token="</list>"; return(ELIST);  			}
 
+\<table\/\>				{ Token="<table/>"; pending_close_token = ETABLE; return(TABLE); }
 \<table\>    				{ Token="<table>"; return(TABLE); }
-\<table[ ]+    				{ Token="<table>"; 
+\<table[ ]+    				{ Token="<table>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ETABLE;
 					  return(PART_TABLE); }
 \<\/table\>  				{ Token="</table>"; return(ETABLE); }
 
+\<menubar\/\>				{ Token="<menubar/>"; pending_close_token = EMENUBAR; return(MENUBAR); }
 \<menubar\>    				{ Token="<menubar>"; return(MENUBAR); }
-\<menubar[ ]+    			{ Token="<menubar>"; 
+\<menubar[ ]+    			{ Token="<menubar>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EMENUBAR;
 					  return(PART_MENUBAR); }
 \<\/menubar\>  				{ Token="</menubar>"; return(EMENUBAR); }
 
+\<menu\/\>				{ Token="<menu/>"; pending_close_token = EMENU; return(MENU); }
 \<menu\>    				{ Token="<menu>"; return(MENU); }
-\<menu[ ]+    				{ Token="<menu>"; 
+\<menu[ ]+    				{ Token="<menu>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EMENU;
 					  return(PART_MENU); }
 \<\/menu\>  				{ Token="</menu>"; return(EMENU); }
 
+\<menuitem\/\>				{ Token="<menuitem/>"; pending_close_token = EMENUITEM; return(MENUITEM); }
 \<menuitem\>    			{ Token="<menuitem>"; return(MENUITEM); }
-\<menuitem[ ]+  			{ Token="<menuitem>"; 
+\<menuitem[ ]+  			{ Token="<menuitem>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EMENUITEM;
 					  return(PART_MENUITEM); }
 \<\/menuitem\>  			{ Token="</menuitem>"; return(EMENUITEM); }
 
+\<menuitemseparator\/\>		{ Token="<menuitemseparator/>"; pending_close_token = EMENUITEMSEPARATOR; return(MENUITEMSEPARATOR); }
 \<menuitemseparator\>    	{ Token="<menuitemseparator>"; return(MENUITEMSEPARATOR); }
 \<\/menuitemseparator\>		{ Token="</menuitemseparator>"; return(EMENUITEMSEPARATOR); }
 
+\<separator\/\>			{ Token="<menuitemseparator/>"; pending_close_token = EMENUITEMSEPARATOR; return(MENUITEMSEPARATOR); }
 \<separator\>    			{ Token="<menuitemseparator>"; return(MENUITEMSEPARATOR); }
 \<\/separator\>				{ Token="</menuitemseparator>"; return(EMENUITEMSEPARATOR); }
 
 	/**************************************************************
 	 * Thunor: Newly supported widgets.
 	 **************************************************************/
+\<hseparator\/\>			{ Token="<hseparator/>"; pending_close_token = EHSEPARATOR; return(HSEPARATOR); }
 \<hseparator\>    			{ Token="<hseparator>"; return(HSEPARATOR); }
-\<hseparator[ ]+  			{ Token="<hseparator>"; 
+\<hseparator[ ]+  			{ Token="<hseparator>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EHSEPARATOR;
 					  return(PART_HSEPARATOR); }
 \<\/hseparator\>			{ Token="</hseparator>"; return(EHSEPARATOR); }
 
+\<vseparator\/\>			{ Token="<vseparator/>"; pending_close_token = EVSEPARATOR; return(VSEPARATOR); }
 \<vseparator\>    			{ Token="<vseparator>"; return(VSEPARATOR); }
-\<vseparator[ ]+  			{ Token="<vseparator>"; 
+\<vseparator[ ]+  			{ Token="<vseparator>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EVSEPARATOR;
 					  return(PART_VSEPARATOR); }
 \<\/vseparator\>			{ Token="</vseparator>"; return(EVSEPARATOR); }
 
+\<comboboxtext\/\>			{ Token="<comboboxtext/>"; pending_close_token = ECOMBOBOXTEXT; return(COMBOBOXTEXT); }
 \<comboboxtext\>   			{ Token="<comboboxtext>"; return(COMBOBOXTEXT); }
-\<comboboxtext[ ]+  		{ Token="<comboboxtext>"; 
+\<comboboxtext[ ]+  		{ Token="<comboboxtext>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ECOMBOBOXTEXT;
 					  return(PART_COMBOBOXTEXT); }
 \<\/comboboxtext\>  		{ Token="</comboboxtext>"; return(ECOMBOBOXTEXT); }
 
+\<comboboxentry\/\>		{ Token="<comboboxentry/>"; pending_close_token = ECOMBOBOXENTRY; return(COMBOBOXENTRY); }
 \<comboboxentry\>   		{ Token="<comboboxentry>"; return(COMBOBOXENTRY); }
-\<comboboxentry[ ]+  		{ Token="<comboboxentry>"; 
+\<comboboxentry[ ]+  		{ Token="<comboboxentry>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ECOMBOBOXENTRY;
 					  return(PART_COMBOBOXENTRY); }
 \<\/comboboxentry\>  		{ Token="</comboboxentry>"; return(ECOMBOBOXENTRY); }
 
+\<hscale\/\>				{ Token="<hscale/>"; pending_close_token = EHSCALE; return(HSCALE); }
 \<hscale\>					{ Token="<hscale>"; return(HSCALE); }
-\<hscale[ ]+				{ Token="<hscale>"; 
+\<hscale[ ]+				{ Token="<hscale>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EHSCALE;
 					  return(PART_HSCALE); }
 \<\/hscale\>				{ Token="</hscale>"; return(EHSCALE); }
 
+\<vscale\/\>				{ Token="<vscale/>"; pending_close_token = EVSCALE; return(VSCALE); }
 \<vscale\>					{ Token="<vscale>"; return(VSCALE); }
-\<vscale[ ]+				{ Token="<vscale>"; 
+\<vscale[ ]+				{ Token="<vscale>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EVSCALE;
 					  return(PART_VSCALE); }
 \<\/vscale\>				{ Token="</vscale>"; return(EVSCALE); }
 
+\<spinbutton\/\>			{ Token="<spinbutton/>"; pending_close_token = ESPINBUTTON; return(SPINBUTTON); }
 \<spinbutton\>				{ Token="<spinbutton>"; return(SPINBUTTON); }
-\<spinbutton[ ]+			{ Token="<spinbutton>"; 
+\<spinbutton[ ]+			{ Token="<spinbutton>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ESPINBUTTON;
 					  return(PART_SPINBUTTON); }
 \<\/spinbutton\>			{ Token="</spinbutton>"; return(ESPINBUTTON); }
 
+\<timer\/\>				{ Token="<timer/>"; pending_close_token = ETIMER; return(TIMER); }
 \<timer\>					{ Token="<timer>"; return(TIMER); }
-\<timer[ ]+					{ Token="<timer>"; 
+\<timer[ ]+					{ Token="<timer>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ETIMER;
 					  return(PART_TIMER); }
 \<\/timer\>					{ Token="</timer>"; return(ETIMER); }
 
+\<togglebutton\/\>			{ Token="<togglebutton/>"; pending_close_token = ETOGGLEBUTTON; return(TOGGLEBUTTON); }
 \<togglebutton\>			{ Token="<togglebutton>"; return(TOGGLEBUTTON); }
-\<togglebutton[ ]+			{ Token="<togglebutton>"; 
+\<togglebutton[ ]+			{ Token="<togglebutton>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ETOGGLEBUTTON;
 					  return(PART_TOGGLEBUTTON); }
 \<\/togglebutton\>			{ Token="</togglebutton>"; return(ETOGGLEBUTTON); }
 
+\<statusbar\/\>			{ Token="<statusbar/>"; pending_close_token = ESTATUSBAR; return(STATUSBAR); }
 \<statusbar\>				{ Token="<statusbar>"; return(STATUSBAR); }
-\<statusbar[ ]+				{ Token="<statusbar>"; 
+\<statusbar[ ]+				{ Token="<statusbar>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ESTATUSBAR;
 					  return(PART_STATUSBAR); }
 \<\/statusbar\>				{ Token="</statusbar>"; return(ESTATUSBAR); }
 
+\<colorbutton\/\>			{ Token="<colorbutton/>"; pending_close_token = ECOLORBUTTON; return(COLORBUTTON); }
 \<colorbutton\>				{ Token="<colorbutton>"; return(COLORBUTTON); }
-\<colorbutton[ ]+			{ Token="<colorbutton>"; 
+\<colorbutton[ ]+			{ Token="<colorbutton>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ECOLORBUTTON;
 					  return(PART_COLORBUTTON); }
 \<\/colorbutton\>			{ Token="</colorbutton>"; return(ECOLORBUTTON); }
 
+\<fontbutton\/\>			{ Token="<fontbutton/>"; pending_close_token = EFONTBUTTON; return(FONTBUTTON); }
 \<fontbutton\>				{ Token="<fontbutton>"; return(FONTBUTTON); }
-\<fontbutton[ ]+			{ Token="<fontbutton>"; 
+\<fontbutton[ ]+			{ Token="<fontbutton>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EFONTBUTTON;
 					  return(PART_FONTBUTTON); }
 \<\/fontbutton\>			{ Token="</fontbutton>"; return(EFONTBUTTON); }
 
+\<terminal\/\>				{ Token="<terminal/>"; pending_close_token = ETERMINAL; return(TERMINAL); }
 \<terminal\>				{ Token="<terminal>"; return(TERMINAL); }
-\<terminal[ ]+				{ Token="<terminal>"; 
+\<terminal[ ]+				{ Token="<terminal>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ETERMINAL;
 					  return(PART_TERMINAL); }
 \<\/terminal\>				{ Token="</terminal>"; return(ETERMINAL); }
 
+\<eventbox\/\>				{ Token="<eventbox/>"; pending_close_token = EEVENTBOX; return(EVENTBOX); }
 \<eventbox\>				{ Token="<eventbox>"; return(EVENTBOX); }
-\<eventbox[ ]+				{ Token="<eventbox>"; 
+\<eventbox[ ]+				{ Token="<eventbox>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EEVENTBOX;
 					  return(PART_EVENTBOX); }
 \<\/eventbox\>				{ Token="</eventbox>"; return(EEVENTBOX); }
 
+\<expander\/\>				{ Token="<expander/>"; pending_close_token = EEXPANDER; return(EXPANDER); }
 \<expander\>				{ Token="<expander>"; return(EXPANDER); }
 \<expander[ ]+				{ Token="<expander>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EEXPANDER;
 					  return(PART_EXPANDER); }
 \<\/expander\>				{ Token="</expander>"; return(EEXPANDER); }
 
+\<switch\/\>				{ Token="<switch/>"; pending_close_token = ESWITCH; return(SWITCH); }
 \<switch\>				{ Token="<switch>"; return(SWITCH); }
 \<switch[ ]+				{ Token="<switch>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ESWITCH;
 					  return(PART_SWITCH); }
 \<\/switch\>				{ Token="</switch>"; return(ESWITCH); }
 
@@ -576,8 +737,9 @@ gchar *Token;
 
 \<item\>     				{ Token="<item>"; return(ITEM);      			}
 \<\/item\>   				{ Token="</item>"; return(EITEM);    			}
-\<item[ ]+   				{ Token="<item>"; 
+\<item[ ]+   				{ Token="<item>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EITEM;
 					  return(PART_ITEM); 					}
 
 \<default\>      			{ Token="<default>"; return(DEFAULT);  			}
@@ -598,11 +760,13 @@ gchar *Token;
 \<input\>        			{ Token="<input>"; return(INPUT);   			}
 \<\/input\>      			{ Token="</input>"; return(EINPUT);   			}
 \<\input\ file\> 			{ Token="<input file>"; return(INPUTFILE);   		}
-\<\input\ file[ ]+ 			{ Token="<input file>"; 
+\<\input\ file[ ]+ 			{ Token="<input file>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EINPUT;
 					  return(PART_INPUTFILE);   				}
-\<\input\ [ ]*   			{ Token="<input>"; 
+\<\input\ [ ]*   			{ Token="<input>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EINPUT;
 					  return(PART_INPUT);   				}
 
 \<output\>        			{ Token="<output>"; return(OUTPUT);   			}
@@ -610,8 +774,9 @@ gchar *Token;
 \<\output\ file\> 			{ Token="<output>"; return(OUTPUTFILE);   		}
 
 \<variable\>     			{ Token="<variable>"; return(VARIABLE);  		}
-\<variable[ ]+   			{ Token="<variable>"; 
+\<variable[ ]+   			{ Token="<variable>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EVARIABLE;
 					  return(PART_VARIABLE); 				}
 \<\/variable\>   			{ Token="</variable>"; return(EVARIABLE);  		}
 
@@ -622,6 +787,7 @@ gchar *Token;
 \<action\>     				{ Token="<action>"; return(ACTION);  			}
 \<action[ ]+   				{ Token="<action>";
 					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EACTION;
 					  return(PART_ACTION); 					}
 \<\/action\>     			{ Token="</action>"; return(EACTION);  			}
 
