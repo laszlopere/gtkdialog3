@@ -251,24 +251,63 @@ GtkWidget *widget_menuitem_create(
 		case TYPE_MENUITEM_SEPARATOR:
 			widget = gtk_separator_menu_item_new();
 			break;
-		case TYPE_MENUITEM_IMAGE_STOCK:
-			/* Stock icons are gone in GTK3; create a plain menu item
-			 * with the stock_id as the label text */
-			widget = gtk_menu_item_new_with_label(stock_id);
+		case TYPE_MENUITEM_IMAGE_STOCK: {
+			/* Map GTK2 stock IDs to freedesktop named icons.
+			 * Use the <label> if provided, otherwise derive from stock_id */
+			const gchar *use_icon = NULL;
+			const gchar *use_label = label;
+			GtkWidget *box, *image;
+
+			/* Map common stock IDs to named icons */
+			if (g_str_has_prefix(stock_id, "gtk-")) {
+				/* Try the stock_id directly as an icon name */
+				use_icon = stock_id;
+			}
+			widget = gtk_menu_item_new();
+			box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+			if (use_icon) {
+				image = gtk_image_new_from_icon_name(use_icon,
+					GTK_ICON_SIZE_MENU);
+				gtk_box_pack_start(GTK_BOX(box), image, FALSE, FALSE, 0);
+			}
+			gtk_box_pack_start(GTK_BOX(box),
+				gtk_label_new_with_mnemonic(use_label), FALSE, FALSE, 0);
+			gtk_container_add(GTK_CONTAINER(widget), box);
+			gtk_widget_show_all(box);
 			break;
-		case TYPE_MENUITEM_IMAGE_ICON:
-			/* GtkImageMenuItem is deprecated in GTK3; create a plain
-			 * menu item (the icon is not displayed) */
-			widget = gtk_menu_item_new_with_label(label);
+		}
+		case TYPE_MENUITEM_IMAGE_ICON: {
+			/* Create a menu item with a named theme icon */
+			GtkWidget *box, *image;
+
+			widget = gtk_menu_item_new();
+			box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+			image = gtk_image_new_from_icon_name(icon_name,
+				GTK_ICON_SIZE_MENU);
+			gtk_box_pack_start(GTK_BOX(box), image, FALSE, FALSE, 0);
+			gtk_box_pack_start(GTK_BOX(box),
+				gtk_label_new_with_mnemonic(label), FALSE, FALSE, 0);
+			gtk_container_add(GTK_CONTAINER(widget), box);
+			gtk_widget_show_all(box);
 			break;
-		case TYPE_MENUITEM_IMAGE_FILE:
-			/* GtkImageMenuItem is deprecated in GTK3; create a plain
-			 * menu item (the image is not displayed) */
-			widget = gtk_menu_item_new_with_label(label);
+		}
+		case TYPE_MENUITEM_IMAGE_FILE: {
+			/* Create a menu item with an icon from a file */
+			GtkWidget *box, *image;
+
+			widget = gtk_menu_item_new();
+			box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+			image = gtk_image_new_from_file(image_name);
+			gtk_box_pack_start(GTK_BOX(box), image, FALSE, FALSE, 0);
+			gtk_box_pack_start(GTK_BOX(box),
+				gtk_label_new_with_mnemonic(label), FALSE, FALSE, 0);
+			gtk_container_add(GTK_CONTAINER(widget), box);
+			gtk_widget_show_all(box);
 			break;
+		}
 		case TYPE_MENUITEM_CHECK:
 			/* Create the GtkCheckMenuItem */
-			widget = gtk_check_menu_item_new_with_label(label);
+			widget = gtk_check_menu_item_new_with_mnemonic(label);
 			/* Get the active state */
 			if ((strcasecmp(active, "true") == 0) ||
 				(strcasecmp(active, "yes") == 0) || (atoi(active) == 1)) {
@@ -282,10 +321,10 @@ GtkWidget *widget_menuitem_create(
 		case TYPE_MENUITEM_RADIO:
 			/* Create the GtkRadioMenuItem */
 			if (lastradiowidget == NULL) {
-				widget = gtk_radio_menu_item_new_with_label(NULL, label);
+				widget = gtk_radio_menu_item_new_with_mnemonic(NULL, label);
 				lastradiowidget = widget;
 			} else {
-				widget = gtk_radio_menu_item_new_with_label_from_widget(
+				widget = gtk_radio_menu_item_new_with_mnemonic_from_widget(
 					GTK_RADIO_MENU_ITEM(lastradiowidget), label);
 			}
 			/* Get the active state */
@@ -301,7 +340,7 @@ GtkWidget *widget_menuitem_create(
 		case TYPE_MENUITEM:
 		default:
 			/* Create the GtkMenuItem */
-			widget = gtk_menu_item_new_with_label(label);
+			widget = gtk_menu_item_new_with_mnemonic(label);
 			break;
 	}
 
