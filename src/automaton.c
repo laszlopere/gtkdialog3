@@ -1388,10 +1388,31 @@ token_store_with_argument_attr(
 		argument = "";
 
 	sub_attribute = (command & SUB_ATTRIBUTE) >> 24;
+
+	/* When an <input> tag has tag attributes but no explicit sub_attribute
+	 * (i.e. PART_INPUT rule), determine the type from the tag attributes:
+	 * if a "file" attribute exists, it's a file input (using the attribute
+	 * value as the path); otherwise it's a shell command. This supports
+	 * <input file="path"> as a replacement for <input file>path</input>
+	 * and fixes the missing "Command:" prefix for <input attrs>cmd</input>. */
+	if (sub_attribute == 0 && (command & ATTRIBUTE) == ATTR_INPUT && attributes) {
+		gchar *file_value = get_tag_attribute(attributes, "file");
+		if (file_value != NULL ||
+			get_tag_attribute(attributes, "stock") != NULL ||
+			get_tag_attribute(attributes, "icon") != NULL) {
+			sub_attribute = 2;  /* SUB_ATTR_FILE >> 24 */
+			/* Use the file attribute value as path if content is empty */
+			if (file_value && argument[0] == '\0' && file_value[0] != '\0')
+				argument = file_value;
+		} else {
+			sub_attribute = 1;  /* SUB_ATTR_SHELL >> 24 */
+		}
+	}
+
 	inst.argument = g_malloc(strlen(argument) + 32);
 	switch (sub_attribute) {
 	case 0:
-		/* 
+		/*
 		 ** No sub_attribute, it is just a normal text.
 		 */
 		inst.argument = strdup(argument);

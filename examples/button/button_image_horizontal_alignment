@@ -54,7 +54,7 @@ MAIN_DIALOG='
 		<hbox homogeneous="true" space-expand="false" space-fill="false">
 			<button border-width="8">
 				<label>Quit</label>
-				<input file stock="application-exit"></input>
+				<input stock="application-exit"></input>
 			</button>
 		</hbox>
 	</vbox>

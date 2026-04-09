@@ -698,20 +698,23 @@ height
   ;
 
 input
-  : INPUT STRING EINPUT    { 
+  : INPUT STRING EINPUT    {
 		token_store_with_argument(SET|ATTR_INPUT|SUB_ATTR_SHELL,$2);
 	}
   | PART_INPUT tagattr '>' STRING EINPUT {
-		token_store_with_argument_attr(SET|ATTR_INPUT, $4, $2); 
+		token_store_with_argument_attr(SET|ATTR_INPUT, $4, $2);
 	}
-  | INPUTFILE STRING EINPUT  { 
-		token_store_with_argument(SET|ATTR_INPUT|SUB_ATTR_FILE,$2); 
+  | PART_INPUT tagattr '>' EINPUT {
+		token_store_with_argument_attr(SET|ATTR_INPUT, "", $2);
+	}
+  | INPUTFILE STRING EINPUT  {
+		token_store_with_argument(SET|ATTR_INPUT|SUB_ATTR_FILE,$2);
 	}
   | PART_INPUTFILE tagattr '>' STRING EINPUT {
-		token_store_with_argument_attr(SET|ATTR_INPUT|SUB_ATTR_FILE, $4, $2); 
+		token_store_with_argument_attr(SET|ATTR_INPUT|SUB_ATTR_FILE, $4, $2);
 	}
   | PART_INPUTFILE tagattr '>' EINPUT {
-		token_store_with_argument_attr(SET|ATTR_INPUT|SUB_ATTR_FILE, "", $2); 
+		token_store_with_argument_attr(SET|ATTR_INPUT|SUB_ATTR_FILE, "", $2);
 	}
   ;
 
