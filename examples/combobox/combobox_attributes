@@ -15,13 +15,13 @@ MAIN_DIALOG='
 <window>
 	<vbox>
 		<text>
-			<label>Combobox attribute demo.
+			<label>"Combobox attribute demo.
 
-The first combobox has case-sensitive="false" and value-in-list="true":
+The first combobox has case-sensitive and value-in-list set:
 only items already in the list are accepted, matching case-insensitively.
 
-The second combobox adds allow-empty="false":
-the entry cannot be left blank.</label>
+The second combobox adds allow-empty set to false:
+the entry cannot be left blank."</label>
 		</text>
 		<hbox>
 			<text>
