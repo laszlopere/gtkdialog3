@@ -1,0 +1,59 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog3
+
+MAIN_DIALOG="
+<window title='Package Selection' resizable='false'>
+	<vbox spacing='6' border-width='8'>
+		<frame title='Description'>
+			<text>
+				<label>Select the software collections you would like
+to install on this system. Each collection includes
+a set of related packages and their dependencies.
+
+You can change this selection later using the
+package manager.</label>
+			</text>
+		</frame>
+		<frame title='Software Collections'>
+			<vbox>
+				<checkbox>
+					<label>Base system utilities</label>
+					<variable>chkBase</variable>
+					<default>true</default>
+				</checkbox>
+				<checkbox>
+					<label>Development tools (compilers, debuggers, build systems)</label>
+					<variable>chkDevel</variable>
+				</checkbox>
+				<checkbox>
+					<label>Office suite (word processor, spreadsheet, presentations)</label>
+					<variable>chkOffice</variable>
+				</checkbox>
+				<checkbox>
+					<label>Graphics and multimedia (image editors, media players)</label>
+					<variable>chkMedia</variable>
+				</checkbox>
+				<checkbox>
+					<label>Network servers (web server, mail server, DNS)</label>
+					<variable>chkServers</variable>
+				</checkbox>
+				<checkbox>
+					<label>Scientific computing (numerical libraries, plotting tools)</label>
+					<variable>chkScience</variable>
+				</checkbox>
+			</vbox>
+		</frame>
+		<buttonbox layout='end'>
+			<button stock='cancel'/>
+			<button stock='ok'/>
+		</buttonbox>
+	</vbox>
+</window>
+"
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
