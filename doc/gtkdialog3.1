@@ -300,20 +300,27 @@ The legacy syntax
 (with \fBfile\fR as a keyword rather than an attribute) is still
 accepted for backward compatibility.
 .SS Tag attributes
-Opening tags may carry inline attributes:
+Opening tags may carry inline attributes.
+Attribute values can be quoted with either double quotes or single quotes:
 .PP
 .EX
 <window title="My App" width\-request="400">
-<entry visible="false">
-<action signal="clicked" type="shell">command</action>
+<window title='My App' width\-request='400'>
+<entry visible='false'>
+<action signal='clicked' type='shell'>command</action>
 .EE
 .PP
 The general form is:
 .PP
 .EX
 <\fItag\fR \fIkey\fR="\fIvalue\fR" [\fIkey\fR="\fIvalue\fR" ...]>
+<\fItag\fR \fIkey\fR='\fIvalue\fR' [\fIkey\fR='\fIvalue\fR' ...]>
 <\fItag\fR \fIkey\fR="\fIvalue\fR" ... />    (self\-closing)
 .EE
+.PP
+Single\-quoted attribute values are convenient when the dialog description
+is stored in a shell double\-quoted string, avoiding the need to escape
+double quotes.
 .PP
 Any attribute whose name matches a GObject property of the underlying GTK widget
 is applied directly.
