@@ -1,0 +1,49 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog3
+
+MAIN_DIALOG="
+<window title='Configuration File Changed' width-request='480' resizable='false'>
+	<vbox spacing='6' border-width='8'>
+		<frame Description>
+			<text wrap='false'>
+				<label>A new version of the configuration file /etc/example/app.conf
+is available from the package maintainer.
+
+The file on disk has been modified since it was installed.
+Choose how you would like to proceed.</label>
+			</text>
+		</frame>
+		<frame Action>
+			<vbox>
+				<radiobutton>
+					<label>Keep the current version installed on the system</label>
+					<variable>rbKeep</variable>
+				</radiobutton>
+				<radiobutton>
+					<label>Install the package maintainer's version</label>
+					<variable>rbInstall</variable>
+				</radiobutton>
+				<radiobutton>
+					<label>Show the differences between the two versions</label>
+					<variable>rbDiff</variable>
+				</radiobutton>
+				<radiobutton>
+					<label>Start a shell to examine the situation</label>
+					<variable>rbShell</variable>
+				</radiobutton>
+			</vbox>
+		</frame>
+		<buttonbox layout='end'>
+			<button stock='ok'/>
+			<button stock='cancel'/>
+		</buttonbox>
+	</vbox>
+</window>
+"
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
