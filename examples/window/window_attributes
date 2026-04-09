@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window title="Example Window" icon-name="gtk-dialog-warning">
 	<vbox>
-		<frame Description>
+		<frame title="Description">
 			<text>
 				<label>icon-name="gtk-dialog-warning"</label>
 			</text>
@@ -27,7 +27,7 @@ esac
 MAIN_DIALOG='
 <window title="Example Window" decorated="false">
 	<vbox>
-		<frame Description>
+		<frame title="Description">
 			<text>
 				<label>decorated=false</label>
 			</text>
@@ -49,7 +49,7 @@ esac
 MAIN_DIALOG='
 <window title="Example Window" resizable="false">
 	<vbox>
-		<frame Description>
+		<frame title="Description">
 			<text>
 				<label>resizable=false</label>
 			</text>
@@ -71,7 +71,7 @@ esac
 MAIN_DIALOG='
 <window title="Example Window" window_position="1">
 	<vbox>
-		<frame Description>
+		<frame title="Description">
 			<text>
 				<label>window_position=1 (GTK_WIN_POS_CENTER)</label>
 			</text>
@@ -93,7 +93,7 @@ esac
 MAIN_DIALOG='
 <window title="Example Window" window_position="2">
 	<vbox>
-		<frame Description>
+		<frame title="Description">
 			<text>
 				<label>window_position=2 (GTK_WIN_POS_MOUSE)</label>
 			</text>
@@ -115,7 +115,7 @@ esac
 MAIN_DIALOG='
 <window title="Example Window" skip_taskbar_hint="true">
 	<vbox>
-		<frame Description>
+		<frame title="Description">
 			<text>
 				<label>skip_taskbar_hint=true</label>
 			</text>

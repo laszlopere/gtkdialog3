@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG="
 <window title='Configuration File Changed' width-request='480' resizable='false'>
 	<vbox spacing='6' border-width='8'>
-		<frame Description>
+		<frame title='Description'>
 			<text wrap='false'>
 				<label>A new version of the configuration file /etc/example/app.conf
 is available from the package maintainer.
@@ -14,7 +14,7 @@ The file on disk has been modified since it was installed.
 Choose how you would like to proceed.</label>
 			</text>
 		</frame>
-		<frame Action>
+		<frame title='Action'>
 			<vbox>
 				<radiobutton>
 					<label>Keep the current version installed on the system</label>

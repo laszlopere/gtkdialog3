@@ -10,7 +10,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Insert and Remove>
+		<frame title="Insert and Remove">
 			<tree rules-hint="true" headers-visible="false">
 				<label>This label is invisible but required</label>
 				<height>100</height>

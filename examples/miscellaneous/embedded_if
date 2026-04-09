@@ -7,7 +7,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Imperative Example>
+		<frame title="Imperative Example">
 			<checkbox active="true">
 				<label>First checkbox</label>
 				<variable>CHECKBOX</variable>

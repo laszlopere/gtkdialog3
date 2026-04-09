@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window title="Example Window" icon-name="gtk-dialog-warning">
 	<vbox>
-		<frame Description>
+		<frame title="Description">
 			<text>
 				<label>Close via the title bar</label>
 			</text>

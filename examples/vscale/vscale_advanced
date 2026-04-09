@@ -83,7 +83,7 @@ MAIN_DIALOG='
 <window title="VScale Advanced" resizable="false">
 	<vbox>
 		<hbox>
-			<frame vscale widget>
+			<frame title="vscale widget">
 				<hbox>
 					'"`funcscaType0Create vscVScale0 v 50 410`"'
 					'"`funcscaType1Create vscVScale1 v 50 410 1 1 1`"'

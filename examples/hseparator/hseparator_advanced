@@ -23,7 +23,7 @@ funcvspCreate() {
 MAIN_DIALOG='
 <window title="HSeparator Advanced" resizable="false">
 	<vbox>
-		<frame hseparator and vseparator widgets>
+		<frame title="hseparator and vseparator widgets">
 			<hbox>
 				<hbox>
 					'"`funcvspCreate 30 200`"'

@@ -14,7 +14,7 @@ funcentCreate() {
 MAIN_DIALOG='
 <window title="VBox Scrollable" resizable="false">
 	<vbox>
-		<frame vbox widget scrolled window functionality>
+		<frame title="vbox widget scrolled window functionality">
 			<hbox>
 				<vbox scrollable="true" width="200" height="200">
 					'"`funcentCreate 0 10`"'

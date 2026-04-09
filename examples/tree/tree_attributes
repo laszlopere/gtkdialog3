@@ -16,7 +16,7 @@ EOF
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame With Rules, Without Headers>
+		<frame title="With Rules, Without Headers">
 			<tree rules-hint="true" headers-visible="false">
 				<variable>TREE1</variable>
 				<height>260</height>
@@ -30,7 +30,7 @@ MAIN_DIALOG='
 				<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
 			</tree>
 		</frame>
-		<frame Hover Mode>
+		<frame title="Hover Mode">
 			<tree hover-expand="true" hover-selection="true">
 				<variable>TREE2</variable>
 				<height>260</height>

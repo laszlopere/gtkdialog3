@@ -2,7 +2,7 @@
 
 <window>
 	<vbox>
-		<frame Checkbox example>
+		<frame title="Checkbox example">
 			<checkbox>
 				<label>This is a checkbox...</label>
 				<variable>CHECKBOX</variable>

@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window title="Signals" icon-name="gtk-dialog-warning">
 	<vbox>
-		<frame Widgets>
+		<frame title="Widgets">
 			<text>
 				<label>Label</label>
 				<action signal="button-press-event">echo Label: button-press-event</action>

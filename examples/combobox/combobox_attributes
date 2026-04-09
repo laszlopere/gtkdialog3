@@ -23,7 +23,7 @@ value-in-list set: only list items are accepted.
 The second adds allow-empty set to false:
 the entry cannot be left blank."</label>
 		</text>
-		<frame Combobox widgets>
+		<frame title="Combobox widgets">
 			<hbox homogeneous="true">
 				<text space-expand="true" space-fill="true" xalign="1">
 					<label>value-in-list:</label>

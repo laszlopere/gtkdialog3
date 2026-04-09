@@ -43,7 +43,7 @@ funcfiletreCreate filetreMultiple 16 multiple
 MAIN_DIALOG='
 <window title="Tree Selection Mode" resizable="false">
 	<vbox>
-		<frame tree widget selection modes>
+		<frame title="tree widget selection modes">
 			<hbox>
 				<vbox>
 					'"`functreCreate treNone 0`"'

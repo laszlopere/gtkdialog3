@@ -13,7 +13,7 @@ modal=false
 
 funcframeCreate() {
 	if [ $2 -eq 1 ]; then
-		echo '<frame This window>'
+		echo '<frame title="This window">'
 	else
 		echo '<frame>'
 	fi

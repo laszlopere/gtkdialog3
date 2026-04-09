@@ -8,7 +8,7 @@ export MAIN_DIALOG='
 <window title="SpinButton Properties" resizable="false">
   <vbox border-width="10" spacing="10">
 
-    <frame Range>
+    <frame title="Range">
       <vbox border-width="5" spacing="5">
         <text xalign="0"><label>range-min, range-max, range-step, range-value</label></text>
         <hbox spacing="10">
@@ -20,7 +20,7 @@ export MAIN_DIALOG='
       </vbox>
     </frame>
 
-    <frame Decimal digits>
+    <frame title="Decimal digits">
       <vbox border-width="5" spacing="5">
         <text xalign="0"><label>digits (number of decimal places displayed)</label></text>
         <hbox spacing="10">
@@ -33,7 +33,7 @@ export MAIN_DIALOG='
       </vbox>
     </frame>
 
-    <frame Wrapping>
+    <frame title="Wrapping">
       <vbox border-width="5" spacing="5">
         <text xalign="0"><label>wrap (value wraps around at min/max)</label></text>
         <hbox spacing="10">
@@ -46,7 +46,7 @@ export MAIN_DIALOG='
       </vbox>
     </frame>
 
-    <frame Numeric and snap-to-ticks>
+    <frame title="Numeric and snap-to-ticks">
       <vbox border-width="5" spacing="5">
         <text xalign="0"><label>numeric (reject non-numeric input), snap-to-ticks</label></text>
         <hbox spacing="10">
@@ -59,7 +59,7 @@ export MAIN_DIALOG='
       </vbox>
     </frame>
 
-    <frame Update policy>
+    <frame title="Update policy">
       <vbox border-width="5" spacing="5">
         <text xalign="0"><label>update-policy (0=always, 1=if-valid only)</label></text>
         <hbox spacing="10">
@@ -72,7 +72,7 @@ export MAIN_DIALOG='
       </vbox>
     </frame>
 
-    <frame Entry properties>
+    <frame title="Entry properties">
       <vbox border-width="5" spacing="5">
         <text xalign="0"><label>editable, xalign, width-chars, max-length</label></text>
         <hbox spacing="10">
@@ -86,7 +86,7 @@ export MAIN_DIALOG='
       </vbox>
     </frame>
 
-    <frame Default value and tooltip>
+    <frame title="Default value and tooltip">
       <vbox border-width="5" spacing="5">
         <text xalign="0"><label>default (initial value via tag), tooltip-text</label></text>
         <hbox spacing="10">

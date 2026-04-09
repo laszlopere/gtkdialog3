@@ -14,7 +14,7 @@ funcentCreate() {
 MAIN_DIALOG='
 <window title="HBox Scrollable" resizable="false">
 	<vbox>
-		<frame hbox widget scrolled window functionality>
+		<frame title="hbox widget scrolled window functionality">
 			<hbox>
 				<hbox width-request="200" height-request="200">
 					<hbox scrollable="true">

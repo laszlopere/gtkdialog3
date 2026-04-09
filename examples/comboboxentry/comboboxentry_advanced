@@ -98,19 +98,19 @@ MAIN_DIALOG='
 	<vbox>
 		<hbox>
 			<vbox>
-				<frame combobox widget (deprecated)>
+				<frame title="combobox widget (deprecated)">
 					'"`funccboCreate 0`"'
 					'"`funccboCreate 1`"'
 					'"`funccboCreate 2`"'
 				</frame>
 			</vbox>
 			<vbox>
-				<frame comboboxentry widget>
+				<frame title="comboboxentry widget">
 					'"`funccboEntryCreate 0`"'
 					'"`funccboEntryCreate 1`"'
 					'"`funccboEntryCreate 2`"'
 				</frame>
-				<frame Practical example>
+				<frame title="Practical example">
 					<text width-request="300">
 						<label>Type something, press the Enter key, repeat...</label>
 					</text>

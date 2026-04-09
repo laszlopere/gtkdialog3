@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Stock ID examples>
+		<frame title="Stock ID examples">
 			<tree rules-hint="true">
 				<height>400</height>
 				<width>250</width>

@@ -14,7 +14,7 @@ modal=false
 winMain='
 <window title="winMain" width-request="250" modal="'$modal'">
 	<vbox>
-		<frame This window>
+		<frame title="This window">
 			<button>
 				<label>launch winMain</label>
 				<action function="launch">winMain</action>
@@ -66,7 +66,7 @@ winLaunch1='
 				<action function="closewindow">winMain</action>
 			</button>
 		</frame>
-		<frame This window>
+		<frame title="This window">
 			<button>
 				<label>launch winLaunch1</label>
 				<action function="launch">winLaunch1</action>
@@ -118,7 +118,7 @@ winLaunch2='
 				<action function="closewindow">winLaunch1</action>
 			</button>
 		</frame>
-		<frame This window>
+		<frame title="This window">
 			<button>
 				<label>launch winLaunch2</label>
 				<action function="launch">winLaunch2</action>

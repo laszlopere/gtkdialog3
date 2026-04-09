@@ -33,7 +33,7 @@ if [ ! -f "$TMPDIR"/inputfile ]; then echo "0.9881" > "$TMPDIR"/inputfile; fi
 MAIN_DIALOG='
 <window title="SpinButton Advanced" resizable="false">
 	<vbox>
-		<frame spinbutton widget>
+		<frame title="spinbutton widget">
 			<hbox border-width="20" spacing="20">
 				<vbox>
 					<spinbutton update-policy="1" wrap="true">

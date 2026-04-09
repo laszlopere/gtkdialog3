@@ -43,7 +43,7 @@ export MAIN_DIALOG='
 <window>
 	<vbox>
 		<hbox>
-			<frame Stock icons from input command>
+			<frame title="Stock icons from input command">
 				<tree>
 					<variable>TREE1</variable>
 					<height>300</height>
@@ -52,7 +52,7 @@ export MAIN_DIALOG='
 					<input stock-column="0">bash -c funcInputstock</input>
 				</tree>
 			</frame>
-			<frame Theme icons from input command>
+			<frame title="Theme icons from input command">
 				<tree>
 					<variable>TREE2</variable>
 					<height>300</height>

@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Tree With Actions>
+		<frame title="Tree With Actions">
 			<text>
 				<label>The exported column is column "One"  </label>
 			</text>
@@ -23,7 +23,7 @@ MAIN_DIALOG='
 				<action signal="button-release-event">echo button-release-event[BUTTON=$BUTTON]: $TREE1; echo</action>
 			</tree>
 		</frame>
-		<frame Another Tree With Actions>
+		<frame title="Another Tree With Actions">
 			<text>
 				<label>The exported column is column "Three"  </label>
 			</text>

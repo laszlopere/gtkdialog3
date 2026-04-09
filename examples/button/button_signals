@@ -10,7 +10,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Button signals>
+		<frame title="Button signals">
 			<hbox>
 				<button>
 					<label>All Default</label>

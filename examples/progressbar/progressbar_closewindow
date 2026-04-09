@@ -17,7 +17,7 @@ progress() {
 export BAR_DIALOG='
 <window>
 	<vbox>
-		<frame Progress>
+		<frame title="Progress">
 			<text>
 				<label>Some text describing what is happening.</label>
 			</text>

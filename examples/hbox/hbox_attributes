@@ -9,7 +9,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Space>
+		<frame title="Space">
 			<hbox spacing="10">
 				<text><label>spacing</label></text>
 				<entry></entry>
@@ -19,7 +19,7 @@ MAIN_DIALOG='
 				<entry></entry>
 			</hbox>
 		</frame>
-		<frame Description>
+		<frame title="Description">
 			<hbox>
 				<pixmap>
 					<input file stock="gtk-info"></input>
@@ -30,7 +30,7 @@ MAIN_DIALOG='
 				</text>
 			</hbox>
 		</frame>
-		<frame Description>
+		<frame title="Description">
 			<hbox fill="true" expand="true">
 				<pixmap>
 					<input file stock="gtk-info"></input>

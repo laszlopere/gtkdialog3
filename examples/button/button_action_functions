@@ -26,7 +26,7 @@ export DIALOG
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Widgets>
+		<frame title="Widgets">
 			<checkbox>
 				<label>This is a checkbox</label>
 				<variable>CHECKBOX</variable>
@@ -36,7 +36,7 @@ MAIN_DIALOG='
 				<variable>ENTRY</variable>
 			</entry>
 		</frame>
-		<frame Button actions>
+		<frame title="Button actions">
 			<hbox>
 				<button>
 					<label>exit</label>

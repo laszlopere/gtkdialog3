@@ -92,14 +92,14 @@ MAIN_DIALOG='
 <window title="ComboBoxText Advanced" resizable="false">
 	<vbox>
 		<hbox>
-			<frame combobox widget (deprecated)>
+			<frame title="combobox widget (deprecated)">
 				<vbox>
 					'"`funccboCreate 0`"'
 					'"`funccboCreate 1`"'
 					'"`funccboCreate 2`"'
 				</vbox>
 			</frame>
-			<frame comboboxtext widget>
+			<frame title="comboboxtext widget">
 				<vbox width-request="300">
 					'"`funccboTextCreate 0`"'
 					'"`funccboTextCreate 1`"'

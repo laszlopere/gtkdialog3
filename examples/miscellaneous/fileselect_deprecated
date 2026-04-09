@@ -8,7 +8,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Simple>
+		<frame title="Simple">
 			<hbox>
 				<entry>
 					<variable>FILE</variable>
@@ -20,7 +20,7 @@ MAIN_DIALOG='
 				</button>
 			</hbox>
 		</frame>
-		<frame Filename>
+		<frame title="Filename">
 			<hbox>
 				<entry accept="filename">
 					<label>Select an Existing File</label>
@@ -33,7 +33,7 @@ MAIN_DIALOG='
 				</button>
 			</hbox>
 		</frame>
-		<frame Filename for Save>
+		<frame title="Filename for Save">
 			<hbox>
 				<entry accept="savefilename">
 					<label>Select a Filename</label>
@@ -46,7 +46,7 @@ MAIN_DIALOG='
 				</button>
 			</hbox>
 		</frame>
-		<frame Directory>
+		<frame title="Directory">
 			<hbox>
 				<entry accept="directory">
 					<label>Select a Directory</label>
@@ -59,7 +59,7 @@ MAIN_DIALOG='
 				</button>
 			</hbox>
 		</frame>
-		<frame New Directory>
+		<frame title="New Directory">
 			<hbox>
 				<entry accept="newdirectory">
 					<label>Create New Directory (really)</label>

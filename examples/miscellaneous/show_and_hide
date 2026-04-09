@@ -75,7 +75,7 @@ MAIN_DIALOG='
 			</vbox>
 			<vseparator></vseparator>
 			<vbox>
-				<frame frame (GtkFrame)>
+				<frame title="frame (GtkFrame)">
 					<entry>
 						<variable>entExample</variable>
 						<default>entry (GtkEntry)</default>

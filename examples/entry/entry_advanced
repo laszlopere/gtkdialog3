@@ -34,7 +34,7 @@ fi
 MAIN_DIALOG="
 <window title='Entry Advanced' width-request='700' resizable='false'>
 	<vbox>
-		<frame entry widget>
+		<frame title='entry widget'>
 			<vbox>
 				<hbox>
 					<entry activates-default='true'>

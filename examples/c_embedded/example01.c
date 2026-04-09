@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	/*  static text (label) as window-header */
 	"<text><label>G T K D I A L O G    C - L A N G   E X A M P L E</label></text>"
 	/* frame 1 - default buttons & static text (label) */
-	"<frame Command buttons (defaults)>"
+	"<frame title=\"Command buttons (defaults)\">"
 		"<hbox>"
 			"<button stock=\"ok\"/>"
 			"<button stock=\"cancel\"/>"
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 	"</frame>"
 	/* frame 2 */
 	/* set 'entry' - single-line text, set 'edit' - multi-line text */
-	"<frame Single-line & Multi-line string boxes>"
+	"<frame title=\"Single-line & Multi-line string boxes\">"
 		"<entry>"
 			"<default>Entry for single string input</default>"
 			"<input>date</input>"
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 		"</edit>"
 	"</frame>"
 	/* frame 3 */
-	"<frame Label from command & system commands>"
+	"<frame title=\"Label from command & system commands\">"
 		"<hbox>"
 			"<text>"
 				"<label>Static text (label) for Date</label>"

@@ -62,7 +62,7 @@ funcpixRandomise
 export MAIN_DIALOG='
 <window title="Timer Advanced" resizable="false">
 	<vbox>
-		<frame timer widget>
+		<frame title="timer widget">
 			<vbox border-width="20">
 				<hbox>
 					<timer>

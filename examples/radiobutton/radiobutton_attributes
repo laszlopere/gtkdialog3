@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Radiobutton attributes example>
+		<frame title="Radiobutton attributes example">
 			<radiobutton active="true">
 				<label>Radiobutton with active set to true</label>
 				<variable>RADIOBUTTON1</variable>

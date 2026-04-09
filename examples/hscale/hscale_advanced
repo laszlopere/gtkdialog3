@@ -83,7 +83,7 @@ MAIN_DIALOG='
 <window title="HScale Advanced" resizable="false">
 	<vbox>
 		<hbox>
-			<frame hscale widget>
+			<frame title="hscale widget">
 				<vbox>
 					'"`funcscaType0Create hscHScale0 h 420 80`"'
 					'"`funcscaType1Create hscHScale1 h 420 80 2 2 2`"'

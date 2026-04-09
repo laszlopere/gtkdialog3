@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Description>
+		<frame title="Description">
 			<text>
 				<label>This is an example window.</label>
 			</text>

@@ -27,7 +27,7 @@ The text is loaded from a file and can be saved back."</label>
 			<height>200</height>
 			<width>400</width>
 		</edit>
-		<frame Clipboard>
+		<frame title="Clipboard">
 			<hbox homogeneous="true" spacing="5">
 				<button>
 					<label>Select All</label>
@@ -51,7 +51,7 @@ The text is loaded from a file and can be saved back."</label>
 				</button>
 			</hbox>
 		</frame>
-		<frame Widget Actions>
+		<frame title="Widget Actions">
 			<hbox homogeneous="true" spacing="5">
 				<button>
 					<label>Disable</label>

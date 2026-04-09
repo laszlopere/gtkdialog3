@@ -5,11 +5,11 @@ GTKDIALOG=gtkdialog3
 MAIN_DIALOG='
 <window>
 	<vbox>
-		<frame Frame1>
+		<frame title="Frame1">
 			<text><label>Label1</label></text>
 			<entry></entry>
 		</frame>
-		<frame Frame2>
+		<frame title="Frame2">
 			<hbox>
 				<text><label>Label2</label></text>
 				<entry></entry>
