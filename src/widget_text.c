@@ -1,7 +1,7 @@
 /*
  * widget_text.c: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  Lï¿½szlï¿½ Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -78,8 +78,40 @@ GtkWidget *widget_text_create(
 		gtk_label_set_use_markup(GTK_LABEL(widget), TRUE);
 	}
 
-	/* Enable line wrapping by default */
+	/* Enable line wrapping by default.
+	 * In GTK3's height-for-width geometry, a wrapping label requests
+	 * only its minimum width (longest word) by default, causing the
+	 * window to be too narrow. Set width-chars to the longest line
+	 * length so the label requests enough space for its content. */
 	gtk_label_set_line_wrap(GTK_LABEL(widget), TRUE);
+	{
+		const gchar *label_text;
+		gchar *plain_text = NULL;
+
+		label_text = gtk_label_get_text(GTK_LABEL(widget));
+		if (label_text) {
+			/* Strip Pango markup if present to get visible text length */
+			if (gtk_label_get_use_markup(GTK_LABEL(widget)))
+				pango_parse_markup(label_text, -1, 0,
+					NULL, &plain_text, NULL, NULL);
+
+			const gchar *p = plain_text ? plain_text : label_text;
+			gint max_len = 0, cur_len = 0;
+			while (*p) {
+				if (*p == '\n') {
+					if (cur_len > max_len) max_len = cur_len;
+					cur_len = 0;
+				} else {
+					cur_len++;
+				}
+				p++;
+			}
+			if (cur_len > max_len) max_len = cur_len;
+			if (max_len > 0)
+				gtk_label_set_width_chars(GTK_LABEL(widget), max_len);
+			g_free(plain_text);
+		}
+	}
 
 	GDG_DEBUG("Exiting.");
 
