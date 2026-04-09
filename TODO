@@ -9,6 +9,7 @@ Thunor: I've fixed these or found them to have already been fixed:
      are not supported. (Thunor: it already works as a tag attribute).
 (6)  10.01-vbox_and_hbox_attributes: we always packing with the defaults.
 (7)  Segfault if no name given for the frame.
+     Verified fixed: the lexer defaults to an empty label for <frame>.
 (8)  All the action handling functions (button_pressed) should get a type
      parameter showing what kind of command has to be executed.
 (10) The tree widget is virtually unhandled.
@@ -54,7 +55,8 @@ Unsupported GTK3 widgets:
 (32) Add GtkButtonBox support (specialized button container).
 (33) Add GtkPopover support (popup attached to a widget).
 (34) Add GtkSearchEntry support (entry with search icon/clearing).
-(35) Add GtkSwitch support (on/off toggle).
+(35) Add GtkSwitch support (on/off toggle). DONE.
+     See examples/switch/switch and tests/ft_switch/ft_switch.py.
 (36) Add GtkCalendar support (date picker).
 (37) Add GtkScaleButton and GtkVolumeButton support (button with popup slider).
 (38) Add GtkImage support (general image display, replacing limited pixmap).
