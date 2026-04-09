@@ -113,7 +113,7 @@ time.sleep(0.5)
 # Launch the example
 t.log("Launching radiobutton example...")
 proc = subprocess.Popen(
-    ['./examples/radiobutton/radiobutton'],
+    ['./examples/standard/radiobutton'],
     stdout=subprocess.PIPE,
     stderr=subprocess.PIPE,
     cwd='/home/pipas/gtkdialog/gtkdialog-0.8.3'
