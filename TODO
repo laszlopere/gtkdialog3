@@ -70,3 +70,6 @@ Unsupported GTK3 widgets:
 (51) Add GtkShortcutsWindow support (keyboard shortcuts overlay).
 (52) Pango <span> attributes containing double quotes break inside quoted labels
      because the lexer treats the inner quotes as string terminators.
+(53) Text widget auto-sizes width-chars to the longest line in the label,
+     but this can make windows too wide. Consider capping or improving the
+     heuristic for better default geometry.
