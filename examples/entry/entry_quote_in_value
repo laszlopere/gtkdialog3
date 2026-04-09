@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Demonstrates that double quotes in widget values are properly
+# escaped in the program output, so shell eval works correctly.
+
+GTKDIALOG=gtkdialog3
+
+MAIN_DIALOG='
+<window title="Quote in Value">
+	<vbox spacing="10" border-width="10">
+		<text>
+			<label>"Entry values containing double quotes
+are escaped in the output so that
+shell eval works correctly."</label>
+		</text>
+		<entry>
+			<variable>ENTRY</variable>
+			<default>He said "hello"</default>
+		</entry>
+		<hbox homogeneous="true">
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
