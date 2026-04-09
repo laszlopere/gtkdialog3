@@ -78,8 +78,8 @@ export MAIN_DIALOG='
   <vbox>
     <text><label>Hello, World!</label></text>
     <hbox>
-      <button ok></button>
-      <button cancel></button>
+      <button stock="ok"/>
+      <button stock="cancel"/>
     </hbox>
   </vbox>
 </window>'
@@ -116,7 +116,7 @@ with a shebang line:
 <window>
   <vbox>
     <entry><variable>NAME</variable></entry>
-    <button ok></button>
+    <button stock="ok"/>
   </vbox>
 </window>
 .EE
@@ -130,7 +130,7 @@ gtkdialog3 \-\-file=dialog.xml
 Pipe the dialog description via stdin:
 .PP
 .EX
-echo '<window><vbox><button ok></button></vbox></window>' | gtkdialog3 \-s
+echo '<window><vbox><button stock="ok"/></vbox></window>' | gtkdialog3 \-s
 .EE
 .SS Event\-driven program
 Execute a script as an event\-driven program:
@@ -230,13 +230,13 @@ button, checkbox, radiobutton, togglebutton, switch,
 colorbutton, fontbutton
 .RE
 .PP
-.I Predefined buttons
+.I Predefined stock buttons
 .RS
-.BR "<button ok>" ,
-.BR "<button cancel>" ,
-.BR "<button help>" ,
-.BR "<button yes>" ,
-.BR "<button no>"
+.BR "<button stock='ok'/>" ,
+.BR "<button stock='cancel'/>" ,
+.BR "<button stock='help'/>" ,
+.BR "<button stock='yes'/>" ,
+.BR "<button stock='no'/>"
 .RE
 .PP
 .I Selection

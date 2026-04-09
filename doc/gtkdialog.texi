@@ -111,8 +111,8 @@ export MAIN_DIALOG='
     <label>This is a label...</label>
   </text>
   <hbox>
-   <button ok></button>
-   <button cancel></button>
+   <button stock="ok"/>
+   <button stock="cancel"/>
   </hbox>
  </vbox>'
 
@@ -140,8 +140,8 @@ export DIALOG='
     <variable>ENTRY</variable>
   </entry>
   <hbox>
-    <button ok></button>
-    <button cancel></button>
+    <button stock="ok"/>
+    <button stock="cancel"/>
   </hbox>
 </vbox>'
 
@@ -278,11 +278,11 @@ normal pushbuttons, but they have a default text, pixmap and output variable.
 Here is the list of available pre-defined pushbuttons:
 
 @itemize @bullet
- @item @code{<button ok></button>}
- @item @code{<button cancel></button>}
- @item @code{<button help></button>}
- @item @code{<button yes></button>}
- @item @code{<button no></button>}
+ @item @code{<button stock="ok"/>}
+ @item @code{<button stock="cancel"/>}
+ @item @code{<button stock="help"/>}
+ @item @code{<button stock="yes"/>}
+ @item @code{<button stock="no"/>}
 @end itemize
 
 @c -----------------------------------------------------------------
@@ -427,7 +427,7 @@ OK, it is not complete, but the next example seems to be just fine.
     <item>Network    |beta:/home/pipas |bin           </item>
     <item>Network    |beta:/home/pipas |documentation </item>
   </tree>
-  <button ok></button>
+  <button stock="ok"/>
 </vbox>
 @end example
 

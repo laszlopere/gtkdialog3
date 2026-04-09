@@ -118,8 +118,8 @@ script.
          <label>This is a label...</label>
        </text>
        <hbox>
-        <button ok></button>
-        <button cancel></button>
+        <button stock="ok"/>
+        <button stock="cancel"/>
        </hbox>
       </vbox>'
 
@@ -145,8 +145,8 @@ next example code show the reading process.
          <variable>ENTRY</variable>
        </entry>
        <hbox>
-         <button ok></button>
-         <button cancel></button>
+         <button stock="ok"/>
+         <button stock="cancel"/>
        </hbox>
      </vbox>'
 
@@ -294,15 +294,15 @@ creation of dialog boxes. The pre-defined buttons can be used the same
 manner the normal pushbuttons, but they have a default text, pixmap and
 output variable.  Here is the list of available pre-defined pushbuttons:
 
-   * `<button ok></button>'
+   * `<button stock="ok"/>'
 
-   * `<button cancel></button>'
+   * `<button stock="cancel"/>'
 
-   * `<button help></button>'
+   * `<button stock="help"/>'
 
-   * `<button yes></button>'
+   * `<button stock="yes"/>'
 
-   * `<button no></button>'
+   * `<button stock="no"/>'
 
 
 File: gtkdialog.info,  Node: Entry,  Next: Checkbox,  Prev: Pre-defined pushbuttons,  Up: Widgets
@@ -468,7 +468,7 @@ OK, it is not complete, but the next example seems to be just fine.
          <item>Network    |beta:/home/pipas |bin           </item>
          <item>Network    |beta:/home/pipas |documentation </item>
        </tree>
-       <button ok></button>
+       <button stock="ok"/>
      </vbox>
 
 
