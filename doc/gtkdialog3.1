@@ -362,6 +362,38 @@ spacing	int	Gap between icon and label (default 6)
 image\-position	int/string	Icon position: 0/left, 1/right, 2/top, 3/bottom
 homogeneous	boolean	Equal space for icon and label
 .TE
+.SS String escaping
+Text content (labels, items, defaults, etc.) can be written as
+unquoted or double\-quoted strings.
+Angle brackets have special meaning because they delimit tags,
+so literal angle brackets in text must be escaped.
+.PP
+Two escaping methods are available:
+.PP
+.TS
+l l l.
+Method	Syntax	Result
+_
+Double\-quoted	"<button>"	<button>
+Backslash\-escaped	\\<button\\>	<button>
+.TE
+.PP
+Inside an unquoted string,
+.B \\\\<
+prevents
+.B <
+from being interpreted as a tag opener, and
+.B \\\\
+followed by any character produces that character literally
+.RB ( \\\\\\\\
+produces a single backslash).
+.PP
+Examples:
+.PP
+.EX
+<text><label>\\<button\\></label></text>
+<text><label>\\<entry visible="false"\\></label></text>
+.EE
 .SS Imperative extensions
 The language includes simple imperative constructs for dynamic behaviour:
 .PP
