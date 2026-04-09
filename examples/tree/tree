@@ -5,8 +5,8 @@
 GTKDIALOG=gtkdialog3
 
 funcList() {
-	ls -lha | grep ^d | awk '{print "dir_o|" $1 "|" $8}'
-	ls -lha | grep ^- | awk '{print "gexec|" $1 "|" $8}'
+	ls -lha | grep ^d | awk '{for(i=9;i<=NF;i++) f=f (i>9?" ":"") $i; print "folder|" $1 "|" f; f=""}'
+	ls -lha | grep ^- | awk '{for(i=9;i<=NF;i++) f=f (i>9?" ":"") $i; print "text-x-generic|" $1 "|" f; f=""}'
 }; export -f funcList
 
 export MAIN_DIALOG='
