@@ -52,7 +52,9 @@ MAIN_DIALOG='
 		</hbox>
 		<hseparator></hseparator>
 		<hbox homogeneous="true" space-expand="false" space-fill="false">
-			<button use-stock="true" label="gtk-quit">
+			<button border-width="8">
+				<label>Quit</label>
+				<input file stock="application-exit"></input>
 			</button>
 		</hbox>
 	</vbox>

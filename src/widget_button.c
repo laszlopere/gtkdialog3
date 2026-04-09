@@ -83,6 +83,7 @@ GtkWidget *widget_button_create(
 	gchar            *value;
 	gint              homogeneous = FALSE;
 	gint              position = GTK_POS_LEFT;
+	gint              spacing = 6;
 	gint              theme_icon_size = 20;
 	gint              stock_icon_size = GTK_ICON_SIZE_BUTTON;
 	gint              buttontype = TYPE_BUTTON;
@@ -270,26 +271,30 @@ GtkWidget *widget_button_create(
 							}
 						}
 					}
+					/* Read spacing between icon and label (default 6) */
+					if (attr &&
+						(value = get_tag_attribute(attr, "spacing")))
+						spacing = atoi(value);
 					/* To centre the contents of the button we need to place
 					 * a homogeneous=FALSE box inside a homogeneous=TRUE box */
 					if (position == GTK_POS_BOTTOM || position == GTK_POS_TOP) {
 						boxouter = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 						gtk_box_set_homogeneous(GTK_BOX(boxouter), TRUE);
 						gtk_container_add(GTK_CONTAINER(widget), boxouter);
-						box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+						box = gtk_box_new(GTK_ORIENTATION_VERTICAL, spacing);
 						gtk_box_pack_end(GTK_BOX(boxouter), box, FALSE, FALSE, 0);
 					} else {
 						if (homogeneous) {
 							/* We're not centring so drop boxouter and
 							 * set homogeneous to TRUE on the box */
-							box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+							box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, spacing);
 							gtk_box_set_homogeneous(GTK_BOX(box), TRUE);
 							gtk_container_add(GTK_CONTAINER(widget), box);
 						} else {
 							boxouter = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 							gtk_box_set_homogeneous(GTK_BOX(boxouter), TRUE);
 							gtk_container_add(GTK_CONTAINER(widget), boxouter);
-							box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+							box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, spacing);
 							gtk_box_pack_end(GTK_BOX(boxouter), box, FALSE, FALSE, 0);
 						}
 					}
@@ -304,6 +309,23 @@ GtkWidget *widget_button_create(
 			}
 			break;
 	}
+
+	/* Apply border-width as margin on the button's internal content.
+	 * GtkContainer's border-width has no visible effect on buttons in
+	 * GTK3 (CSS controls button frame padding), so we repurpose it to
+	 * set margin on the child box, giving the expected inner padding. */
+	if (attr && (value = get_tag_attribute(attr, "border-width"))) {
+		gint bw = atoi(value);
+		GtkWidget *content = boxouter ? boxouter : box ? box : label;
+		if (content) {
+			gtk_widget_set_margin_start(content, bw);
+			gtk_widget_set_margin_end(content, bw);
+			gtk_widget_set_margin_top(content, bw);
+			gtk_widget_set_margin_bottom(content, bw);
+		}
+		kill_tag_attribute(attr, "border-width");
+	}
+	if (attr) kill_tag_attribute(attr, "spacing");
 
 	switch (Type) {
 		case WIDGET_TOGGLEBUTTON:
