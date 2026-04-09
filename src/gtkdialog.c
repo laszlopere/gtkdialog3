@@ -67,6 +67,7 @@ gboolean option_input_stdin = FALSE;
 gboolean option_no_warning = FALSE;
 gboolean option_print_ir = FALSE;
 gboolean option_centering = FALSE;
+gboolean option_debug_geometry = FALSE;
 
 static gint source = PRG_UNKNOWN;    // Where the program is coming from?
 gchar *program_src = NULL;           // The actual program source.
@@ -219,10 +220,15 @@ gtkdialog_init(
 		0, G_OPTION_ARG_STRING, &option_space_expand, 
 		"The \"expand\" state for packing all widgets.", "state"
 	},
-	{ 
-		"space-fill", '\0', 
-		0, G_OPTION_ARG_STRING, &option_space_fill, 
+	{
+		"space-fill", '\0',
+		0, G_OPTION_ARG_STRING, &option_space_fill,
 		"The \"fill\" state for packing all widgets.", "state"
+	},
+	{
+		"debug-geometry", '\0',
+		0, G_OPTION_ARG_NONE, &option_debug_geometry,
+		"Print widget geometry negotiations to stderr.", NULL
 	},
 	{
 		NULL
@@ -301,6 +307,10 @@ gtkdialog_init(
 				error->message);
 
 	g_option_context_free(context);
+
+	/* Also enable debug-geometry via environment variable */
+	if (!option_debug_geometry && g_getenv("GTKDIALOG_DEBUG_GEOMETRY") != NULL)
+		option_debug_geometry = TRUE;
 }
 
 gint get_program_from_variable(gchar *name)

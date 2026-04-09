@@ -416,6 +416,32 @@ char *widgets_to_str(int itype)
 }
 
 /***********************************************************************
+ *  Debug Geometry Handler                                             *
+ ***********************************************************************/
+
+static void on_any_widget_size_allocate_debug(
+	GtkWidget *widget, GtkAllocation *allocation, gpointer data)
+{
+	gint              min_w, nat_w, min_h, nat_h;
+	const gchar      *name;
+	variable         *var;
+
+	(void)data;
+
+	var = find_variable_by_widget(widget);
+	name = var ? var->Name : G_OBJECT_TYPE_NAME(widget);
+
+	gtk_widget_get_preferred_width(widget, &min_w, &nat_w);
+	gtk_widget_get_preferred_height(widget, &min_h, &nat_h);
+
+	fprintf(stderr, "GEOM %-20s  pref_w: %4d/%4d  pref_h: %4d/%4d  "
+		"alloc: %dx%d+%d+%d\n",
+		name, min_w, nat_w, min_h, nat_h,
+		allocation->width, allocation->height,
+		allocation->x, allocation->y);
+}
+
+/***********************************************************************
  *  Widget Connect Signals                                             *
  ***********************************************************************/
 
@@ -457,6 +483,10 @@ gboolean widget_connect_signals(GtkWidget *widget, AttributeSet *Attr)
 		G_CALLBACK(on_any_widget_delete_event), (gpointer)Attr);
 	g_signal_connect(G_OBJECT(widget), "destroy-event",
 		G_CALLBACK(on_any_widget_destroy_event), (gpointer)Attr);
+
+	if (option_debug_geometry)
+		g_signal_connect(G_OBJECT(widget), "size-allocate",
+			G_CALLBACK(on_any_widget_size_allocate_debug), NULL);
 
 	GDG_DEBUG("Exiting.");
 

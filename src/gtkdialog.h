@@ -59,6 +59,9 @@ extern GList *widget_hide_list, *widget_show_list;
 /* An auto-incremented unique id for each window created */
 extern gint window_id;
 
+/* Debug geometry flag: print widget size negotiations to stderr */
+extern gboolean option_debug_geometry;
+
 void reset_program_source(void);
 //Redundant: gint set_program_source(gchar *name);
 gint get_program_from_variable(gchar *name);

@@ -52,6 +52,14 @@ Center the windows on the screen.
 .B \-\-print\-ir
 Print the internal representation of the parsed program and exit.
 .TP
+.B \-\-debug\-geometry
+Print widget geometry negotiations to stderr.
+For each widget, shows preferred width (min/natural), preferred height
+(min/natural), and the final allocation as GTK assigns it.
+Can also be enabled by setting the environment variable
+.B GTKDIALOG_DEBUG_GEOMETRY
+to any value.
+.TP
 .BR \-\-space\-expand =\fISTATE\fR
 Set the default "expand" packing state for all widgets.
 .TP
