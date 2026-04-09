@@ -51,6 +51,23 @@ gchar *Token;
 static int pending_close_token = 0;
 static int current_close_token = 0;
 
+/*
+ * Strip backslash escapes from a string: \< becomes <, \\ becomes \, etc.
+ * The caller must free the returned string with g_free().
+ */
+static gchar *strip_backslash_escapes(const gchar *s) {
+	gchar *result = g_malloc(strlen(s) + 1);
+	gchar *dst = result;
+	while (*s) {
+		if (*s == '\\' && s[1]) {
+			s++;
+		}
+		*dst++ = *s++;
+	}
+	*dst = '\0';
+	return result;
+}
+
 %}
 
 	/**************************************************************
@@ -829,9 +846,14 @@ static int current_close_token = 0;
 					  							}
 												
 					/*
-					 * An unquoted string can contain anything except 
+					 * An unquoted string can contain anything except
 					 * unescaped '<'.
 					 */
+\\<					{
+					  Token = "string";
+					  BEGIN(ST_STRING);
+					  yymore();
+												}
 [^ \n\t\>\<\"][^\n\<\\]*  		{
 					  Token = "string";
 					  BEGIN(ST_STRING);
@@ -852,8 +874,10 @@ static int current_close_token = 0;
 												}
 
 <ST_STRING>"<"				{
-					  gtkdialog_lval.cval = g_strdup(yytext);
-					  gtkdialog_lval.cval[strlen(gtkdialog_lval.cval) - 1] = '\0';
+					  gchar *tmp = g_strdup(yytext);
+					  tmp[strlen(tmp) - 1] = '\0';
+					  gtkdialog_lval.cval = strip_backslash_escapes(tmp);
+					  g_free(tmp);
 					  unput('<');
 					  BEGIN(0);
 					  return STRING;
