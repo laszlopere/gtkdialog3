@@ -197,6 +197,14 @@ Each container follows the same pattern as
 .BR window :
 an opening tag with optional inline attributes, a body of nested
 containers and widgets, attribute sub\-elements, and a closing tag.
+.PP
+Any widget or container tag may use XML self\-closing syntax as a
+shorthand for an empty element:
+.PP
+.EX
+<hseparator/>           equivalent to <hseparator></hseparator>
+<entry visible="false"/>   equivalent to <entry visible="false"></entry>
+.EE
 .SS Container widgets
 .TS
 l l.
@@ -252,7 +260,7 @@ Menus have their own nesting hierarchy:
 <menubar>
   <menu>
     <menuitem> ... </menuitem>
-    <menuitemseparator></menuitemseparator>
+    <menuitemseparator/>
     <menuitem> ... </menuitem>
   </menu>
 </menubar>
@@ -304,6 +312,7 @@ The general form is:
 .PP
 .EX
 <\fItag\fR \fIkey\fR="\fIvalue\fR" [\fIkey\fR="\fIvalue\fR" ...]>
+<\fItag\fR \fIkey\fR="\fIvalue\fR" ... />    (self\-closing)
 .EE
 .PP
 Any attribute whose name matches a GObject property of the underlying GTK widget
