@@ -15,7 +15,7 @@ MAIN_DIALOG='
 	<vbox>
 		<hbox homogeneous="true">
 			<vbox>
-				<text><label>"<button>"</label></text>
+				<text><label>\<button\></label></text>
 				'"`funcbtnCreate 0 false gtk-print`"'
 				'"`funcbtnCreate 0 false gtk-orientation-landscape`"'
 				'"`funcbtnCreate 0 false gtk-undelete`"'
@@ -23,7 +23,7 @@ MAIN_DIALOG='
 				'"`funcbtnCreate 0 false gtk-cut`"'
 			</vbox>
 			<vbox>
-				<text><label>"<button homogeneous='"'true'"'>"</label></text>
+				<text><label>\<button homogeneous="true"\></label></text>
 				'"`funcbtnCreate 0 true gtk-print`"'
 				'"`funcbtnCreate 0 true gtk-orientation-landscape`"'
 				'"`funcbtnCreate 0 true gtk-undelete`"'
@@ -34,7 +34,7 @@ MAIN_DIALOG='
 		<hseparator/>
 		<hbox homogeneous="true">
 			<vbox>
-				<text><label>"<button image-position='"'1'"'>"</label></text>
+				<text><label>\<button image-position="1"\></label></text>
 				'"`funcbtnCreate 1 false gtk-print`"'
 				'"`funcbtnCreate 1 false gtk-orientation-landscape`"'
 				'"`funcbtnCreate 1 false gtk-undelete`"'
@@ -42,7 +42,7 @@ MAIN_DIALOG='
 				'"`funcbtnCreate 1 false gtk-cut`"'
 			</vbox>
 			<vbox>
-				<text><label>"<button image-position='"'1'"' homogeneous='"'true'"'>"</label></text>
+				<text><label>\<button image-position="1" homogeneous="true"\></label></text>
 				'"`funcbtnCreate 1 true gtk-print`"'
 				'"`funcbtnCreate 1 true gtk-orientation-landscape`"'
 				'"`funcbtnCreate 1 true gtk-undelete`"'
