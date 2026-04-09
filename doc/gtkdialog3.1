@@ -282,6 +282,43 @@ The general form is:
 .EX
 <\fItag\fR \fIkey\fR="\fIvalue\fR" [\fIkey\fR="\fIvalue\fR" ...]>
 .EE
+.PP
+Any attribute whose name matches a GObject property of the underlying GTK widget
+is applied directly.
+Boolean properties accept \fBtrue\fR/\fBfalse\fR, integer and float properties
+accept numeric values, and enum properties accept the GLib nick string
+(e.g.\& \fBstart\fR, \fBcenter\fR, \fBend\fR, \fBfill\fR) or an integer.
+.PP
+Commonly used GTK widget properties:
+.TS
+l l l.
+Attribute	Type	Purpose
+_
+halign	enum	Horizontal alignment (fill, start, end, center, baseline)
+valign	enum	Vertical alignment (fill, start, end, center, baseline)
+hexpand	boolean	Whether the widget requests extra horizontal space
+vexpand	boolean	Whether the widget requests extra vertical space
+margin\-start	int	Left margin in pixels (LTR)
+margin\-end	int	Right margin in pixels (LTR)
+margin\-top	int	Top margin in pixels
+margin\-bottom	int	Bottom margin in pixels
+width\-request	int	Minimum widget width in pixels
+height\-request	int	Minimum widget height in pixels
+sensitive	boolean	Whether the widget responds to input
+visible	boolean	Whether the widget is visible
+.TE
+.PP
+Container\-specific properties:
+.TS
+l l l.
+Attribute	Type	Purpose
+_
+spacing	int	Pixel gap between children (vbox, hbox)
+border\-width	int	Padding inside the container
+homogeneous	boolean	Give all children equal size
+space\-expand	boolean	Override default expand packing
+space\-fill	boolean	Override default fill packing
+.TE
 .SS Imperative extensions
 The language includes simple imperative constructs for dynamic behaviour:
 .PP
