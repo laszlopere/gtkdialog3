@@ -52,7 +52,7 @@ Unsupported GTK3 widgets:
 (29) Add GtkOverlay support (layered widget stacking).
 (30) Add GtkRevealer support (animated show/hide).
 (31) Add GtkInfoBar support (in-window notification bar).
-(32) Add GtkButtonBox support (specialized button container).
+(32) Add GtkButtonBox support (specialized button container). DONE.
 (33) Add GtkPopover support (popup attached to a widget).
 (34) Add GtkSearchEntry support (entry with search icon/clearing).
 (35) Add GtkSwitch support (on/off toggle). DONE.
