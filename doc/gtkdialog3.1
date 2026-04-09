@@ -215,6 +215,7 @@ _
 <notebook>	Tabbed notebook
 <frame \fILabel\fR>	Labeled frame (label in opening tag)
 <eventbox>	Invisible event\-catching container
+<buttonbox>	Button container with layout control
 <expander>	Collapsible container
 .TE
 .SS Leaf widgets
@@ -357,6 +358,15 @@ border\-width	int	Padding inside the container
 homogeneous	boolean	Give all children equal size
 space\-expand	boolean	Override default expand packing
 space\-fill	boolean	Override default fill packing
+.TE
+.PP
+Buttonbox\-specific properties:
+.TS
+l l l.
+Attribute	Type	Purpose
+_
+layout	string	Button arrangement: spread, edge, start, end (default), center
+orientation	string	horizontal (default) or vertical
 .TE
 .PP
 Button\-specific properties:

@@ -13,10 +13,10 @@ MAIN_DIALOG="
 			<text><label>Label2</label></text>
 			<entry/>
 		</hbox>
-		<hbox>
+		<buttonbox layout='end'>
 			<button stock='cancel'/>
 			<button stock='help'/>
-		</hbox>
+		</buttonbox>
 	</vbox>
 </window>
 "
