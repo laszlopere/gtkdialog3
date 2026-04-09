@@ -1545,7 +1545,17 @@ void print_variables(variable *actual)
 
 		if (value == NULL)
 			value = "";
-		printf("%s=\"%s\"\n", actual->Name, value);
+		/* Escape double quotes and backslashes so output is valid for shell eval */
+		{
+			const gchar *p;
+			printf("%s=\"", actual->Name);
+			for (p = value; *p; p++) {
+				if (*p == '"' || *p == '\\')
+					putchar('\\');
+				putchar(*p);
+			}
+			printf("\"\n");
+		}
 
 		/* Thunor: I've disabled this for performance reasons. Zigbert was
 		 * experiencing terrible table performance which I've tested too.
