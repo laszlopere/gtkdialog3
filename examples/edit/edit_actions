@@ -1,0 +1,102 @@
+#!/bin/sh
+
+# Demonstrates the edit (multi-line text editor) widget with
+# all available action buttons: cut, copy, paste, selectall,
+# disable, enable, clear, removeselected, refresh, and save.
+
+GTKDIALOG=gtkdialog3
+
+TMPDIR=/tmp/gtkdialog3/examples/"`basename $0`"
+mkdir -p "$TMPDIR"
+
+echo "This text was loaded from an input file.
+You can edit it, then use the buttons below
+to perform various actions on the editor." > "$TMPDIR"/inputfile
+
+MAIN_DIALOG='
+<window title="Edit Actions">
+	<vbox spacing="10" border-width="10">
+		<text>
+			<label>"Editor widget with action buttons.
+The text is loaded from a file and can be saved back."</label>
+		</text>
+		<edit wrap-mode="1">
+			<variable>EDITOR</variable>
+			<input file>'"$TMPDIR"'/inputfile</input>
+			<output file>'"$TMPDIR"'/outputfile</output>
+			<height>200</height>
+			<width>400</width>
+		</edit>
+		<frame Clipboard>
+			<hbox homogeneous="true" spacing="5">
+				<button>
+					<label>Select All</label>
+					<action>echo "action:selectall"</action>
+					<action function="selectall">EDITOR</action>
+				</button>
+				<button>
+					<label>Cut</label>
+					<action>echo "action:cut"</action>
+					<action function="cut">EDITOR</action>
+				</button>
+				<button>
+					<label>Copy</label>
+					<action>echo "action:copy"</action>
+					<action function="copy">EDITOR</action>
+				</button>
+				<button>
+					<label>Paste</label>
+					<action>echo "action:paste"</action>
+					<action function="paste">EDITOR</action>
+				</button>
+			</hbox>
+		</frame>
+		<frame Widget Actions>
+			<hbox homogeneous="true" spacing="5">
+				<button>
+					<label>Disable</label>
+					<action>echo "action:disable"</action>
+					<action function="disable">EDITOR</action>
+				</button>
+				<button>
+					<label>Enable</label>
+					<action>echo "action:enable"</action>
+					<action function="enable">EDITOR</action>
+				</button>
+				<button>
+					<label>Clear</label>
+					<action>echo "action:clear"</action>
+					<action function="clear">EDITOR</action>
+				</button>
+			</hbox>
+			<hbox homogeneous="true" spacing="5">
+				<button>
+					<label>Delete</label>
+					<action>echo "action:delete"</action>
+					<action function="removeselected">EDITOR</action>
+				</button>
+				<button>
+					<label>Refresh</label>
+					<action>echo "action:refresh"</action>
+					<action function="refresh">EDITOR</action>
+				</button>
+				<button>
+					<label>Save</label>
+					<action>echo "action:save"</action>
+					<action function="save">EDITOR</action>
+				</button>
+			</hbox>
+		</frame>
+		<hbox homogeneous="true">
+			<button ok></button>
+			<button cancel></button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
