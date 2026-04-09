@@ -68,3 +68,5 @@ Unsupported GTK3 widgets:
 (49) Add GtkMenuButton support (button with attached menu/popover).
 (50) Add GtkApplicationWindow support (app window with GAction integration).
 (51) Add GtkShortcutsWindow support (keyboard shortcuts overlay).
+(52) Pango <span> attributes containing double quotes break inside quoted labels
+     because the lexer treats the inner quotes as string terminators.
