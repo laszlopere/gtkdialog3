@@ -119,7 +119,7 @@ start_up(void)
 %token         WIDTH EWIDTH
 %token         HEIGHT EHEIGHT
 %token         INPUT EINPUT PART_INPUT
-%token         OUTPUT OUTPUTFILE EOUTPUT
+%token         OUTPUT EOUTPUT PART_OUTPUT
 
 %token         ACTION EACTION PART_ACTION 
 
@@ -765,10 +765,13 @@ input
 
 output
   : OUTPUT STRING EOUTPUT {
-	         fprintf( stderr, "<output>: Not implemented.\n" ); 
+	         fprintf( stderr, "<output>: Not implemented.\n" );
 	}
-  | OUTPUTFILE STRING EOUTPUT {
-         	token_store_with_argument(SET|ATTR_OUTPUT|SUB_ATTR_FILE,$2);
+  | PART_OUTPUT tagattr '>' STRING EOUTPUT {
+		token_store_with_argument_attr(SET|ATTR_OUTPUT, $4, $2);
+	}
+  | PART_OUTPUT tagattr '>' EOUTPUT {
+		token_store_with_argument_attr(SET|ATTR_OUTPUT, "", $2);
 	}
   ;
 

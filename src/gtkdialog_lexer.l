@@ -816,7 +816,10 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 
 \<output\>        			{ Token="<output>"; return(OUTPUT);   			}
 \<\/output\>      			{ Token="</output>"; return(EOUTPUT);   		}
-\<\output\ file\> 			{ Token="<output>"; return(OUTPUTFILE);   		}
+\<\output\ [ ]*   			{ Token="<output>";
+					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EOUTPUT;
+					  return(PART_OUTPUT);   			}
 
 \<variable\>     			{ Token="<variable>"; return(VARIABLE);  		}
 \<variable[ ]+   			{ Token="<variable>";

@@ -1498,6 +1498,21 @@ token_store_with_argument_attr(
 
 	sub_attribute = (command & SUB_ATTRIBUTE) >> 24;
 
+	/* When an <output> tag has tag attributes but no explicit sub_attribute
+	 * (i.e. PART_OUTPUT rule), determine the type from the tag attributes.
+	 * Currently only type="file" is supported. */
+	if (sub_attribute == 0 && (command & ATTRIBUTE) == ATTR_OUTPUT && attributes) {
+		gchar *type_value = get_tag_attribute(attributes, "type");
+		if (type_value != NULL && strcasecmp(type_value, "file") == 0) {
+			sub_attribute = 2;  /* SUB_ATTR_FILE >> 24 */
+		} else if (type_value != NULL) {
+			fprintf(stderr, "%s(): Unknown output type \"%s\"\n",
+				__func__, type_value);
+		} else {
+			fprintf(stderr, "<output>: Not implemented.\n");
+		}
+	}
+
 	/* When an <input> tag has tag attributes but no explicit sub_attribute
 	 * (i.e. PART_INPUT rule), determine the type from the tag attributes.
 	 *
