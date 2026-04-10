@@ -32,5 +32,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTKDIALOG --program=MAIN_DIALOG --output-format=json ;;
 esac
