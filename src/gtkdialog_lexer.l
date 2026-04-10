@@ -809,11 +809,6 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 
 \<input\>        			{ Token="<input>"; return(INPUT);   			}
 \<\/input\>      			{ Token="</input>"; return(EINPUT);   			}
-\<\input\ file\> 			{ Token="<input file>"; return(INPUTFILE);   		}
-\<\input\ file[ ]+ 			{ Token="<input file>";
-					  BEGIN(ST_TAG_ATTR);
-					  current_close_token = EINPUT;
-					  return(PART_INPUTFILE);   				}
 \<\input\ [ ]*   			{ Token="<input>";
 					  BEGIN(ST_TAG_ATTR);
 					  current_close_token = EINPUT;

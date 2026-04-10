@@ -1499,14 +1499,47 @@ token_store_with_argument_attr(
 	sub_attribute = (command & SUB_ATTRIBUTE) >> 24;
 
 	/* When an <input> tag has tag attributes but no explicit sub_attribute
-	 * (i.e. PART_INPUT rule), determine the type from the tag attributes:
-	 * if a "file" attribute exists, it's a file input (using the attribute
-	 * value as the path); otherwise it's a shell command. This supports
-	 * <input file="path"> as a replacement for <input file>path</input>
-	 * and fixes the missing "Command:" prefix for <input attrs>cmd</input>. */
+	 * (i.e. PART_INPUT rule), determine the type from the tag attributes.
+	 *
+	 * The "type" attribute specifies the input kind:
+	 *   <input type="bash">cmd</input>       - shell command (same as <input>)
+	 *   <input type="file">path</input>      - file input
+	 *   <input type="stock">gtk-open</input> - GTK stock icon
+	 *   <input type="icon">icon-name</input> - GTK theme icon
+	 *
+	 * Without "type", the legacy attribute forms are also handled:
+	 *   <input file="path">                  - file input
+	 *   <input stock="name">                 - stock icon
+	 *   <input icon="name">                  - theme icon
+	 */
 	if (sub_attribute == 0 && (command & ATTRIBUTE) == ATTR_INPUT && attributes) {
+		gchar *type_value = get_tag_attribute(attributes, "type");
 		gchar *file_value = get_tag_attribute(attributes, "file");
-		if (file_value != NULL ||
+
+		if (type_value != NULL) {
+			if (strcasecmp(type_value, "bash") == 0 ||
+				strcasecmp(type_value, "shell") == 0) {
+				sub_attribute = 1;  /* SUB_ATTR_SHELL >> 24 */
+			} else if (strcasecmp(type_value, "file") == 0) {
+				sub_attribute = 2;  /* SUB_ATTR_FILE >> 24 */
+			} else if (strcasecmp(type_value, "stock") == 0) {
+				sub_attribute = 2;  /* SUB_ATTR_FILE >> 24 */
+				/* Move content to "stock" tag attribute so widgets find it */
+				if (argument[0] != '\0')
+					attributes = add_tag_attribute(attributes, (char *)"stock", (char *)argument);
+				argument = "";
+			} else if (strcasecmp(type_value, "icon") == 0) {
+				sub_attribute = 2;  /* SUB_ATTR_FILE >> 24 */
+				/* Move content to "icon" tag attribute so widgets find it */
+				if (argument[0] != '\0')
+					attributes = add_tag_attribute(attributes, (char *)"icon", (char *)argument);
+				argument = "";
+			} else {
+				fprintf(stderr, "%s(): Unknown input type \"%s\"\n",
+					__func__, type_value);
+				sub_attribute = 1;  /* default to shell */
+			}
+		} else if (file_value != NULL ||
 			get_tag_attribute(attributes, "stock") != NULL ||
 			get_tag_attribute(attributes, "icon") != NULL) {
 			sub_attribute = 2;  /* SUB_ATTR_FILE >> 24 */
