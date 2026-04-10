@@ -1,0 +1,35 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog3
+
+MAIN_DIALOG="
+<window title='Linux News' width-request='900' height-request='700'>
+	<vbox spacing='6' border-width='8'>
+		<frame title='Description' space-expand='false' space-fill='false'>
+			<text>
+				<label>This example demonstrates the webview widget by loading a live web page.
+The webview uses WebKitGTK to render HTML content inside a GTK window. You can
+use it to display documentation, reports, or any web content within your dialog.
+The current URL is exported as the widget variable value when the dialog closes.</label>
+			</text>
+		</frame>
+		<frame title='LWN.net - Linux Weekly News' space-expand='true' space-fill='true'>
+			<webview>
+				<variable>webPage</variable>
+				<default>https://lwn.net</default>
+			</webview>
+		</frame>
+		<buttonbox layout='end' space-expand='false' space-fill='false'>
+			<button stock='ok'/>
+		</buttonbox>
+	</vbox>
+	<variable>webviewDialog</variable>
+</window>
+"
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true \
+		--program=MAIN_DIALOG --output-format=json ;;
+esac
