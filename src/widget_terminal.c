@@ -469,6 +469,24 @@ static void widget_terminal_input_by_command(variable *var, char *command)
 }
 
 /***********************************************************************
+ * Feed command (public, for action_set)                               *
+ ***********************************************************************/
+
+void widget_terminal_feed_command(variable *var, const char *command)
+{
+#if HAVE_VTE
+	GString *text = g_string_new(command);
+	/* Append newline if not already present so the command executes */
+	if (text->len == 0 || text->str[text->len - 1] != '\n')
+		g_string_append_c(text, '\n');
+	vte_terminal_feed_child(VTE_TERMINAL(var->Widget), text->str, text->len);
+	g_string_free(text, TRUE);
+#else
+	fprintf(stderr, "%s(): VTE support not compiled in.\n", __func__);
+#endif
+}
+
+/***********************************************************************
  * Input by File                                                       *
  ***********************************************************************/
 

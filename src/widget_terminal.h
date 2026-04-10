@@ -1,7 +1,7 @@
 /*
  * widget_terminal.h: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  Lï¿½szlï¿½ Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@ gchar *widget_terminal_envvar_all_construct(variable *var);
 gchar *widget_terminal_envvar_construct(GtkWidget *widget);
 void widget_terminal_fileselect(
 	variable *var, const char *name, const char *value);
+void widget_terminal_feed_command(variable *var, const char *command);
 void widget_terminal_refresh(variable *var);
 void widget_terminal_removeselected(variable *var);
 void widget_terminal_save(variable *var);

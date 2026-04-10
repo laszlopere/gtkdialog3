@@ -39,6 +39,7 @@
 #include "variables.h"
 #include "tag_attributes.h"
 #include "widget_sourceview.h"
+#include "widget_terminal.h"
 #if HAVE_WEBKIT
 #include <webkit2/webkit2.h>
 #endif
@@ -732,6 +733,14 @@ void action_set(GtkWidget *widget, char *string)
 		}
 		if (strcasecmp(nv.name, "language") == 0) {
 			widget_sourceview_set_language(var, nv.value);
+			g_free(widget_name);
+			g_free(nv.name);
+			return;
+		}
+	}
+	if (var->Type == WIDGET_TERMINAL) {
+		if (strcasecmp(nv.name, "command") == 0) {
+			widget_terminal_feed_command(var, nv.value);
 			g_free(widget_name);
 			g_free(nv.name);
 			return;
