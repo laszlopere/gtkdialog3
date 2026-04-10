@@ -1,0 +1,198 @@
+#!/bin/bash
+
+GTKDIALOG=gtkdialog3
+
+TMPDIR=/tmp/gtkdialog3/examples/sourceview
+mkdir -p "$TMPDIR"
+
+# Write the C program sample to a static file
+cat > "$TMPDIR"/hello.c << 'CEOF'
+#include <stdio.h>
+#include <stdlib.h>
+
+/* A simple greeting program that demonstrates
+   basic C syntax highlighting in the sourceview widget. */
+
+typedef struct {
+    const char *name;
+    int         count;
+} greeting_t;
+
+static void greet(const greeting_t *g)
+{
+    for (int i = 0; i < g->count; i++)
+        printf("Hello, %s! (%d/%d)\n", g->name, i + 1, g->count);
+}
+
+int main(int argc, char *argv[])
+{
+    greeting_t g = {
+        .name  = argc > 1 ? argv[1] : "World",
+        .count = 3,
+    };
+
+    greet(&g);
+    return EXIT_SUCCESS;
+}
+CEOF
+
+# Write the Bash script sample to a static file
+cat > "$TMPDIR"/greet.sh << 'SHEOF'
+#!/bin/bash
+
+# A simple system information script that demonstrates
+# bash syntax highlighting in the sourceview widget.
+
+readonly PROGNAME=$(basename "$0")
+readonly VERSION="1.0"
+
+usage() {
+    cat <<EOF
+Usage: $PROGNAME [OPTIONS]
+
+Options:
+    -u, --user      Show current user
+    -h, --host      Show hostname
+    -d, --date      Show current date
+    -a, --all       Show everything
+    --help          Show this help
+EOF
+}
+
+show_info() {
+    local label="$1"
+    local value="$2"
+    printf "  %-12s %s\n" "$label:" "$value"
+}
+
+main() {
+    local show_user=0 show_host=0 show_date=0
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -u|--user) show_user=1 ;;
+            -h|--host) show_host=1 ;;
+            -d|--date) show_date=1 ;;
+            -a|--all)  show_user=1; show_host=1; show_date=1 ;;
+            --help)    usage; exit 0 ;;
+            *)         echo "Unknown option: $1" >&2; exit 1 ;;
+        esac
+        shift
+    done
+
+    echo "$PROGNAME v$VERSION"
+    echo "---"
+    [[ $show_user -eq 1 ]] && show_info "User" "$(whoami)"
+    [[ $show_host -eq 1 ]] && show_info "Hostname" "$(hostname)"
+    [[ $show_date -eq 1 ]] && show_info "Date" "$(date)"
+}
+
+main "$@"
+SHEOF
+
+# Shell function to generate JSON data dynamically
+generate_json() {
+    cat <<JEOF
+{
+    "application": {
+        "name": "gtkdialog3",
+        "version": "0.9.0",
+        "description": "GTK3 dialog builder for shell scripts"
+    },
+    "widgets": [
+        {
+            "name": "sourceview",
+            "library": "GtkSourceView",
+            "features": [
+                "syntax highlighting",
+                "line numbers",
+                "auto-indent",
+                "bracket matching"
+            ]
+        },
+        {
+            "name": "webview",
+            "library": "WebKitGTK",
+            "features": [
+                "HTML rendering",
+                "URL navigation",
+                "local file loading"
+            ]
+        },
+        {
+            "name": "terminal",
+            "library": "VTE",
+            "features": [
+                "shell emulation",
+                "command input",
+                "color support"
+            ]
+        }
+    ],
+    "build": {
+        "system": "autotools",
+        "compiler": "gcc",
+        "parser": "flex + bison"
+    }
+}
+JEOF
+}
+export -f generate_json
+
+# Load initial content (C program)
+cp "$TMPDIR"/hello.c "$TMPDIR"/code
+echo "c" > "$TMPDIR"/code.lang
+
+MAIN_DIALOG='
+<window title="Source Code Viewer" width-request="750" height-request="600">
+	<vbox spacing="6" border-width="8">
+		<frame title="Description" space-expand="false" space-fill="false">
+			<text>
+				<label>This example demonstrates the sourceview widget with syntax highlighting.
+Use the buttons to switch between different source files and languages. The C
+and Bash examples are loaded from static files, while the JSON example is
+generated dynamically by a shell function.</label>
+			</text>
+		</frame>
+		<frame title="Source Code" space-expand="true" space-fill="true">
+			<vbox>
+				<hbox spacing="6" space-expand="false" space-fill="false">
+					<button>
+						<label>C Program</label>
+						<action>cp '"$TMPDIR"'/hello.c '"$TMPDIR"'/code</action>
+						<action>echo c > '"$TMPDIR"'/code.lang</action>
+						<action>refresh:srcEditor</action>
+					</button>
+					<button>
+						<label>JSON Data</label>
+						<action>generate_json > '"$TMPDIR"'/code</action>
+						<action>echo json > '"$TMPDIR"'/code.lang</action>
+						<action>refresh:srcEditor</action>
+					</button>
+					<button>
+						<label>Bash Script</label>
+						<action>cp '"$TMPDIR"'/greet.sh '"$TMPDIR"'/code</action>
+						<action>echo sh > '"$TMPDIR"'/code.lang</action>
+						<action>refresh:srcEditor</action>
+					</button>
+				</hbox>
+				<sourceview language="c" font-name="Monospace 12">
+					<variable>srcEditor</variable>
+					<input file>'"$TMPDIR"'/code</input>
+				</sourceview>
+			</vbox>
+		</frame>
+		<buttonbox layout="end" space-expand="false" space-fill="false">
+			<button stock="ok"/>
+		</buttonbox>
+	</vbox>
+	<variable>sourceviewDialog</variable>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true \
+		--program=MAIN_DIALOG --output-format=json ;;
+esac

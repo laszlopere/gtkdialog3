@@ -309,5 +309,37 @@ static void widget_sourceview_input_by_file(variable *var, char *filename)
 		fprintf(stderr, "%s(): Couldn't stat '%s'.\n", __func__, filename);
 	}
 
+#if HAVE_GTKSOURCEVIEW
+	/* Check for a companion .lang file to switch syntax highlighting.
+	 * If <filename>.lang exists and contains a language ID (e.g. "c",
+	 * "json", "sh"), set it on the source buffer. */
+	{
+		gchar *lang_file = g_strdup_printf("%s.lang", filename);
+		if (stat(lang_file, &st) == 0 && st.st_size > 0 && st.st_size < 64) {
+			gchar lang_id[64];
+			FILE *fp = fopen(lang_file, "r");
+			if (fp) {
+				if (fgets(lang_id, sizeof(lang_id), fp)) {
+					g_strstrip(lang_id);
+					GtkSourceLanguageManager *lm =
+						gtk_source_language_manager_get_default();
+					GtkSourceLanguage *lang =
+						gtk_source_language_manager_get_language(lm, lang_id);
+					gtk_source_buffer_set_language(
+						GTK_SOURCE_BUFFER(
+							gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget))),
+						lang);
+					gtk_source_buffer_set_highlight_syntax(
+						GTK_SOURCE_BUFFER(
+							gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget))),
+						lang != NULL);
+				}
+				fclose(fp);
+			}
+		}
+		g_free(lang_file);
+	}
+#endif
+
 	GDG_DEBUG("Exiting.");
 }
