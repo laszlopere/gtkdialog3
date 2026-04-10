@@ -98,6 +98,7 @@ typedef struct actioncommand {
 #define WIDGET_SWITCH            0x00B30000
 #define WIDGET_BUTTONBOX         0x00B40000
 #define WIDGET_WEBVIEW           0x00B50000
+#define WIDGET_SOURCEVIEW        0x00B60000
 
 /*
  * Imperative stuff.

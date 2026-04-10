@@ -157,6 +157,7 @@ start_up(void)
 %token         FONTBUTTON PART_FONTBUTTON EFONTBUTTON
 %token         TERMINAL PART_TERMINAL ETERMINAL
 %token         WEBVIEW PART_WEBVIEW EWEBVIEW
+%token         SOURCEVIEW PART_SOURCEVIEW ESOURCEVIEW
 %token         EVENTBOX PART_EVENTBOX EEVENTBOX
 %token         EXPANDER PART_EXPANDER EEXPANDER
 %token         SWITCH ESWITCH PART_SWITCH
@@ -322,6 +323,7 @@ widget
   | fontbutton
   | terminal
   | webview
+  | sourceview
   | switch
   ;
 
@@ -698,6 +700,15 @@ webview
 	}
   | PART_WEBVIEW tagattr '>' attr EWEBVIEW {
 		token_store_attr(PUSH | WIDGET_WEBVIEW, $2);
+	}
+  ;
+
+sourceview
+  : SOURCEVIEW attr ESOURCEVIEW {
+		token_store(PUSH | WIDGET_SOURCEVIEW);
+	}
+  | PART_SOURCEVIEW tagattr '>' attr ESOURCEVIEW {
+		token_store_attr(PUSH | WIDGET_SOURCEVIEW, $2);
 	}
   ;
 

@@ -50,6 +50,7 @@
 #include "widget_statusbar.h"
 #include "widget_table.h"
 #include "widget_terminal.h"
+#include "widget_sourceview.h"
 #include "widget_webview.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -457,6 +458,9 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_TABLE:
 			widget_table_fileselect(toset, name, value);
 			break;
+		case WIDGET_SOURCEVIEW:
+			widget_sourceview_fileselect(toset, name, value);
+			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_fileselect(toset, name, value);
 			break;
@@ -589,6 +593,9 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_TABLE:
 			widget_table_save(var);
+			break;
+		case WIDGET_SOURCEVIEW:
+			widget_sourceview_save(var);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_save(var);
@@ -745,6 +752,9 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_refresh(var);
+			break;
+		case WIDGET_SOURCEVIEW:
+			widget_sourceview_refresh(var);
 			break;
 		case WIDGET_WEBVIEW:
 			widget_webview_refresh(var);
@@ -2081,6 +2091,9 @@ variable *variables_clear(const char *name)
 		case WIDGET_TABLE:
 			widget_table_clear(toclear);
 			break;
+		case WIDGET_SOURCEVIEW:
+			widget_sourceview_clear(toclear);
+			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_clear(toclear);
 			break;
@@ -2233,6 +2246,9 @@ int remove_selected_variable(const char *name)
 			break;
 		case WIDGET_TABLE:
 			widget_table_removeselected(toclear);
+			break;
+		case WIDGET_SOURCEVIEW:
+			widget_sourceview_removeselected(toclear);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_removeselected(toclear);

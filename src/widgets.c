@@ -64,6 +64,7 @@
 #include "widget_statusbar.h"
 #include "widget_table.h"
 #include "widget_terminal.h"
+#include "widget_sourceview.h"
 #include "widget_webview.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -215,6 +216,10 @@ char *widget_get_text_value(GtkWidget *widget, int type)
 			break;
 		case WIDGET_TERMINAL:
 			string = widget_terminal_envvar_construct(widget);
+			return string;
+			break;
+		case WIDGET_SOURCEVIEW:
+			string = widget_sourceview_envvar_construct(widget);
 			return string;
 			break;
 		case WIDGET_WEBVIEW:
@@ -474,6 +479,9 @@ char *widgets_to_str(int itype)
 			break;
 		case WIDGET_TERMINAL:
 			type = "TERMINAL";
+			break;
+		case WIDGET_SOURCEVIEW:
+			type = "SOURCEVIEW";
 			break;
 		case WIDGET_WEBVIEW:
 			type = "WEBVIEW";

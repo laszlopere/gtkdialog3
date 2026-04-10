@@ -70,6 +70,7 @@
 #include "widget_statusbar.h"
 #include "widget_table.h"
 #include "widget_terminal.h"
+#include "widget_sourceview.h"
 #include "widget_webview.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -234,6 +235,9 @@ void print_command(instruction command)
 			break;
 		case WIDGET_TERMINAL:
 			printf("(new terminal())");
+			break;
+		case WIDGET_SOURCEVIEW:
+			printf("(new sourceview())");
 			break;
 		case WIDGET_WEBVIEW:
 			printf("(new webview())");
@@ -622,6 +626,9 @@ void print_token(token Token)
 			break;
 		case WIDGET_TERMINAL:
 			printf("(TERMINAL)");
+			break;
+		case WIDGET_SOURCEVIEW:
+			printf("(SOURCEVIEW)");
 			break;
 		case WIDGET_WEBVIEW:
 			printf("(WEBVIEW)");
@@ -1187,6 +1194,12 @@ instruction_execute_push(
 			break;
 		case WIDGET_TERMINAL:
 			Widget = widget_terminal_create(Attr, tag_attributes, Widget_Type);
+			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
+				tag_attributes, Widget_Type);
+			push_widget(scrolled_window, WIDGET_SCROLLEDW);
+			break;
+		case WIDGET_SOURCEVIEW:
+			Widget = widget_sourceview_create(Attr, tag_attributes, Widget_Type);
 			scrolled_window = put_in_the_scrolled_window(Widget, Attr,
 				tag_attributes, Widget_Type);
 			push_widget(scrolled_window, WIDGET_SCROLLEDW);

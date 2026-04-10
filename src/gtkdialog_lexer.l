@@ -748,6 +748,14 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 					  return(PART_WEBVIEW); }
 \<\/webview\>				{ Token="</webview>"; return(EWEBVIEW); }
 
+\<sourceview\/\>			{ Token="<sourceview/>"; pending_close_token = ESOURCEVIEW; return(SOURCEVIEW); }
+\<sourceview\>				{ Token="<sourceview>"; return(SOURCEVIEW); }
+\<sourceview[ ]+			{ Token="<sourceview>";
+					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = ESOURCEVIEW;
+					  return(PART_SOURCEVIEW); }
+\<\/sourceview\>			{ Token="</sourceview>"; return(ESOURCEVIEW); }
+
 \<eventbox\/\>				{ Token="<eventbox/>"; pending_close_token = EEVENTBOX; return(EVENTBOX); }
 \<eventbox\>				{ Token="<eventbox>"; return(EVENTBOX); }
 \<eventbox[ ]+				{ Token="<eventbox>";

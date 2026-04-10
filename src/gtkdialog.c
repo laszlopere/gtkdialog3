@@ -415,6 +415,10 @@ print_version_exit(int exitcode)
 	if (extralibs) printf(", ");
 	printf("WebKit"); extralibs++;
 #endif
+#if HAVE_GTKSOURCEVIEW
+	if (extralibs) printf(", ");
+	printf("GtkSourceView"); extralibs++;
+#endif
 	if (!extralibs) printf("none");
 	printf(".\n");
 
