@@ -50,6 +50,7 @@ and with no Back-Cover Texts.
 @menu
 * Getting Gtkdialog::      How to find, download and install the program.
 * Introduction::           A brief description of the package.
+* The Description Language::  Syntax of the dialog markup language.
 * Invoking the Program::   How to call the program from various languages.
 * Widgets::    		   The elements of dialog boxes.
 * Containers::		   Dialog elements grouping widgets together.
@@ -96,435 +97,1902 @@ create a GUI not just for any shell script or UNIX command but for any
 interpreted or compiled program capable of starting a child process and
 using pipes.
 
-@node Invoking the Program
-@chapter Invoking the Program
-@section Examples
-Our first example program shows how to call the @command{gtkdialog3}
-from a BASH script.
+@node The Description Language
+@chapter The Description Language
 
+Gtkdialog3 uses an XML-like markup language to describe dialog boxes.
+The language looks like XML and follows its basic structure --- tags
+with attributes, nested elements, and self-closing tags --- but it is
+not standard XML.  The parser recognises a fixed set of tag names
+(@pxref{Widgets}, @pxref{Containers}) and has several non-standard
+extensions described below.
+
+All of the non-standard language elements listed in this chapter are
+@strong{deprecated} and will be removed in a future version.  New
+dialog descriptions should use only well-formed XML constructs.
+
+@menu
+* Backslash escaping::          Non-standard character escaping
+* Space in tag names::          The @code{<input file>} tag name
+* Imperative constructs::       Programming constructs in markup
+* Implicit window element::    Omitting the root @code{<window>} tag
+* Unsupported XML features::   Standard XML features that are not available
+@end menu
+
+@c -----------------------------------------------------------------
+@node Backslash escaping
+@section Backslash escaping
+
+Standard XML uses entity references (@code{&lt;}, @code{&gt;},
+@code{&amp;}) to represent special characters.  Gtkdialog3 does not
+support entity references.  Instead, it uses backslash escaping:
+
+@table @code
+@item \<
+A literal @code{<} character (prevents it from being parsed as a tag).
+@item \>
+A literal @code{>} character.
+@item \"
+A literal double-quote inside a quoted string.
+@item \\
+A literal backslash.
+@end table
+
+@noindent Example --- displaying the text @samp{<button>} as a label:
 @example
-#! /bin/bash
-
-export MAIN_DIALOG='
- <vbox>
-  <text>
-    <label>This is a label...</label>
-  </text>
-  <hbox>
-   <button stock="ok"/>
-   <button stock="cancel"/>
-  </hbox>
- </vbox>'
-
-gtkdialog3 --program MAIN_DIALOG
+<text><label>\<button\></label></text>
 @end example
 
-This example uses a very plain way to open a dialog box. We store the
-description of the dialog box in the @code{MAIN_DIALOG} environment
-variable which is exported to the child processes with the BASH
-@code{export} built-in. Then we call the @code{gtkdialog3} program with
-the @option{--program} option which is followed by the name of the
-variable holding the dialog box description. It is simple and easy to
-write BASH scripts in this manner.
-
-A similar calling method can be used when user input is needed. The
-@command{gtkdialog3} sends the state of the widgets to the standard
-output when exiting and this is how we can get user input for the BASH
-program. The next example code shows the reading process.
+In standard XML, this would be written as:
 @example
-#! /bin/bash
+<text><label>&lt;button&gt;</label></text>
+@end example
 
-export DIALOG='
+@c -----------------------------------------------------------------
+@node Space in tag names
+@section Space in tag names
+
+XML tag names cannot contain spaces.  Gtkdialog3 has two tag names
+that contain a space:
+
+@table @code
+@item <input file>@dots{}</input>
+Reads the widget's value from a file.
+@item <output file>@dots{}</output>
+Writes the widget's value to a file.
+@end table
+
+These are parsed as single tokens, not as a tag named @code{input}
+with an attribute named @code{file}.  In new code, prefer the
+attribute form instead:
+
+@example
+@r{Deprecated:}  <input file>/path/to/file</input>
+@r{Preferred:}   <input file="/path/to/file">
+@end example
+
+@c -----------------------------------------------------------------
+@node Imperative constructs
+@section Imperative constructs
+
+The language includes simple imperative programming constructs that
+can be placed alongside widget elements.  These are not part of XML
+and exist for dynamic dialog generation at parse time.
+
+@table @code
+@item <command assignment="@var{var} := @var{expr}">
+Assigns a value to a variable.  The expression supports arithmetic
+operators (@code{+}, @code{-}, @code{*}, @code{/}) and numeric
+constants.
+
+@item <if condition="@var{expr}">@dots{}</if>
+Conditionally includes the enclosed widgets.  The condition supports
+variable names, numbers, and the comparison operators @code{=} and
+@code{!=}.
+
+@item <while condition="@var{expr}">@dots{}</while>
+Repeatedly includes the enclosed widgets as long as the condition is
+true.
+
+@item <show/>
+Forces all widgets created so far to be displayed immediately.
+@end table
+
+@noindent Example --- creating five buttons in a loop:
+@example
+<command assignment="i := 0">
+<while condition="i != 5">
+    <button><label>Button</label></button>
+    <command assignment="i := i + 1">
+</while>
+@end example
+
+@c -----------------------------------------------------------------
+@node Implicit window element
+@section Implicit window element
+
+Standard XML requires a single root element.  In gtkdialog3, the
+outermost @code{<window>} tag can be omitted; the parser wraps the
+content in an implicit window automatically.  This means a dialog
+can start directly with a container:
+
+@example
 <vbox>
-  <entry>
-    <variable>ENTRY</variable>
-  </entry>
-  <hbox>
+    <text><label>Hello</label></text>
     <button stock="ok"/>
-    <button stock="cancel"/>
-  </hbox>
-</vbox>'
-
-I=$IFS; IFS=""
-for STATEMENTS in  $(gtkdialog3 --program DIALOG); do
-  eval $STATEMENTS
-done
-IFS=$I
-
-if [ "$EXIT" = "OK" ]; then 
-  echo "You entered: $ENTRY."
-else
-  echo "You pressed the Cancel button."
-fi
-@end example
-
-In the example script we use the @code{for} built-in to go through the
-list @code{gtkdialog3} produced. Changing the field separator (IFS) is
-a little bit disturbing but necessary since this is the only way to
-protect the space characters in user input. 
-
-In larger software projects it may be a good idea to break the code to
-separate files. Since @code{gtkdialog3} can read the description
-program from file it is easy to write self executable programs with
-it. This is how the next example is constructed.
-
-@example
-#! /usr/local/bin/gtkdialog3 -f
-<vbox>
-  <checkbox>
-    <label>This is a checkbox</label>
-    <variable>CHECK1</variable>
-  </checkbox>
-  <checkbox>
-    <label>Another one</label>
-    <variable>CHECK2</variable>
-  </checkbox>
-  <button>
-    <label>OK</label>
-  </button>
 </vbox>
 @end example
 
-When used in this fashion the state of the widgets can be read from
-the standard output of the script as usual.
+This is equivalent to:
+
+@example
+<window>
+    <vbox>
+        <text><label>Hello</label></text>
+        <button stock="ok"/>
+    </vbox>
+</window>
+@end example
+
+New dialog descriptions should always include an explicit
+@code{<window>} element.
+
+@c -----------------------------------------------------------------
+@node Unsupported XML features
+@section Unsupported XML features
+
+The following standard XML features are @strong{not supported} by
+gtkdialog3's parser:
+
+@itemize @bullet
+@item XML declarations (@code{<?xml version="1.0"?>})
+@item Document type definitions (@code{<!DOCTYPE @dots{}>})
+@item CDATA sections (@code{<![CDATA[@dots{}]]>})
+@item Entity references (@code{&amp;}, @code{&lt;}, @code{&gt;},
+@code{&quot;}, @code{&apos;})
+@item Processing instructions (@code{<?@dots{}?>})
+@item XML comments (@code{<!-- @dots{} -->})
+@item Namespaces
+@end itemize
+
+Including any of these in a dialog description will cause a parse
+error.
+
+@c -----------------------------------------------------------------
+@node Invoking the Program
+@chapter Invoking the Program
+
+Gtkdialog3 reads a dialog description from one of several sources,
+displays the resulting window, and prints the widget values to standard
+output when the dialog closes.
+
+@menu
+* Command-line options::        All available flags
+* Environment variable::        The most common invocation method
+* Capturing output::            Reading widget values in a script
+* Output formats::              Bash, JSON, and XML output
+* Reading from a file::         Loading the dialog from a file
+* Standard input::              Piping the dialog via stdin
+* Including function libraries:: Sourcing shell functions for actions
+* Multiple windows::            Working with more than one window
+* Layout options::              Controlling widget packing defaults
+* Window placement::            Setting window position and size
+@end menu
+
+@c -----------------------------------------------------------------
+@node Command-line options
+@section Command-line options
+
+@table @option
+@item -v, --version
+Print version information (including which optional libraries are
+enabled) and exit.
+
+@item -d, --debug
+Debug mode; prints the processed characters as gtkdialog3 parses the
+input.
+
+@item -p, --program=@var{VARIABLE}
+Read the dialog description from the named environment variable.
+
+@item -f, --file=@var{FILENAME}
+Read the dialog description from a file.
+
+@item -s, --stdin
+Read the dialog description from standard input.
+
+@item -e, --event-driven=@var{FILENAME}
+Execute the file as an event-driven program.
+
+@item -g, --glade-xml=@var{FILENAME}
+Read the dialog description from a Glade XML file.  Only available if
+gtkdialog3 was built with Glade library support.
+
+@item -i, --include=@var{FILENAME}
+Source the given shell script before executing action commands, making
+its functions and variables available to @code{<action>} handlers.
+
+@item -w, --no-warning
+Suppress warning messages.
+
+@item -G, --geometry=@var{[WxH][+X+Y]}
+Set the size and placement of the window.  @var{W} and @var{H} are
+the width and height in pixels; @var{X} and @var{Y} are the screen
+coordinates.
+
+@item -c, --center
+Center the window on the screen.
+
+@item --space-expand=@var{STATE}
+Set the default ``expand'' packing for all widgets (@code{true} or
+@code{false}).
+
+@item --space-fill=@var{STATE}
+Set the default ``fill'' packing for all widgets (@code{true} or
+@code{false}).
+
+@item --output-format=@var{FORMAT}
+Set the output format: @code{bash} (default), @code{json}, or
+@code{xml}.
+
+@item --print-ir
+Print the internal representation of the parsed program and exit
+without displaying a window.  Useful for debugging the dialog
+description.
+
+@item --debug-geometry
+Print widget geometry negotiations to stderr, showing preferred and
+allocated sizes for each widget.  Can also be enabled by setting the
+environment variable @env{GTKDIALOG_DEBUG_GEOMETRY}.
+@end table
+
+@c -----------------------------------------------------------------
+@node Environment variable
+@section Reading from an environment variable
+
+The most common way to use gtkdialog3.  Store the dialog description
+in a shell variable, export it, and pass its name with
+@option{--program}:
+
+@noindent From @file{examples/standard/entry}:
+@example
+#!/bin/sh
+
+MAIN_DIALOG="
+<window title='System Configuration' resizable='false'>
+    <vbox spacing='6' border-width='8'>
+        <frame title='Hostname'>
+            <entry>
+                <default>localhost</default>
+                <variable>entHostname</variable>
+            </entry>
+        </frame>
+        <buttonbox layout='end'>
+            <button stock='cancel'/>
+            <button stock='ok'/>
+        </buttonbox>
+    </vbox>
+</window>"
+export MAIN_DIALOG
+
+gtkdialog3 --program=MAIN_DIALOG
+@end example
+
+@c -----------------------------------------------------------------
+@node Capturing output
+@section Capturing widget values
+
+When the dialog closes, gtkdialog3 prints one
+@code{@var{VARIABLE}="@var{value}"} assignment per line to standard
+output, plus an @code{EXIT} variable indicating which button was
+pressed.  Evaluate the output to import the values into the calling
+script:
+
+@example
+I=$IFS; IFS=""
+for STATEMENTS in $(gtkdialog3 --program=DIALOG); do
+    eval $STATEMENTS
+done
+IFS=$I
+
+if [ "$EXIT" = "OK" ]; then
+    echo "You entered: $ENTRY."
+else
+    echo "You pressed Cancel."
+fi
+@end example
+
+Changing @code{IFS} to the empty string protects spaces in user input
+from being split by the shell's word splitting.
+
+@c -----------------------------------------------------------------
+@node Output formats
+@section Output formats
+
+By default, gtkdialog3 prints variable assignments in Bash syntax.
+Two alternative formats are available via @option{--output-format}:
+
+@subsection JSON output
+
+@example
+gtkdialog3 --program=MAIN_DIALOG --output-format=json
+@end example
+
+Produces a JSON object grouped by window name:
+
+@example
+@{
+  "widget_contents": @{
+    "myWindow": @{
+      "entName": "Alice",
+      "chkAgreed": "true"
+    @}
+  @},
+  "exit": "OK"
+@}
+@end example
+
+The window name is taken from the @code{<variable>} element inside
+each @code{<window>} tag (or auto-generated if none is specified).
+
+@subsection XML output
+
+@example
+gtkdialog3 --program=MAIN_DIALOG --output-format=xml
+@end example
+
+Produces an XML document with the same grouping by window name:
+
+@example
+<?xml version="1.0" encoding="UTF-8"?>
+<gtkdialog>
+  <widget_contents>
+    <window name="myWindow">
+      <variable name="entName">Alice</variable>
+      <variable name="chkAgreed">true</variable>
+    </window>
+  </widget_contents>
+  <exit>OK</exit>
+</gtkdialog>
+@end example
+
+@c -----------------------------------------------------------------
+@node Reading from a file
+@section Reading from a file
+
+Use @option{--file} to load the dialog description from a file:
+
+@example
+gtkdialog3 --file=dialog.xml
+@end example
+
+A file containing only the dialog description can also be made
+directly executable with a shebang line:
+
+@noindent From
+@file{examples/languages/standalone_gtkdialog3_script}:
+@example
+#! /usr/local/bin/gtkdialog3 -f
+
+<window>
+    <vbox>
+        <checkbox>
+            <label>This is a checkbox...</label>
+            <variable>CHECKBOX</variable>
+        </checkbox>
+        <hbox>
+            <button stock="ok"/>
+            <button stock="cancel"/>
+        </hbox>
+    </vbox>
+</window>
+@end example
+
+When used as a standalone script, widget values are printed to the
+standard output of the script as usual.
+
+@c -----------------------------------------------------------------
+@node Standard input
+@section Reading from standard input
+
+Use @option{--stdin} to read the dialog description from a pipe:
+
+@example
+echo '<window><vbox><button stock="ok"/></vbox></window>' \
+    | gtkdialog3 --stdin
+@end example
+
+This is useful for generating dialog descriptions dynamically in a
+pipeline.
+
+@c -----------------------------------------------------------------
+@node Including function libraries
+@section Including function libraries
+
+Use @option{--include} to source a shell script before any action
+command runs.  This makes the script's functions and variables
+available to @code{<action>} handlers.
+
+@example
+gtkdialog3 --include=functions.sh --program=MAIN_DIALOG
+@end example
+
+Without @option{--include}, action commands run in a fresh subshell
+that only has the exported environment variables.  With it, the
+included file is dot-sourced (via @code{. @var{file}}) before each
+action command, so unexported shell functions become available.
+
+@c -----------------------------------------------------------------
+@node Multiple windows
+@section Multiple windows
+
+Define each window in a separate exported shell variable.  The
+variable name must match the @code{<variable>} directive inside the
+@code{<window>} element.  Windows can open and close each other using
+the @code{launch:} and @code{closewindow:} actions
+(@pxref{launch}, @pxref{closewindow}).
+
+@noindent From
+@file{examples/languages/bash_script_multi_window}:
+@example
+winMain='
+<window title="winMain" width-request="250">
+    <vbox>
+        <button>
+            <label>Open second window</label>
+            <action function="launch">winLaunch1</action>
+        </button>
+        <button stock="cancel"/>
+    </vbox>
+    <variable>winMain</variable>
+</window>'
+export winMain
+
+winLaunch1='
+<window title="winLaunch1" width-request="250">
+    <vbox>
+        <text><label>Second window</label></text>
+        <button>
+            <label>Close this window</label>
+            <action function="closewindow">winLaunch1</action>
+        </button>
+    </vbox>
+    <variable>winLaunch1</variable>
+</window>'
+export winLaunch1
+
+gtkdialog3 --program=winMain
+@end example
+
+@c -----------------------------------------------------------------
+@node Layout options
+@section Layout options
+
+The @option{--space-expand} and @option{--space-fill} flags set the
+default packing behaviour for all widgets in the dialog.  These
+defaults can be overridden per widget using the @code{space-expand}
+and @code{space-fill} tag attributes.
+
+@example
+gtkdialog3 --space-expand=true --space-fill=true \
+    --program=MAIN_DIALOG
+@end example
+
+When @code{space-expand} is @code{true}, widgets request extra space
+from their parent container.  When @code{space-fill} is @code{true},
+widgets fill the extra space they are given.  Setting both to
+@code{true} is common for dialogs where widgets should stretch to
+fill the window.
+
+@c -----------------------------------------------------------------
+@node Window placement
+@section Window placement
+
+Use @option{--center} to center the window on the screen:
+
+@example
+gtkdialog3 --center --program=MAIN_DIALOG
+@end example
+
+Use @option{--geometry} for precise control over window size and
+position.  The format is @code{@var{W}x@var{H}+@var{X}+@var{Y}},
+where @var{W}/@var{H} are the width and height in pixels and
+@var{X}/@var{Y} are the screen coordinates:
+
+@example
+gtkdialog3 --geometry=400x300+100+200 --program=MAIN_DIALOG
+@end example
 
 
 @node Widgets
 @chapter Widgets
-The dialog description language is a simple XML like language capable 
-to denote any complex dialog box containing widgets and boxes. 
+The dialog description language is a simple XML-like markup capable of
+describing complex dialog boxes containing widgets and containers.
 
-Widgets are simple GUI elements such as buttons, entry fields, lists,
-etc. Widget can have attributes, states and actions (@pxref{Actions}).
+Widgets are GUI elements such as buttons, entry fields, lists, and
+labels.  Every widget can have attributes, states, and actions
+(@pxref{Actions}).  Widgets must be placed inside containers
+(@pxref{Containers}).
 
-The widgets are grouped together with containers (@pxref{Containers}),
-horizontal and vertical boxes or frames. Every widget should placed 
-in one of the containers, no widgets can be alone for it is dangerous 
-outside.
+Most widgets support the following common sub-elements:
+
+@table @code
+@item <variable>
+Names the shell variable that receives this widget's value on exit.
+@item <label>
+Sets the display text.
+@item <default>
+Sets the initial value.
+@item <input>
+A shell command whose output sets the widget's value.
+@item <input file>
+A file whose contents set the widget's value.
+@item <output file>
+A file to write the widget's value to (used with @code{save:}).
+@item <action>
+A command to run when the widget changes (@pxref{Actions}).
+@item <sensitive>
+Sets the initial interactive state (@code{enabled} or @code{disabled}).
+@item <width>, <height>
+Sets the widget's minimum size.
+@end table
 
 @menu
-* Static label::                Labels containing static text
-* Pushbutton::			Pushbutton widgets
-* Pre-defined pushbuttons::	Pushbuttons with pixmap and text label
-* Entry::			One line text entry widgets
-* Checkbox::			Checkbox widgets
-* Pixmap::			Static pixmap widgets
-* Menus::                       Making menubars, menus and menuitems
-* Trees::                       Complex widget for trees
+* text::                Static text labels
+* button::              Pushbuttons
+* entry::               Single-line text input
+* checkbox::            On/off check marks
+* radiobutton::         Mutually exclusive choices
+* togglebutton::        Toggle buttons with icon support
+* switch::              On/off slide switch
+* combobox::            Drop-down selection (editable)
+* comboboxtext::        Drop-down selection (fixed choices)
+* comboboxentry::       Drop-down with editable entry
+* list::                Single-column selection list
+* table::               Multi-column sortable table
+* tree::                Multi-column tree view
+* edit::                Multi-line text editor
+* pixmap::              Static image display
+* hscale and vscale::   Slider controls
+* spinbutton::          Numeric entry with up/down arrows
+* colorbutton::         Colour picker button
+* fontbutton::          Font picker button
+* progressbar::         Progress indicator
+* statusbar::           Status message bar
+* timer::               Periodic timer
+* hseparator and vseparator::  Decorative separator lines
+* menubar::             Menu bar with drop-down menus
+* terminal::            Embedded terminal emulator
+* sourceview::          Syntax-highlighting text editor
+* webview::             Embedded web browser
 @end menu
 
 @c -----------------------------------------------------------------
-@node Static label 
-@section Static label
-Label is a static text widget created with @code{<text></text>} 
-tag. 
+@node text
+@section @code{<text>} --- Static label
 
-The text in a static label, can be set with the
-@code{<label>@var{string}</label>} or the 
-@code{<input file>@var{filename}</input>} expression.
+A non-editable text label.  The text can be set with
+@code{<label>}, loaded from a file with @code{<input file>}, or
+generated by a shell command with @code{<input>}.  Refreshing the
+widget re-evaluates its input source, so labels can show dynamic
+content.
+
+Exports its displayed text as the variable value.
+
+@noindent From @file{examples/text/text}:
+@example
+<text>
+    <label>This is a label...</label>
+</text>
+@end example
 
 @c -----------------------------------------------------------------
-@node Pushbutton
-@section Pushbutton
-The pushbutton is a clickable widget defined with the 
-@code{<button></button>} tags. 
+@node button
+@section @code{<button>} --- Pushbutton
 
-@subsection @code{<label></label>}
-The @code{<label>@var{string}</label>} directive sets the text label of
-the pushbutton. If no label and pixmap is given for the button,
-gtkdialog3 will use @var{OK} as default.
+A clickable button.  When clicked, its action chain runs.  If no
+action is given, clicking the button exits the dialog and sets
+@code{EXIT} to the button's label.
 
-@subsection @code{<input file></input>}
-When creating buttons, the @command{<input file>@var{filename}</input>}
-tag can be used to insert a pixmap into the button. The @var{filename}
-must be a pixmap file. Gtkdialog3 will search for this file in the
-directories listed in the @env{GTKDIALOG_PIXMAP_PATH} environment
-variable if it cannot be opened directly.
+Buttons can display a text label, an icon image, or both.  Use
+@code{<label>} for the text and @code{<input file>} for the icon.
+If neither is given, the label defaults to @samp{OK}.
 
-The pushbuttons can contain a label and a pixmap simultaneously. For
-this you have to use the @code{<label></label>} and the 
-@code{<input file></input>} as the next example shows:
+Gtkdialog3 searches for icon files in the directories listed in the
+@env{GTKDIALOG_PIXMAP_PATH} environment variable if the file cannot
+be opened directly.
 
+Tag attributes for button layout:
+
+@table @code
+@item image-position
+Icon position relative to the label: @code{0} (left), @code{1}
+(right), @code{2} (top), @code{3} (bottom).
+@item spacing
+Gap in pixels between icon and label (default 6).
+@item border-width
+Inner padding between the button frame and its content.
+@end table
+
+@noindent From @file{examples/button/button_action_functions}:
 @example
 <button>
-  <input file>/usr/share/GUIcompletion/button_save.xpm</input>
-  <label>The label</label>
+    <label>exit</label>
+    <action>echo You pressed the exit button</action>
+    <action function="exit">Exit by button</action>
 </button>
 @end example
 
-@subsection @code{<action></action>}
-The @code{<action>@var{command}</action>} directive tells gtkdialog3
-what to do, when the button is pressed. If the action is not given
-explicitly gtkdialog3 uses the default action, which is to exit
-the program. In this case the printed variable list will 
-contain a variable named @var{EXIT}, with the label of the activated 
-button as value.
+@subsection Pre-defined stock buttons
 
-The buttons can handle more than one actions simultaneously. If there
-are more @code{<action></action>} directive for the given button, they
-will be executed one by one, in the right order.
-
-@subsection @code{<visible></visible>}
-The @code{<visible>@var{state}</visible>} specify the initial visibility 
-of the button. The @var{state} can be either @code{enabled} or 
-@code{disabled}. When a button is disabled, it is shaded and can not be 
-activated by mouse or keyboard.
-
-@c -----------------------------------------------------------------
-@node Pre-defined pushbuttons
-@section Pre-defined pushbuttons
-Gtkdialog supports a few pre-defined pushbuttons to simplify the creation
-of dialog boxes. The pre-defined buttons can be used in the same manner as the
-normal pushbuttons, but they have a default text, pixmap and output variable.
-Here is the list of available pre-defined pushbuttons:
+Gtkdialog3 provides shorthand stock buttons with a built-in label
+and icon:
 
 @itemize @bullet
- @item @code{<button stock="ok"/>}
- @item @code{<button stock="cancel"/>}
- @item @code{<button stock="help"/>}
- @item @code{<button stock="yes"/>}
- @item @code{<button stock="no"/>}
+@item @code{<button stock="ok"/>}
+@item @code{<button stock="cancel"/>}
+@item @code{<button stock="help"/>}
+@item @code{<button stock="yes"/>}
+@item @code{<button stock="no"/>}
 @end itemize
 
 @c -----------------------------------------------------------------
-@node Entry
-@section Entry
-The entry widget is a simple text input field, which can be used to
-get a string from the user. 
+@node entry
+@section @code{<entry>} --- Single-line text input
 
-@subsection @code{<default></default>}
-The @code{<default>@var{string}</default>} directive sets the
-default content of the entry.
+A single-line text field for entering strings.  Actions fire when the
+user changes the content or presses Enter.
 
-@subsection @code{<visible></visible>}
-The @code{<visible>@var{visibility}</visible>} sets the initial 
-state of the entry widget. The @var{visibility} can be @code{enabled},
-which means the entry can be used, @code{disabled}, which means
-the content of the entry can not be altered or @code{password}.
+Use @code{<default>} to set the initial text.  The @code{<sensitive>}
+sub-element accepts @code{enabled}, @code{disabled}, or
+@code{password}.  In password mode the text is hidden with dots.
 
-The entry widgets with the visibility set to @code{password} are
-editable, but unreadable as it is common with entries holding 
-password style information.
+Exports the current text as the variable value.
 
-@subsection @code{<action></action>}
-The entry widgets are activating actions after their contents are
-changed. 
+@noindent From @file{examples/entry/entry}:
+@example
+<entry>
+    <default>Default entry text</default>
+    <variable>ENTRY</variable>
+</entry>
+@end example
 
 @c -----------------------------------------------------------------
-@node Checkbox
-@section Checkbox
-The checkbox is a simple widget with a label and a check mark which 
-can be turned on and off by the user. Checkboxes are made with the
-@code{<checkbox></checkbox>} directive.
+@node checkbox
+@section @code{<checkbox>} --- Check mark
 
-@subsection @code{<label></label>}
-The label is the text shown beside the check mark. Every checkbox
-should have a label.
+A labelled check box that the user can toggle on and off.  Use
+@code{<default>} with @code{true} or @code{false} to set the initial
+state.
 
-@subsection @code{<default></default>}
-The initial state of the checkbox can be set by the 
-@code{<default>@var{state}</default>} directive, where the @var{state}
-can be either @code{yes} or @code{no}.
+Actions fire when the state changes.  Conditional actions with
+@code{if true} and @code{if false} prefixes let you run different
+commands depending on the new state.
 
-@subsection @code{<action></action>}
-The @code{<action></action>} directive tells gtkdialog3 what to do,
-when the state of the checkbox is changed. As every widget, the
-checkbox can hold multiple actions which are executed serially in the
-order they are written.
+Exports @code{true} or @code{false} as the variable value.
 
-Actions of checkboxes can be written as conditional instructions with 
-@command{if true} and @command{if false} prefixes as in the next 
-example:
-
+@noindent From @file{examples/checkbox/checkbox}:
 @example
 <checkbox>
-	<label>This is a checkbox...</label>
-	<variable>CHECKBOX</variable>
-	<action>echo Checkbox is $CHECKBOX now.</action>
-	<action>if true enable:ENTRY</action>
-	<action>if false disable:ENTRY</action>
+    <label>This is a checkbox...</label>
+    <variable>CHECKBOX</variable>
+    <action>echo Checkbox is $CHECKBOX now.</action>
+    <action>if true enable:ENTRY</action>
+    <action>if false disable:ENTRY</action>
 </checkbox>
 @end example
 
-@subsection @code{<visible></visible>}
-The @code{<visible>@var{state}</visible>} specify the initial
-visibility of the checkbox. The @var{state} can be either
-@code{enabled} or @code{disabled}. When a checkbox is disabled, it is
-shaded and its state can not be altered anyway.
+@c -----------------------------------------------------------------
+@node radiobutton
+@section @code{<radiobutton>} --- Mutually exclusive choice
 
-@subsection @code{<variable></variable>}
-The value of a checkbox can be @code{true} or @code{false} and depends 
-only on its state.
+A radio button that automatically groups with adjacent radio buttons.
+Only one button in a group can be active at a time --- selecting one
+deselects the others.
+
+Use @code{<default>} with @code{true} or @code{false} to set the
+initial state.  Actions fire on the @code{toggled} signal.
+
+Exports @code{true} or @code{false} as the variable value.
+
+@noindent From @file{examples/radiobutton/radiobutton_attributes}:
+@example
+<radiobutton active="true">
+    <label>First choice</label>
+    <variable>RADIOBUTTON1</variable>
+    <action>echo RADIOBUTTON1 is $RADIOBUTTON1</action>
+</radiobutton>
+<radiobutton>
+    <label>Second choice</label>
+    <variable>RADIOBUTTON2</variable>
+    <action>echo RADIOBUTTON2 is $RADIOBUTTON2</action>
+</radiobutton>
+@end example
 
 @c -----------------------------------------------------------------
-@node Pixmap
-@section Pixmap
-The @code{<pixmap></pixmap>} defines a static pixmap widget. 
+@node togglebutton
+@section @code{<togglebutton>} --- Toggle button
 
-@subsection @code{<input file></input>}
+A button that stays pressed when clicked and releases on the next
+click.  Like regular buttons, toggle buttons can display a label, an
+icon, or both.
 
-The widget must have an input file defined with the 
-@code{<input file>@var{filename}</input>} tags. The @var{filename} 
-is the graphic image file for the pixmap. Gtkdialog3 will load this
-file if it can be opened for reading, or will search for it in the
-directories listed in the @env{GTKDIALOG_PIXMAP_PATH} environment
-variable.  
+Use @code{<default>} with @code{true} or @code{false} to set the
+initial state.  Actions fire on the @code{toggled} signal.
 
-The next example defines a static pixmap:
+Exports @code{true} or @code{false} as the variable value.
 
+@noindent From @file{examples/togglebutton/togglebutton_advanced}:
+@example
+<togglebutton>
+    <default>true</default>
+    <label>Toggle</label>
+    <variable>tgb0</variable>
+    <action>save:tgb0</action>
+    <output file>/tmp/outputfile</output>
+</togglebutton>
+@end example
+
+@c -----------------------------------------------------------------
+@node switch
+@section @code{<switch>} --- On/off switch
+
+A sliding toggle switch, similar in function to a checkbox but with
+a modern visual appearance.  Use @code{<default>} with @code{true} or
+@code{false} to set the initial state.  Actions fire when the switch
+is toggled.
+
+Exports @code{true} or @code{false} as the variable value.
+
+@noindent From @file{examples/switch/switch}:
+@example
+<hbox homogeneous="true">
+    <text space-expand="true" space-fill="true">
+        <label>Enable notifications:</label>
+    </text>
+    <switch>
+        <variable>NOTIFICATIONS</variable>
+        <default>true</default>
+    </switch>
+</hbox>
+@end example
+
+@c -----------------------------------------------------------------
+@node combobox
+@section @code{<combobox>} --- Editable drop-down
+
+A drop-down list with an editable text field.  Items can be added with
+@code{<item>} sub-elements or loaded from a shell command with
+@code{<input>}.  The user can select an existing item or type a new
+value.
+
+Exports the current text (typed or selected) as the variable value.
+
+@noindent From @file{examples/combobox/combobox}:
+@example
+<combobox>
+    <variable>COMBOBOX</variable>
+    <item>First item</item>
+    <item>Second item</item>
+    <item>Third item</item>
+</combobox>
+@end example
+
+@c -----------------------------------------------------------------
+@node comboboxtext
+@section @code{<comboboxtext>} --- Fixed drop-down
+
+A drop-down list where the user must choose from the available items
+(no free-form typing).  Items can come from @code{<item>} elements,
+@code{<input>} commands, or @code{<input file>}.  Use @code{<default>}
+to pre-select an item by its text.
+
+Exports the selected item text as the variable value.
+
+@noindent From @file{examples/comboboxtext/comboboxtext_advanced}:
+@example
+<comboboxtext>
+    <variable>cboComboBoxText0</variable>
+    <item>First choice</item>
+    <item>Second choice</item>
+    <input>echo "This came from a shell command"</input>
+    <action signal="changed">echo "Changed to $cboComboBoxText0"</action>
+</comboboxtext>
+@end example
+
+@c -----------------------------------------------------------------
+@node comboboxentry
+@section @code{<comboboxentry>} --- Drop-down with entry
+
+A drop-down list combined with an editable entry field.  This is a
+variant of @code{<comboboxtext>} that additionally allows the user
+to type arbitrary text.  It supports the @code{activate} signal, which
+fires when the user presses Enter in the entry field.
+
+Exports the current text as the variable value.
+
+@noindent From @file{examples/comboboxentry/comboboxentry_advanced}:
+@example
+<comboboxentry has-focus="true">
+    <variable>cboComboBoxEntry3</variable>
+    <default>Type something here...</default>
+    <input file>/tmp/inoutfile</input>
+    <output file>/tmp/inoutfile</output>
+    <action signal="activate">save:cboComboBoxEntry3</action>
+    <action signal="activate">refresh:cboComboBoxEntry3</action>
+</comboboxentry>
+@end example
+
+@c -----------------------------------------------------------------
+@node list
+@section @code{<list>} --- Single-column list
+
+A scrollable single-column list.  Items can be added with
+@code{<item>} elements or loaded one-per-line from @code{<input>} or
+@code{<input file>}.  Use the @code{selected-row} tag attribute to
+pre-select a row by index.
+
+Actions fire when the selection changes.
+
+Exports the text of the selected row as the variable value.
+
+@noindent From @file{examples/list/list_attributes}:
+@example
+<list selected-row="1">
+    <variable>LIST</variable>
+    <input>printf "First item\nSecond item\nThird item"</input>
+    <action>echo "The chosen item is \"$LIST\""</action>
+</list>
+@end example
+
+@c -----------------------------------------------------------------
+@node table
+@section @code{<table>} --- Multi-column table
+
+A sortable multi-column table.  Column headers are defined by a
+pipe-separated @code{<label>} and rows by pipe-separated @code{<item>}
+elements or pipe-separated lines from @code{<input>} / @code{<input
+file>}.  Clicking a column header sorts the table by that column.
+
+Key tag attributes:
+
+@table @code
+@item exported-column
+Which column's value to export (default 0).
+@item selected-row
+Pre-select a row by index.
+@item selection-mode
+@code{single}, @code{multiple}, @code{browse}, or @code{none}.
+@item sort-function
+Sort type: @code{0} (default), @code{1} (natural), @code{2}
+(natural, case-insensitive).
+@item column-visible
+Pipe-separated @code{true}/@code{false} per column.
+@item column-header-active
+Pipe-separated @code{true}/@code{false} to enable sorting per column.
+@end table
+
+Exports the selected cell text (from the exported column) as the
+variable value.  With multiple selection, values are newline-separated.
+
+@noindent From @file{examples/table/table}:
+@example
+<table exported-column='2' selected-row='1'
+    sort-function='1'
+    column-header-active='true|true|true|false'>
+    <variable>tbl0</variable>
+    <label>Column 0  |Column 1  |Column 2  |Column 3</label>
+    <input file>/tmp/inputfile</input>
+    <item>1002|$RANDOM|0|$RANDOM</item>
+    <action>echo "tbl0=$tbl0"</action>
+</table>
+@end example
+
+@c -----------------------------------------------------------------
+@node tree
+@section @code{<tree>} --- Multi-column tree view
+
+A multi-column tree view, similar to @code{<table>} but predating it.
+Column headers are defined by a pipe-separated @code{<label>} and rows
+by pipe-separated @code{<item>} elements or input sources.
+
+Exports the selected row as the variable value.
+
+@noindent From @file{examples/tree/tree_insert}:
+@example
+<tree>
+    <label>Device    |Directory        |File</label>
+    <item>Hard drive |/usr/            |letter.tex</item>
+    <item>Hard drive |/etc/            |fstab</item>
+    <item>Network    |alpha:/home      |quota.user</item>
+    <variable>TREE</variable>
+    <action>echo "TREE=$TREE"</action>
+</tree>
+@end example
+
+@c -----------------------------------------------------------------
+@node edit
+@section @code{<edit>} --- Multi-line text editor
+
+A multi-line text editing area with scrollbars.  Use @code{<default>}
+to set initial text, or @code{<input file>} to load the contents of
+a file.  The @code{save:} action writes the buffer to the file
+specified by @code{<output file>}.
+
+Supports clipboard actions: @code{cut:}, @code{copy:}, @code{paste:},
+and @code{selectall:} (@pxref{Clipboard actions}).
+
+Exports the full buffer text as the variable value.
+
+@noindent From @file{examples/edit/edit}:
+@example
+<edit>
+    <variable>EDITOR</variable>
+    <height>150</height>
+    <width>350</width>
+    <default>
+"This is the default text of the editor."
+    </default>
+</edit>
+@end example
+
+@c -----------------------------------------------------------------
+@node pixmap
+@section @code{<pixmap>} --- Static image
+
+Displays a static image.  The image file is specified with
+@code{<input file>}.  Gtkdialog3 searches for the file in directories
+listed in the @env{GTKDIALOG_PIXMAP_PATH} environment variable if it
+cannot be opened directly.
+
+Refreshing the widget reloads the image, which is useful for
+displaying dynamically generated graphics.
+
+@noindent From @file{examples/pixmap/pixmap}:
 @example
 <pixmap>
-  <input file>help.png</input>
+    <input file>help.png</input>
 </pixmap>
 @end example
 
 @c -----------------------------------------------------------------
-@node Menus 
-@section Menubar 
-The @code{<menubar></menubar>} defines menu bar which can be placed 
-as any other screen elements. In the menubar widget you have to create
-menus with the @code{<menu></menu>} tag, and inside the menu
-must be at least one menu item created by the
-@code{<menuitem></menuitem>} tag.
+@node hscale and vscale
+@section @code{<hscale>}, @code{<vscale>} --- Sliders
 
-The next example shows how to create a simple menubar with only one
-menu:
+Horizontal and vertical slider controls for selecting a numeric value
+within a range.  Use @code{<item>} elements to place custom marks
+along the scale.
 
+Key tag attributes:
+
+@table @code
+@item range-min
+Minimum value (default 0).
+@item range-max
+Maximum value (default 100).
+@item range-step
+Step increment (default 1).
+@item range-value
+Initial value (default 0).
+@end table
+
+Actions fire when the value changes.  Exports the current numeric
+value as the variable value.
+
+@noindent From @file{examples/hscale/hscale_advanced}:
+@example
+<hscale width-request="420" range-value="4">
+    <variable>hscHScale0</variable>
+    <action>echo "hscHScale0 changed to $hscHScale0"</action>
+</hscale>
+@end example
+
+@c -----------------------------------------------------------------
+@node spinbutton
+@section @code{<spinbutton>} --- Numeric spinner
+
+A text entry for numeric values with up/down arrow buttons.  Supports
+the same @code{range-min}, @code{range-max}, @code{range-step}, and
+@code{range-value} tag attributes as scales.
+
+Actions fire on @code{value-changed} (arrow clicks or typing) and
+@code{activate} (pressing Enter).  Exports the current numeric value
+as the variable value.
+
+@noindent From @file{examples/spinbutton/spinbutton}:
+@example
+<spinbutton range-min="-50" range-max="50"
+    range-step="5" range-value="10">
+    <variable>SPB_RANGE</variable>
+</spinbutton>
+@end example
+
+@c -----------------------------------------------------------------
+@node colorbutton
+@section @code{<colorbutton>} --- Colour picker
+
+A button that displays a colour swatch and opens a colour chooser
+dialog when clicked.  Use @code{<default>} to set the initial colour
+in @code{#rrggbb} format.  If the @code{use-alpha} tag attribute is
+set to @code{true}, an alpha channel is also available and the format
+becomes @code{#rrggbb|alpha}.
+
+Actions fire when a new colour is selected.  Exports the colour string
+as the variable value.
+
+@noindent From @file{examples/colorbutton/colorbutton_advanced}:
+@example
+<colorbutton use-alpha="true">
+    <default>#4488cc|32768</default>
+    <variable>clb3</variable>
+    <action>echo clb3 changed to $clb3</action>
+</colorbutton>
+@end example
+
+@c -----------------------------------------------------------------
+@node fontbutton
+@section @code{<fontbutton>} --- Font picker
+
+A button that displays a font name and opens a font chooser dialog
+when clicked.  Use @code{<default>} or the @code{font-name} tag
+attribute to set the initial font using Pango syntax (e.g.@:
+@samp{Sans Bold 12}).
+
+Actions fire when a new font is selected.  Exports the Pango font
+description string as the variable value.
+
+@noindent From @file{examples/fontbutton/fontbutton}:
+@example
+<fontbutton font-name="Monospace 18" use-font="true">
+    <variable>ftb1</variable>
+    <action>echo ftb1 changed to $ftb1</action>
+</fontbutton>
+@end example
+
+@c -----------------------------------------------------------------
+@node progressbar
+@section @code{<progressbar>} --- Progress indicator
+
+A horizontal progress bar.  The @code{<input>} command runs in a
+background thread; each line of output is interpreted as either a
+number (0--100, setting the bar position) or text (updating the bar
+label).  When the value reaches 100, the action chain fires.
+
+Use @code{<label>} to set the initial bar text.
+
+@noindent From @file{examples/progressbar/progressbar}:
+@example
+<progressbar>
+    <label>Some Text</label>
+    <input>for i in $(seq 0 10 100); do
+        echo $i; sleep 0.3; done</input>
+    <action function="exit">Ready</action>
+</progressbar>
+@end example
+
+@c -----------------------------------------------------------------
+@node statusbar
+@section @code{<statusbar>} --- Status message bar
+
+A message bar typically placed at the bottom of a window.  The
+message can be set with @code{<label>}, @code{<default>},
+@code{<input>}, or @code{<input file>}.  Refreshing the widget
+re-evaluates its input source.
+
+Exports the current message text as the variable value.
+
+@noindent From @file{examples/statusbar/statusbar_advanced}:
+@example
+<statusbar>
+    <default>Ready</default>
+    <variable>stb0</variable>
+    <input>echo Status from a command</input>
+    <output file>/tmp/outputfile</output>
+</statusbar>
+@end example
+
+@c -----------------------------------------------------------------
+@node timer
+@section @code{<timer>} --- Periodic timer
+
+An invisible widget that fires its action chain at regular intervals.
+Use it to periodically refresh other widgets or run commands.
+
+Key tag attributes:
+
+@table @code
+@item interval
+The timer period (default 1).
+@item milliseconds
+Set to @code{true} for millisecond precision; otherwise the interval
+is in seconds.
+@end table
+
+The timer runs while it is sensitive.  Disabling the timer stops it;
+enabling it restarts it.  Use @code{visible="false"} to hide the
+timer's internal label widget.
+
+Exports @code{true} (running) or @code{false} (stopped) as the
+variable value.
+
+@noindent From @file{examples/timer/timer_advanced}:
+@example
+<timer milliseconds="true" interval="500"
+    visible="false">
+    <variable>tmr3</variable>
+    <action>refresh:pix30</action>
+    <action>refresh:pix31</action>
+</timer>
+@end example
+
+@c -----------------------------------------------------------------
+@node hseparator and vseparator
+@section @code{<hseparator>}, @code{<vseparator>} --- Separators
+
+Purely decorative horizontal or vertical lines used to visually
+separate groups of widgets.  They have no value, input, or actions.
+
+@noindent From @file{examples/hseparator/hseparator_advanced}:
+@example
+<hseparator width-request="400"></hseparator>
+@end example
+
+@c -----------------------------------------------------------------
+@node menubar
+@section @code{<menubar>} --- Menu bar
+
+A menu bar containing drop-down menus.  Build the menu hierarchy with
+@code{<menu>} elements (each containing a @code{<label>} for the menu
+title) and @code{<menuitem>} elements inside.  Use
+@code{<menuitemseparator/>} to insert separator lines between items.
+
+Menu items support @code{<label>}, @code{<variable>}, and
+@code{<action>} sub-elements.  A menuitem with @code{checkbox="true"}
+as a tag attribute becomes a check menu item that toggles on click.
+
+@noindent From @file{examples/menubar/menubar}:
 @example
 <menubar>
-  <menu>
-    <menuitem>
-      <label>gtk-open</label>
-    </menuitem>
-    <menuitem>
-      <label>gtk-save</label>
-    </menuitem>
-    <menuitem>
-      <label>gtk-quit</label>
-      <action>EXIT="quit"</action>
-    </menuitem>
-    <label>File</label>
-  </menu>
+    <menu>
+        <menuitem>
+            <label>Open</label>
+        </menuitem>
+        <menuitemseparator></menuitemseparator>
+        <menuitem>
+            <label>Quit</label>
+            <action>exit:quit</action>
+        </menuitem>
+        <label>File</label>
+    </menu>
 </menubar>
 @end example
 
 @c -----------------------------------------------------------------
-@node Trees
-@section The tree
-The following example shows a basic tree widget.
+@node terminal
+@section @code{<terminal>} --- Terminal emulator (optional)
 
+An embedded VTE terminal emulator.  Requires libvte (VTE 2.91) at
+build time.  Use @code{gtkdialog3 --version} to check availability.
+
+The terminal spawns a shell process (@code{/bin/sh} by default).
+Feed commands to it with @code{<input>} or @code{<input file>}.
+Actions fire on the @code{child-exited} signal when the shell exits.
+
+Key tag attributes:
+
+@table @code
+@item argv0 @dots{} argv127
+Command-line arguments for the spawned process.
+@item text-foreground-color, text-background-color
+Terminal colours.
+@item font-name
+Terminal font (Pango syntax).
+@end table
+
+Exports the child process PID as the variable value.
+
+@noindent From @file{examples/terminal/terminal}:
 @example
-<vbox>
-  <tree>
-    <label>Device    |Directory        |File         </label>
-    <item>Hard drive |/usr/            |letter.tex    </item>
-    <item>Hard drive |/etc/            |inittab       </item>
-    <item>Hard drive |/etc/            |fstab         </item>
-    <item>Network    |alpha:/home      |quota.user    </item>
-    <item>Network    |alpha:/home      |quota.group   </item>
-    <item>Network    |beta:/home/pipas |tmp           </item>
-    <item>Network    |beta:/home/pipas |latexfiles    </item>
-    <item>Network    |beta:/home/pipas |book          </item>
-    <item>Network    |beta:/home/pipas |bin           </item>
-    <item>Network    |beta:/home/pipas |documentation </item>
-  </tree>
-  <button stock="ok"/>
-</vbox>
+<terminal has-focus="true">
+    <variable>vte0</variable>
+    <action signal="child-exited">clear:vte0</action>
+</terminal>
+@end example
+
+@c -----------------------------------------------------------------
+@node sourceview
+@section @code{<sourceview>} --- Source editor (optional)
+
+A text editor with syntax highlighting, line numbers, and
+auto-indentation.  Requires libgtksourceview-4 at build time.
+
+Use @code{<input file>} to load a source file.  A companion
+@file{.lang} sidecar file (containing just the language ID) switches
+the highlighting language automatically on refresh.
+
+Key tag attributes:
+
+@table @code
+@item language
+Syntax highlighting language (e.g.@: @code{c}, @code{sh},
+@code{python}, @code{json}).
+@item font-name
+Font name and size (e.g.@: @samp{Monospace 12}).
+@item show-line-numbers
+Show line numbers (@code{true}/@code{false}, default @code{true}).
+@item highlight-current-line
+Highlight the current line (@code{true}/@code{false}, default
+@code{true}).
+@item tab-width
+Tab width in characters (default 4).
+@end table
+
+Exports the full buffer text as the variable value.
+
+@noindent From @file{examples/standard/sourceview}:
+@example
+<sourceview language="c" font-name="Monospace 12">
+    <variable>srcEditor</variable>
+    <input file>/tmp/code.c</input>
+</sourceview>
+@end example
+
+@c -----------------------------------------------------------------
+@node webview
+@section @code{<webview>} --- Web browser (optional)
+
+An embedded web browser using WebKitGTK.  Requires libwebkit2gtk at
+build time.
+
+Use @code{<default>} to set the initial URL, or @code{<input file>}
+to load content dynamically.  The input file may contain a URL
+(starting with @code{http://} or @code{https://}), a local file path
+(starting with @code{/}), or raw HTML.
+
+Exports the current URI as the variable value.
+
+@noindent From @file{examples/standard/webview}:
+@example
+<webview space-expand="true" space-fill="true">
+    <variable>webPage</variable>
+    <input file>/tmp/nav</input>
+</webview>
 @end example
 
 @c -----------------------------------------------------------------
 @node Containers
 @chapter Containers
 
-@c -----------------------------------------------------------------
-@node Actions
-@chapter Actions
-When the user changes the state of a widget, gtkdialog3 checks if there
-is something to do with it. If the tampered widget have one or more
-actions, the program will execute them for the new situation to be
-handled.
-
-Every widget can have multiple actions, a list of commands must be
-executed when the widget changed. Gtkdialog executes the actions in
-the order they found in the dialog description program, so one can
-write a complete program as a series of instructions.
+Containers are layout widgets that hold other widgets and arrange them
+on screen.  Every widget must be placed inside a container.
 
 @menu
-* Start and exit::	Actions that starts programs and exits dialogs
-* Widget manipulation:: Actions affect widgets
+* vbox and hbox::       Vertical and horizontal box layouts
+* frame::               Labelled frame
+* notebook::            Tabbed pages
+* eventbox::            Invisible event-catching container
+* expander::            Collapsible container
+* buttonbox::           Button layout container
+* window::              Top-level window
 @end menu
 
 @c -----------------------------------------------------------------
-@node Start and exit
-@section Start and exit
+@node vbox and hbox
+@section @code{<vbox>}, @code{<hbox>} --- Box layouts
 
-@subsection Start programs
+The most common containers.  A @code{<vbox>} stacks its children
+vertically; an @code{<hbox>} arranges them horizontally.  Boxes can
+be nested to create complex layouts.
 
-If the action of a widget is created with the simple 
-@code{<action>@var{command}</action>} directive, gtkdialog3 will execute
-it in a subshell. That means it will start up the user's @code{$SHELL}
-(falling back to @code{/bin/sh}) to handle
-the operation. Here is how the subshell operation works:
-@enumerate
- @item First gtkdialog3 updates the environment variables holds the
- state and value of the widgets. This is how the child process will
- know what is happening in the GUI called it.
- 
- @item Next the include file is checked. If gtkdialog3 started
- with the @option{-i @var{file}} option gtkdialog3 will ask the
- subshell to include the @var{file} before the execution of command.
+Key tag attributes:
 
- This strange method is needed for the action driven programs, where
- the subshell have to load the shell functions from the calling script.
+@table @code
+@item spacing
+Pixel gap between children (default 5).
+@item homogeneous
+Give all children equal size (@code{true}/@code{false}).
+@item space-expand
+Default expand packing for children (@code{true}/@code{false}).
+@item space-fill
+Default fill packing for children (@code{true}/@code{false}).
+@item border-width
+Padding inside the container.
+@end table
 
- @item At the third step gtkdialog3 starts the command and waits for
- it to complete. (Commands usually can be run in the background by 
- writing a @code{&} as last character, so the subshell will not wait 
- the program to complete.)
-@end enumerate
-
-@subsection Exit dialog
-
-The @code{exit:@var{Value}} command exits @command{gtkdialog3}
-immediately. The @var{Value} will be printed to standard output as the
-value of the variable named @var{EXIT}.
+@noindent From @file{examples/vbox/vbox}:
+@example
+<vbox>
+    <text><label>First</label></text>
+    <text><label>Second</label></text>
+    <hbox>
+        <button stock="ok"/>
+        <button stock="cancel"/>
+    </hbox>
+</vbox>
+@end example
 
 @c -----------------------------------------------------------------
-@node Widget manipulation
-@section Widget manipulation
+@node frame
+@section @code{<frame>} --- Labelled frame
 
-@subsection @code{closewindow:@var{Name}}
-The command closes the named window opened by the @code{launch:}
-command. The program remain active if there are more windows active.
+A container with a visible border and a title label.  Use the
+@code{title} tag attribute to set the frame label.  The frame label
+can also be set dynamically via @code{<input>} or @code{<input file>}.
 
-@subsection @code{launch:@var{Name}}
-The command opens a new window using the environment variable
-@code{@var{Name}}.
+@noindent From @file{examples/frame/frame}:
+@example
+<frame title="Frame1">
+    <text><label>Label1</label></text>
+    <entry></entry>
+</frame>
+@end example
 
-@subsection @code{disable:@var{Name}}
-The command disables the given widget if it is enabled. If the widget
-is disabled when the command is activated, nothing happens.
+@c -----------------------------------------------------------------
+@node notebook
+@section @code{<notebook>} --- Tabbed pages
 
-The disabled widgets are insensitive to user actions, their shapes are
-indicating they are temporary unavailable.
+A container with tabbed pages.  Each direct child becomes a page.
+Tab labels are set with the @code{labels} tag attribute (pipe-separated),
+or auto-generated as @samp{Page 1}, @samp{Page 2}, etc.
 
-@subsection @code{enable:@var{Name}}
-The command enables the given widget if it is disabled. If the widget
-is enabled nothing happens.
+Exports the current page index (starting at 0) as the variable value.
 
-@subsection @code{refresh:@var{Name}}
-The command refresh the named widget. If the widget have one or more
-input actions, they will be called by @command{gtkdialog3}.
+@noindent From @file{examples/notebook/notebook}:
+@example
+<notebook labels="Checkbox|Radiobutton|Tree">
+    <vbox>
+        <checkbox><label>A checkbox</label></checkbox>
+    </vbox>
+    <vbox>
+        <radiobutton><label>First</label></radiobutton>
+        <radiobutton><label>Second</label></radiobutton>
+    </vbox>
+    <vbox>
+        <text><label>Third page</label></text>
+    </vbox>
+</notebook>
+@end example
 
-@subsection @code{save:@var{Name}}
-Some widgets can hold much data.
+@c -----------------------------------------------------------------
+@node eventbox
+@section @code{<eventbox>} --- Event container
 
-The @code{save:} action will save the data found in the named widget
-to the filename found in @code{<output file>} attribute.
+An invisible container that adds mouse and keyboard event handling to
+its single child widget.  Useful for detecting clicks, mouse
+movement, or key presses on widgets that do not normally emit those
+signals.
 
-@subsection @code{fileselect:@var{Widget}}
-@subsection @code{clear:@var{Widget}}
-@subsection @code{removeselected:@var{Widget}}
+@noindent From @file{examples/eventbox/eventbox}:
+@example
+<eventbox above-child="false" visible-window="true">
+    <text><label>Click me</label></text>
+    <action signal="button-press-event">
+        echo "Clicked!"</action>
+    <action signal="enter-notify-event">
+        echo "Mouse entered"</action>
+</eventbox>
+@end example
+
+@c -----------------------------------------------------------------
+@node expander
+@section @code{<expander>} --- Collapsible container
+
+A container with a clickable header that expands or collapses to
+show or hide its children.  Use the @code{expanded} tag attribute
+to set the initial state (@code{true} or @code{false}).
+
+Actions fire when the expander is toggled.  Exports @code{true}
+(expanded) or @code{false} (collapsed) as the variable value.
+
+@noindent From @file{examples/expander/expander}:
+@example
+<expander expanded="true">
+    <vbox>
+        <entry><default>entry</default></entry>
+    </vbox>
+    <label>Details</label>
+    <variable>exp0</variable>
+    <action>echo "exp0=$exp0"</action>
+</expander>
+@end example
+
+@c -----------------------------------------------------------------
+@node buttonbox
+@section @code{<buttonbox>} --- Button layout
+
+A container that arranges buttons with consistent spacing.  Use it
+instead of @code{<hbox>} for dialog button rows to get standard
+platform-appropriate layout.
+
+Key tag attributes:
+
+@table @code
+@item layout
+Button arrangement: @code{spread}, @code{edge}, @code{start},
+@code{end} (default), or @code{center}.
+@item orientation
+@code{horizontal} (default) or @code{vertical}.
+@end table
+
+@noindent From @file{examples/hbox/hbox}:
+@example
+<buttonbox layout='end'>
+    <button stock='cancel'/>
+    <button stock='help'/>
+</buttonbox>
+@end example
+
+@c -----------------------------------------------------------------
+@node window
+@section @code{<window>} --- Top-level window
+
+The outermost container.  Every dialog has at least one window.  Use
+the @code{title} tag attribute to set the title bar text, and
+@code{icon-name} to set the title bar icon.
+
+Multiple windows can be opened using the @code{launch:} action
+(@pxref{launch}).
+
+@noindent From @file{examples/window/window_attributes}:
+@example
+<window title="Example Window"
+    icon-name="gtk-dialog-warning">
+    <vbox>
+        <text><label>Hello, World!</label></text>
+        <hbox>
+            <button stock="ok"/>
+            <button stock="cancel"/>
+        </hbox>
+    </vbox>
+</window>
+@end example
+
+@c -----------------------------------------------------------------
+@node Actions
+@chapter Actions
+When the user changes the state of a widget, gtkdialog3 checks whether
+actions are attached to it.  If the widget has one or more actions, the
+program executes them so the new situation can be handled.
+
+Every widget can have multiple actions.  Gtkdialog3 executes them in
+the order they appear in the dialog description, so you can write a
+sequence of instructions that runs as a small program.
+
+Actions can be written in two equivalent syntaxes:
+
+@example
+@r{Colon syntax:}     <action>@var{type}:@var{argument}</action>
+@r{Attribute syntax:} <action function="@var{type}">@var{argument}</action>
+@end example
+
+The colon syntax is shorter; the attribute syntax allows additional
+attributes such as @code{signal}, @code{condition}, and @code{when}.
+Both forms are case-insensitive in the action type.
+
+@menu
+* Shell commands::	Running external programs
+* exit::		Closing the dialog
+* launch::		Opening additional windows
+* closewindow::		Closing additional windows
+* presentwindow::	Bringing a window to the front
+* enable::		Making a widget interactive
+* disable::		Greying out a widget
+* show::		Making a widget visible
+* hide::		Making a widget invisible
+* activate::		Simulating a user click
+* grabfocus::		Giving keyboard focus to a widget
+* refresh::		Reloading a widget's content
+* save::		Writing widget data to a file
+* fileselect::		Opening a file chooser dialog
+* clear::		Clearing a widget's content
+* removeselected::	Removing the selected item
+* break::		Stopping the action chain
+* insert::		Inserting data from one widget into another
+* append::		Appending data from one widget to another
+* Clipboard actions::	Cut, copy, paste, select all
+@end menu
+
+@c -----------------------------------------------------------------
+@node Shell commands
+@section Shell commands
+
+If no action type is given, the action text is executed as a shell
+command.  Gtkdialog3 starts the user's @code{$SHELL} (falling back to
+@code{/bin/sh}) to run the command.  Before the command runs:
+
+@enumerate
+@item
+All widget variables are exported as environment variables so the
+command can read the current state of the dialog.
+
+@item
+If gtkdialog3 was started with the @option{-i @var{file}} option, that
+file is sourced by the subshell first, making its functions available
+to the command.
+
+@item
+The command runs and gtkdialog3 waits for it to finish.  Append
+@code{&} to the command to run it in the background without waiting.
+@end enumerate
+
+@noindent From @file{examples/button/button_action_functions}:
+@example
+<button>
+    <label>exit</label>
+    <action>echo You pressed the exit button</action>
+    <action function="exit">Exit by button</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node exit
+@section @code{exit:@var{Value}}
+
+Closes the dialog immediately.  All widget variables are printed to
+standard output, followed by @code{EXIT="@var{Value}"}.  The calling
+script can evaluate this output to find out which button or action
+caused the dialog to close.
+
+@noindent From @file{examples/button/button_action_functions}:
+@example
+<button>
+    <label>exit</label>
+    <action>echo You pressed the exit button</action>
+    <action function="exit">Exit by button</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node launch
+@section @code{launch:@var{Name}}
+
+Opens a new window whose definition is stored in the environment
+variable @var{Name}.  If a window with that variable name already
+exists, it is brought to the front instead of creating a duplicate.
+The target window must be defined in a separate exported shell variable
+containing a @code{<window>} element.
+
+@noindent From @file{examples/languages/bash_script_multi_window}:
+@example
+<button>
+    <label>launch winLaunch1</label>
+    <action function="launch">winLaunch1</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node closewindow
+@section @code{closewindow:@var{Name}}
+
+Closes the window identified by @var{Name}.  All variables belonging
+to that window are removed.  If other windows remain open, the program
+continues running; if this was the last window, the program exits
+and prints all remaining variables.
+
+@noindent From @file{examples/languages/bash_script_multi_window}:
+@example
+<button>
+    <label>closewindow winLaunch1</label>
+    <action function="closewindow">winLaunch1</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node presentwindow
+@section @code{presentwindow:@var{Name}}
+
+Brings the named window to the front and gives it keyboard focus.
+Unlike @code{launch:}, this does not create a new window --- it only
+raises an existing one.  Useful when you have multiple windows open and
+want to direct the user's attention to a specific one.
+
+@noindent From @file{examples/miscellaneous/presentwindow}:
+@example
+<button>
+    <label>presentwindow winLaunch1</label>
+    <action function="presentwindow">winLaunch1</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node enable
+@section @code{enable:@var{Name}}
+
+Makes the named widget interactive again after it has been disabled.
+If the widget is already enabled, nothing happens.  Works on any
+widget type.
+
+@noindent From @file{examples/button/button_action_functions}:
+@example
+<button>
+    <label>enable</label>
+    <action function="enable">ENTRY</action>
+    <action function="enable">CHECKBOX</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node disable
+@section @code{disable:@var{Name}}
+
+Greys out the named widget and prevents all user interaction with it.
+If the widget is already disabled, nothing happens.  Works on any
+widget type.
+
+@noindent From @file{examples/button/button_action_functions}:
+@example
+<button>
+    <label>disable</label>
+    <action function="disable">ENTRY</action>
+    <action function="disable">CHECKBOX</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node show
+@section @code{show:@var{Name}}
+
+Makes the named widget visible.  If the widget is inside a scrolled
+container, the container is also shown so the widget actually appears
+on screen.
+
+Typically used together with @code{hide:} and conditional prefixes to
+toggle parts of the interface:
+
+@noindent From @file{examples/miscellaneous/show_and_hide}:
+@example
+<togglebutton active="true">
+    <label>button</label>
+    <action>if true show:btnExample</action>
+    <action>if false hide:btnExample</action>
+</togglebutton>
+@end example
+
+@c -----------------------------------------------------------------
+@node hide
+@section @code{hide:@var{Name}}
+
+Makes the named widget invisible.  The widget still exists and keeps
+its value, but it is removed from the visible layout.  If the widget
+is inside a scrolled container, the container is also hidden.
+
+@noindent From @file{examples/miscellaneous/show_and_hide}:
+@example
+<menuitem checkbox="true" label="vbox Left">
+    <action>if true show:vbxLeft</action>
+    <action>if false hide:vbxLeft</action>
+</menuitem>
+@end example
+
+@c -----------------------------------------------------------------
+@node activate
+@section @code{activate:@var{Name}}
+
+Simulates the default activation of the named widget --- clicking a
+button, toggling a checkbox, pressing Enter in an entry, and so on.
+This triggers the widget's own action chain as if the user had
+interacted with it directly.
+
+@noindent From @file{examples/miscellaneous/activate}:
+@example
+<button>
+    <label>Activate everything else</label>
+    <action function="activate">button</action>
+    <action function="activate">checkbox</action>
+    <action function="activate">entry</action>
+    <action function="activate">togglebutton</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node grabfocus
+@section @code{grabfocus:@var{Name}}
+
+Gives keyboard focus to the named widget.  After this action, keyboard
+input goes to the target widget.  Useful for directing the user to a
+specific entry field or text editor after an event.
+
+@noindent From @file{examples/miscellaneous/grabfocus}:
+@example
+<button>
+    <label>entry</label>
+    <action>grabfocus:entEntry</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node refresh
+@section @code{refresh:@var{Name}}
+
+Reloads the content of the named widget from its data source.  If the
+widget has an @code{<input>} or @code{<input file>} directive, it is
+re-evaluated and the widget is updated with the new data.  All widget
+variables are exported before the refresh, so input commands can
+access the current state of the dialog.
+
+@noindent From @file{examples/checkbox/checkbox_conditional_refreshing}:
+@example
+<checkbox sensitive="false">
+    <variable>chkCheck</variable>
+    <input file>/tmp/inputdir/chkCheck</input>
+    <action>refresh:txt0</action>
+    <action>refresh:txt1</action>
+</checkbox>
+@end example
+
+@c -----------------------------------------------------------------
+@node save
+@section @code{save:@var{Name}}
+
+Writes the current value of the named widget to the file specified by
+its @code{<output file>} attribute.  Works on most widget types
+including entries, text editors, checkboxes, comboboxes, scales, and
+spinbuttons.
+
+@noindent From @file{examples/edit/edit_actions}:
+@example
+<button>
+    <label>Save</label>
+    <action function="save">EDITOR</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node fileselect
+@section @code{fileselect:@var{Name}}
+
+Opens a file chooser dialog and places the selected path into the
+named widget (typically an entry).  The file chooser's behaviour is
+controlled by tag attributes on the target widget:
+
+@table @code
+@item fs-action
+The type of selection: @code{file}, @code{newfile}, @code{folder}, or
+@code{newfolder}.
+@item fs-title
+The title of the file chooser dialog.
+@item fs-folder
+The initial directory shown.
+@item fs-filters
+Pipe-separated file glob patterns, e.g.@: @code{*.txt|*.html}.
+@item fs-filters-mime
+Pipe-separated MIME types, e.g.@: @code{text/plain|text/html}.
+@end table
+
+@noindent From @file{examples/miscellaneous/fileselect_advanced}:
+@example
+<entry fs-action="file" fs-folder="/usr/share/doc"
+    fs-filters="*.txt|*.html"
+    fs-title="Select an existing file">
+    <variable>ent1</variable>
+</entry>
+<button>
+    <input file stock="gtk-new"></input>
+    <action>fileselect:ent1</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node clear
+@section @code{clear:@var{Name}}
+
+Removes all content from the named widget.  For text editors and
+entries this clears the text; for lists, trees, and tables this removes
+all rows; for comboboxes this removes all items.
+
+@noindent From @file{examples/edit/edit_actions}:
+@example
+<button>
+    <label>Clear</label>
+    <action function="clear">EDITOR</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node removeselected
+@section @code{removeselected:@var{Name}}
+
+Removes the currently selected item from the named widget.  Most
+commonly used with list, tree, and table widgets to let the user
+delete individual rows.  For text editors, it removes the selected
+text range.
+
+@noindent From @file{examples/tree/tree_insert}:
+@example
+<button>
+    <input file stock="gtk-remove"></input>
+    <action function="removeselected">TREE</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node break
+@section @code{break}
+
+Stops executing the remaining actions in the current action chain.
+Actions listed before the @code{break} run normally; actions listed
+after it are skipped.  Typically used with a @code{condition} attribute
+to conditionally stop the chain.
+
+@noindent From @file{examples/miscellaneous/break}:
+@example
+<button label="Break">
+    <action>echo This action is above the break</action>
+    <action condition="active_is_true(CHECKBOX)"
+            function="break">""</action>
+    <action>echo This action is below the break</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node insert
+@section @code{insert:@var{Source},@var{Target}}
+
+Takes the value from the @var{Source} widget and inserts it into the
+@var{Target} widget.  For list and tree widgets, a new row is added.
+For entry widgets, the text is set.  For edit widgets, the text is
+inserted at the cursor position.
+
+@noindent From @file{examples/tree/tree_insert}:
+@example
+<entry>
+    <variable>ENTRY</variable>
+</entry>
+<button>
+    <input file stock="gtk-add"></input>
+    <action function="insert">ENTRY,TREE</action>
+</button>
+@end example
+
+@c -----------------------------------------------------------------
+@node append
+@section @code{append:@var{Source},@var{Target}}
+
+Works the same way as @code{insert:} --- takes the value from
+@var{Source} and adds it to @var{Target}.  Both @code{insert:} and
+@code{append:} add new rows to list and tree widgets and set text in
+entry and edit widgets.
+
+@c -----------------------------------------------------------------
+@node Clipboard actions
+@section Clipboard actions
+
+The following four actions operate on text editor (@code{<edit>})
+widgets and use the system clipboard.
+
+@subsection @code{cut:@var{Name}}
+Cuts the selected text from the named editor to the clipboard.
+
+@subsection @code{copy:@var{Name}}
+Copies the selected text from the named editor to the clipboard
+without removing it.
+
+@subsection @code{paste:@var{Name}}
+Pastes the clipboard contents into the named editor at the cursor
+position.
+
+@subsection @code{selectall:@var{Name}}
+Selects all text in the named editor.
+
+@noindent From @file{examples/edit/edit_actions}:
+@example
+<button>
+    <label>Select All</label>
+    <action function="selectall">EDITOR</action>
+</button>
+<button>
+    <label>Cut</label>
+    <action function="cut">EDITOR</action>
+</button>
+<button>
+    <label>Copy</label>
+    <action function="copy">EDITOR</action>
+</button>
+<button>
+    <label>Paste</label>
+    <action function="paste">EDITOR</action>
+</button>
+@end example
 
 
 @bye

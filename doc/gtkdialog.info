@@ -1,10 +1,9 @@
-This is gtkdialog.info, produced by makeinfo version 4.13 from
+This is gtkdialog.info, produced by makeinfo version 7.1 from
 gtkdialog.texi.
 
-This manual documents version {No value for `VERSION'} of the Gtkdialog
-utility.
+This manual documents version 0.9.0 of the Gtkdialog utility.
 
-   Copyright (C) 2003-2007 Laszlo Pere.
+   Copyright © 2003-2007 Laszlo Pere.
 
    WARNING: This documentation is very incomplete and has not been
 updated since at least 2007 although it is still informative for
@@ -22,10 +21,9 @@ File: gtkdialog.info,  Node: Top,  Next: Getting Gtkdialog,  Up: (dir)
 Gtkdialog User's Manual
 ***********************
 
-This manual documents version {No value for `VERSION'} of the Gtkdialog
-utility.
+This manual documents version 0.9.0 of the Gtkdialog utility.
 
-   Copyright (C) 2003-2007 Laszlo Pere.
+   Copyright © 2003-2007 Laszlo Pere.
 
    WARNING: This documentation is very incomplete and has not been
 updated since at least 2007 although it is still informative for
@@ -41,10 +39,11 @@ beginners.
 
 * Getting Gtkdialog::      How to find, download and install the program.
 * Introduction::           A brief description of the package.
+* The Description Language::  Syntax of the dialog markup language.
 * Invoking the Program::   How to call the program from various languages.
 * Widgets::    		   The elements of dialog boxes.
 * Containers::		   Dialog elements grouping widgets together.
-* Actions::		   What is happening when something happening.
+* Actions::		   What happens when something happens.
 
 
 File: gtkdialog.info,  Node: Getting Gtkdialog,  Next: Introduction,  Prev: Top,  Up: Top
@@ -56,561 +55,1977 @@ File: gtkdialog.info,  Node: Getting Gtkdialog,  Next: Introduction,  Prev: Top,
 ============
 
 The source of Gtkdialog can be downloaded from Anonymous FTP at URL
-`ftp://linux.pte.hu/pub/gtkdialog/'.
+<ftp://linux.pte.hu/pub/gtkdialog/>.
 
 1.2 How to Install the Program
 ==============================
 
-The program can be installed using the standard `./configure', `make'
-and `make install' command sequence. Further details can be found in
-the `INSTALL' file included.
+The program can be installed using the standard ‘./configure’, ‘make’
+and ‘make install’ command sequence.  Further details can be found in
+the ‘INSTALL’ file included.
 
 1.3 Copying
 ===========
 
-Copyright (C) 2003-2007 Laszlo Pere.
+Copyright © 2003-2007 Laszlo Pere.
 
-   The gtkdialog is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 2.0 of the
-License, or (at your option) any later version.
+   The gtkdialog is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2.0 of the License, or (at your
+option) any later version.
 
    The program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+Public License for more details.
 
    You should have received a copy of the GNU General Public License
-along with this software; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
-USA.
+along with this software; if not, write to the Free Software Foundation,
+Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
 
-File: gtkdialog.info,  Node: Introduction,  Next: Invoking the Program,  Prev: Getting Gtkdialog,  Up: Top
+File: gtkdialog.info,  Node: Introduction,  Next: The Description Language,  Prev: Getting Gtkdialog,  Up: Top
 
 2 Introduction
 **************
 
-Gtkdialog is a small utility program based on the GTK+ library. The
-program mainly made for GUI development for shell scripts but can be
-used with many other programming languages. The programmer can easily
-create GUI not just for any shell script or UNIX command but for any
-interpreted or compiled program capable to start child process and use
-pipes.
+Gtkdialog is a small utility program based on the GTK library.  The
+program is mainly made for GUI development for shell scripts but can be
+used with many other programming languages.  The programmer can easily
+create a GUI not just for any shell script or UNIX command but for any
+interpreted or compiled program capable of starting a child process and
+using pipes.
 
 
-File: gtkdialog.info,  Node: Invoking the Program,  Next: Widgets,  Prev: Introduction,  Up: Top
+File: gtkdialog.info,  Node: The Description Language,  Next: Invoking the Program,  Prev: Introduction,  Up: Top
 
-3 Invoking the Program
+3 The Description Language
+**************************
+
+Gtkdialog3 uses an XML-like markup language to describe dialog boxes.
+The language looks like XML and follows its basic structure -- tags with
+attributes, nested elements, and self-closing tags -- but it is not
+standard XML. The parser recognises a fixed set of tag names (*note
+Widgets::, *note Containers::) and has several non-standard extensions
+described below.
+
+   All of the non-standard language elements listed in this chapter are
+*deprecated* and will be removed in a future version.  New dialog
+descriptions should use only well-formed XML constructs.
+
+* Menu:
+
+* Backslash escaping::          Non-standard character escaping
+* Space in tag names::          The ‘<input file>’ tag name
+* Imperative constructs::       Programming constructs in markup
+* Implicit window element::    Omitting the root ‘<window>’ tag
+* Unsupported XML features::   Standard XML features that are not available
+
+
+File: gtkdialog.info,  Node: Backslash escaping,  Next: Space in tag names,  Up: The Description Language
+
+3.1 Backslash escaping
+======================
+
+Standard XML uses entity references (‘&lt;’, ‘&gt;’, ‘&amp;’) to
+represent special characters.  Gtkdialog3 does not support entity
+references.  Instead, it uses backslash escaping:
+
+‘\<’
+     A literal ‘<’ character (prevents it from being parsed as a tag).
+‘\>’
+     A literal ‘>’ character.
+‘\"’
+     A literal double-quote inside a quoted string.
+‘\\’
+     A literal backslash.
+
+Example -- displaying the text ‘<button>’ as a label:
+     <text><label>\<button\></label></text>
+
+   In standard XML, this would be written as:
+     <text><label>&lt;button&gt;</label></text>
+
+
+File: gtkdialog.info,  Node: Space in tag names,  Next: Imperative constructs,  Prev: Backslash escaping,  Up: The Description Language
+
+3.2 Space in tag names
+======================
+
+XML tag names cannot contain spaces.  Gtkdialog3 has two tag names that
+contain a space:
+
+‘<input file>...</input>’
+     Reads the widget's value from a file.
+‘<output file>...</output>’
+     Writes the widget's value to a file.
+
+   These are parsed as single tokens, not as a tag named ‘input’ with an
+attribute named ‘file’.  In new code, prefer the attribute form instead:
+
+     Deprecated:  <input file>/path/to/file</input>
+     Preferred:   <input file="/path/to/file">
+
+
+File: gtkdialog.info,  Node: Imperative constructs,  Next: Implicit window element,  Prev: Space in tag names,  Up: The Description Language
+
+3.3 Imperative constructs
+=========================
+
+The language includes simple imperative programming constructs that can
+be placed alongside widget elements.  These are not part of XML and
+exist for dynamic dialog generation at parse time.
+
+‘<command assignment="VAR := EXPR">’
+     Assigns a value to a variable.  The expression supports arithmetic
+     operators (‘+’, ‘-’, ‘*’, ‘/’) and numeric constants.
+
+‘<if condition="EXPR">...</if>’
+     Conditionally includes the enclosed widgets.  The condition
+     supports variable names, numbers, and the comparison operators ‘=’
+     and ‘!=’.
+
+‘<while condition="EXPR">...</while>’
+     Repeatedly includes the enclosed widgets as long as the condition
+     is true.
+
+‘<show/>’
+     Forces all widgets created so far to be displayed immediately.
+
+Example -- creating five buttons in a loop:
+     <command assignment="i := 0">
+     <while condition="i != 5">
+         <button><label>Button</label></button>
+         <command assignment="i := i + 1">
+     </while>
+
+
+File: gtkdialog.info,  Node: Implicit window element,  Next: Unsupported XML features,  Prev: Imperative constructs,  Up: The Description Language
+
+3.4 Implicit window element
+===========================
+
+Standard XML requires a single root element.  In gtkdialog3, the
+outermost ‘<window>’ tag can be omitted; the parser wraps the content in
+an implicit window automatically.  This means a dialog can start
+directly with a container:
+
+     <vbox>
+         <text><label>Hello</label></text>
+         <button stock="ok"/>
+     </vbox>
+
+   This is equivalent to:
+
+     <window>
+         <vbox>
+             <text><label>Hello</label></text>
+             <button stock="ok"/>
+         </vbox>
+     </window>
+
+   New dialog descriptions should always include an explicit ‘<window>’
+element.
+
+
+File: gtkdialog.info,  Node: Unsupported XML features,  Prev: Implicit window element,  Up: The Description Language
+
+3.5 Unsupported XML features
+============================
+
+The following standard XML features are *not supported* by gtkdialog3's
+parser:
+
+   • XML declarations (‘<?xml version="1.0"?>’)
+   • Document type definitions (‘<!DOCTYPE ...>’)
+   • CDATA sections (‘<![CDATA[...]]>’)
+   • Entity references (‘&amp;’, ‘&lt;’, ‘&gt;’, ‘&quot;’, ‘&apos;’)
+   • Processing instructions (‘<?...?>’)
+   • XML comments (‘<!-- ... -->’)
+   • Namespaces
+
+   Including any of these in a dialog description will cause a parse
+error.
+
+
+File: gtkdialog.info,  Node: Invoking the Program,  Next: Widgets,  Prev: The Description Language,  Up: Top
+
+4 Invoking the Program
 **********************
 
-3.1 Examples
-============
+Gtkdialog3 reads a dialog description from one of several sources,
+displays the resulting window, and prints the widget values to standard
+output when the dialog closes.
 
-Our first example program shows how to call the `gtkdialog' from a BASH
-script.
+* Menu:
 
-     #! /bin/bash
+* Command-line options::        All available flags
+* Environment variable::        The most common invocation method
+* Capturing output::            Reading widget values in a script
+* Output formats::              Bash, JSON, and XML output
+* Reading from a file::         Loading the dialog from a file
+* Standard input::              Piping the dialog via stdin
+* Including function libraries:: Sourcing shell functions for actions
+* Multiple windows::            Working with more than one window
+* Layout options::              Controlling widget packing defaults
+* Window placement::            Setting window position and size
 
-     export MAIN_DIALOG='
-      <vbox>
-       <text>
-         <label>This is a label...</label>
-       </text>
-       <hbox>
-        <button stock="ok"/>
-        <button stock="cancel"/>
-       </hbox>
-      </vbox>'
+
+File: gtkdialog.info,  Node: Command-line options,  Next: Environment variable,  Up: Invoking the Program
 
-     gtkdialog --program MAIN_DIALOG
+4.1 Command-line options
+========================
 
-   This example uses a very plain way to open a dialog box. We store the
-description of the dialog box in the `MAIN_DIALOG' environment variable
-which is exported to the child processes with the BASH `export'
-built-in. Then we call the `gtkdialog' program with the `--program'
-option which is followed by the name of the variable holding the dialog
-box description. It is simple and easy to write BASH scripts in this
-manner.
+‘-v, --version’
+     Print version information (including which optional libraries are
+     enabled) and exit.
 
-   A similar calling method can be used when user input is needed. The
-`gtkdialog' send the state of the widgets to the standard output when
-exiting and this is how we can get user input for the BASH program. The
-next example code show the reading process.
-     #! /bin/bash
+‘-d, --debug’
+     Debug mode; prints the processed characters as gtkdialog3 parses
+     the input.
 
-     export DIALOG='
-     <vbox>
-       <entry>
-         <variable>ENTRY</variable>
-       </entry>
-       <hbox>
-         <button stock="ok"/>
-         <button stock="cancel"/>
-       </hbox>
-     </vbox>'
+‘-p, --program=VARIABLE’
+     Read the dialog description from the named environment variable.
+
+‘-f, --file=FILENAME’
+     Read the dialog description from a file.
+
+‘-s, --stdin’
+     Read the dialog description from standard input.
+
+‘-e, --event-driven=FILENAME’
+     Execute the file as an event-driven program.
+
+‘-g, --glade-xml=FILENAME’
+     Read the dialog description from a Glade XML file.  Only available
+     if gtkdialog3 was built with Glade library support.
+
+‘-i, --include=FILENAME’
+     Source the given shell script before executing action commands,
+     making its functions and variables available to ‘<action>’
+     handlers.
+
+‘-w, --no-warning’
+     Suppress warning messages.
+
+‘-G, --geometry=[WXH][+X+Y]’
+     Set the size and placement of the window.  W and H are the width
+     and height in pixels; X and Y are the screen coordinates.
+
+‘-c, --center’
+     Center the window on the screen.
+
+‘--space-expand=STATE’
+     Set the default "expand" packing for all widgets (‘true’ or
+     ‘false’).
+
+‘--space-fill=STATE’
+     Set the default "fill" packing for all widgets (‘true’ or ‘false’).
+
+‘--output-format=FORMAT’
+     Set the output format: ‘bash’ (default), ‘json’, or ‘xml’.
+
+‘--print-ir’
+     Print the internal representation of the parsed program and exit
+     without displaying a window.  Useful for debugging the dialog
+     description.
+
+‘--debug-geometry’
+     Print widget geometry negotiations to stderr, showing preferred and
+     allocated sizes for each widget.  Can also be enabled by setting
+     the environment variable ‘GTKDIALOG_DEBUG_GEOMETRY’.
+
+
+File: gtkdialog.info,  Node: Environment variable,  Next: Capturing output,  Prev: Command-line options,  Up: Invoking the Program
+
+4.2 Reading from an environment variable
+========================================
+
+The most common way to use gtkdialog3.  Store the dialog description in
+a shell variable, export it, and pass its name with ‘--program’:
+
+From ‘examples/standard/entry’:
+     #!/bin/sh
+
+     MAIN_DIALOG="
+     <window title='System Configuration' resizable='false'>
+         <vbox spacing='6' border-width='8'>
+             <frame title='Hostname'>
+                 <entry>
+                     <default>localhost</default>
+                     <variable>entHostname</variable>
+                 </entry>
+             </frame>
+             <buttonbox layout='end'>
+                 <button stock='cancel'/>
+                 <button stock='ok'/>
+             </buttonbox>
+         </vbox>
+     </window>"
+     export MAIN_DIALOG
+
+     gtkdialog3 --program=MAIN_DIALOG
+
+
+File: gtkdialog.info,  Node: Capturing output,  Next: Output formats,  Prev: Environment variable,  Up: Invoking the Program
+
+4.3 Capturing widget values
+===========================
+
+When the dialog closes, gtkdialog3 prints one ‘VARIABLE="VALUE"’
+assignment per line to standard output, plus an ‘EXIT’ variable
+indicating which button was pressed.  Evaluate the output to import the
+values into the calling script:
 
      I=$IFS; IFS=""
-     for STATEMENTS in  $(gtkdialog --program DIALOG); do
-       eval $STATEMENTS
+     for STATEMENTS in $(gtkdialog3 --program=DIALOG); do
+         eval $STATEMENTS
      done
      IFS=$I
 
      if [ "$EXIT" = "OK" ]; then
-       echo "You entered: $ENTRY."
+         echo "You entered: $ENTRY."
      else
-       echo "You pressed the Cancel button."
+         echo "You pressed Cancel."
      fi
 
-   In the example script we use the `for' built-in to go through the
-list `gtkdialog' produced. Changing the field separator (IFS) is a
-little bit disturbing but necessary since this is the only way to
-protect the space characters in user input.
+   Changing ‘IFS’ to the empty string protects spaces in user input from
+being split by the shell's word splitting.
 
-   In larger software projects it may be a good idea to break the code
-to separate files. Since `gtkdialog' can read the description program
-from file it is easy to write self executable programs with it. This is
-how the next example constructed.
+
+File: gtkdialog.info,  Node: Output formats,  Next: Reading from a file,  Prev: Capturing output,  Up: Invoking the Program
 
-     #! /usr/local/bin/gtkdialog -f
-     <vbox>
-       <checkbox>
-         <label>This is a checkbox</label>
-         <variable>CHECK1</variable>
-       </checkbox>
-       <checkbox>
-         <label>Another one</label>
-         <variable>CHECK2</variable>
-       </checkbox>
-       <button>
-         <label>OK</label>
-       </button>
-     </vbox>
+4.4 Output formats
+==================
 
-   When used in this fashion the state of the widgets can get from the
-standard output of the script as usually.
+By default, gtkdialog3 prints variable assignments in Bash syntax.  Two
+alternative formats are available via ‘--output-format’:
+
+4.4.1 JSON output
+-----------------
+
+     gtkdialog3 --program=MAIN_DIALOG --output-format=json
+
+   Produces a JSON object grouped by window name:
+
+     {
+       "widget_contents": {
+         "myWindow": {
+           "entName": "Alice",
+           "chkAgreed": "true"
+         }
+       },
+       "exit": "OK"
+     }
+
+   The window name is taken from the ‘<variable>’ element inside each
+‘<window>’ tag (or auto-generated if none is specified).
+
+4.4.2 XML output
+----------------
+
+     gtkdialog3 --program=MAIN_DIALOG --output-format=xml
+
+   Produces an XML document with the same grouping by window name:
+
+     <?xml version="1.0" encoding="UTF-8"?>
+     <gtkdialog>
+       <widget_contents>
+         <window name="myWindow">
+           <variable name="entName">Alice</variable>
+           <variable name="chkAgreed">true</variable>
+         </window>
+       </widget_contents>
+       <exit>OK</exit>
+     </gtkdialog>
+
+
+File: gtkdialog.info,  Node: Reading from a file,  Next: Standard input,  Prev: Output formats,  Up: Invoking the Program
+
+4.5 Reading from a file
+=======================
+
+Use ‘--file’ to load the dialog description from a file:
+
+     gtkdialog3 --file=dialog.xml
+
+   A file containing only the dialog description can also be made
+directly executable with a shebang line:
+
+From ‘examples/languages/standalone_gtkdialog3_script’:
+     #! /usr/local/bin/gtkdialog3 -f
+
+     <window>
+         <vbox>
+             <checkbox>
+                 <label>This is a checkbox...</label>
+                 <variable>CHECKBOX</variable>
+             </checkbox>
+             <hbox>
+                 <button stock="ok"/>
+                 <button stock="cancel"/>
+             </hbox>
+         </vbox>
+     </window>
+
+   When used as a standalone script, widget values are printed to the
+standard output of the script as usual.
+
+
+File: gtkdialog.info,  Node: Standard input,  Next: Including function libraries,  Prev: Reading from a file,  Up: Invoking the Program
+
+4.6 Reading from standard input
+===============================
+
+Use ‘--stdin’ to read the dialog description from a pipe:
+
+     echo '<window><vbox><button stock="ok"/></vbox></window>' \
+         | gtkdialog3 --stdin
+
+   This is useful for generating dialog descriptions dynamically in a
+pipeline.
+
+
+File: gtkdialog.info,  Node: Including function libraries,  Next: Multiple windows,  Prev: Standard input,  Up: Invoking the Program
+
+4.7 Including function libraries
+================================
+
+Use ‘--include’ to source a shell script before any action command runs.
+This makes the script's functions and variables available to ‘<action>’
+handlers.
+
+     gtkdialog3 --include=functions.sh --program=MAIN_DIALOG
+
+   Without ‘--include’, action commands run in a fresh subshell that
+only has the exported environment variables.  With it, the included file
+is dot-sourced (via ‘. FILE’) before each action command, so unexported
+shell functions become available.
+
+
+File: gtkdialog.info,  Node: Multiple windows,  Next: Layout options,  Prev: Including function libraries,  Up: Invoking the Program
+
+4.8 Multiple windows
+====================
+
+Define each window in a separate exported shell variable.  The variable
+name must match the ‘<variable>’ directive inside the ‘<window>’
+element.  Windows can open and close each other using the ‘launch:’ and
+‘closewindow:’ actions (*note launch::, *note closewindow::).
+
+From ‘examples/languages/bash_script_multi_window’:
+     winMain='
+     <window title="winMain" width-request="250">
+         <vbox>
+             <button>
+                 <label>Open second window</label>
+                 <action function="launch">winLaunch1</action>
+             </button>
+             <button stock="cancel"/>
+         </vbox>
+         <variable>winMain</variable>
+     </window>'
+     export winMain
+
+     winLaunch1='
+     <window title="winLaunch1" width-request="250">
+         <vbox>
+             <text><label>Second window</label></text>
+             <button>
+                 <label>Close this window</label>
+                 <action function="closewindow">winLaunch1</action>
+             </button>
+         </vbox>
+         <variable>winLaunch1</variable>
+     </window>'
+     export winLaunch1
+
+     gtkdialog3 --program=winMain
+
+
+File: gtkdialog.info,  Node: Layout options,  Next: Window placement,  Prev: Multiple windows,  Up: Invoking the Program
+
+4.9 Layout options
+==================
+
+The ‘--space-expand’ and ‘--space-fill’ flags set the default packing
+behaviour for all widgets in the dialog.  These defaults can be
+overridden per widget using the ‘space-expand’ and ‘space-fill’ tag
+attributes.
+
+     gtkdialog3 --space-expand=true --space-fill=true \
+         --program=MAIN_DIALOG
+
+   When ‘space-expand’ is ‘true’, widgets request extra space from their
+parent container.  When ‘space-fill’ is ‘true’, widgets fill the extra
+space they are given.  Setting both to ‘true’ is common for dialogs
+where widgets should stretch to fill the window.
+
+
+File: gtkdialog.info,  Node: Window placement,  Prev: Layout options,  Up: Invoking the Program
+
+4.10 Window placement
+=====================
+
+Use ‘--center’ to center the window on the screen:
+
+     gtkdialog3 --center --program=MAIN_DIALOG
+
+   Use ‘--geometry’ for precise control over window size and position.
+The format is ‘WxH+X+Y’, where W/H are the width and height in pixels
+and X/Y are the screen coordinates:
+
+     gtkdialog3 --geometry=400x300+100+200 --program=MAIN_DIALOG
 
 
 File: gtkdialog.info,  Node: Widgets,  Next: Containers,  Prev: Invoking the Program,  Up: Top
 
-4 Widgets
+5 Widgets
 *********
 
-The dialog description language is a simple XML like language capable
-to denote any complex dialog box containing widgets and boxes.
+The dialog description language is a simple XML-like markup capable of
+describing complex dialog boxes containing widgets and containers.
 
-   Widgets are simple GUI elements such as buttons, entry fields, lists,
-etc. Widget can have attributes, states and actions (*note Actions::).
+   Widgets are GUI elements such as buttons, entry fields, lists, and
+labels.  Every widget can have attributes, states, and actions (*note
+Actions::).  Widgets must be placed inside containers (*note
+Containers::).
 
-   The widgets are grouped together with containers (*note
-Containers::), horizontal and vertical boxes or frames. Every widget
-should placed in one of the containers, no widgets can be alone for it
-is dangerous outside.
+   Most widgets support the following common sub-elements:
+
+‘<variable>’
+     Names the shell variable that receives this widget's value on exit.
+‘<label>’
+     Sets the display text.
+‘<default>’
+     Sets the initial value.
+‘<input>’
+     A shell command whose output sets the widget's value.
+‘<input file>’
+     A file whose contents set the widget's value.
+‘<output file>’
+     A file to write the widget's value to (used with ‘save:’).
+‘<action>’
+     A command to run when the widget changes (*note Actions::).
+‘<sensitive>’
+     Sets the initial interactive state (‘enabled’ or ‘disabled’).
+‘<width>, <height>’
+     Sets the widget's minimum size.
 
 * Menu:
 
-* Static label::                Labels containing static text
-* Pushbutton::			Pushbutton widgets
-* Pre-defined pushbuttons::	Pushbuttons with pixmap and text label
-* Entry::			One line text entry widgets
-* Checkbox::			Checkbox widgets
-* Pixmap::			Static pixmap widgets
-* Menus::                       Making menubars, menus and menuitems
-* Trees::                       Complex widget for trees
+* text::                Static text labels
+* button::              Pushbuttons
+* entry::               Single-line text input
+* checkbox::            On/off check marks
+* radiobutton::         Mutually exclusive choices
+* togglebutton::        Toggle buttons with icon support
+* switch::              On/off slide switch
+* combobox::            Drop-down selection (editable)
+* comboboxtext::        Drop-down selection (fixed choices)
+* comboboxentry::       Drop-down with editable entry
+* list::                Single-column selection list
+* table::               Multi-column sortable table
+* tree::                Multi-column tree view
+* edit::                Multi-line text editor
+* pixmap::              Static image display
+* hscale and vscale::   Slider controls
+* spinbutton::          Numeric entry with up/down arrows
+* colorbutton::         Colour picker button
+* fontbutton::          Font picker button
+* progressbar::         Progress indicator
+* statusbar::           Status message bar
+* timer::               Periodic timer
+* hseparator and vseparator::  Decorative separator lines
+* menubar::             Menu bar with drop-down menus
+* terminal::            Embedded terminal emulator
+* sourceview::          Syntax-highlighting text editor
+* webview::             Embedded web browser
 
 
-File: gtkdialog.info,  Node: Static label,  Next: Pushbutton,  Up: Widgets
+File: gtkdialog.info,  Node: text,  Next: button,  Up: Widgets
 
-4.1 Static label
-================
+5.1 ‘<text>’ -- Static label
+============================
 
-Label is a static text widget created with `<text></text>' tag.
+A non-editable text label.  The text can be set with ‘<label>’, loaded
+from a file with ‘<input file>’, or generated by a shell command with
+‘<input>’.  Refreshing the widget re-evaluates its input source, so
+labels can show dynamic content.
 
-   The text in a static label, can be set with the
-`<label>STRING</label>' or the `<input file>FILENAME</input>'
-expression.
+   Exports its displayed text as the variable value.
+
+From ‘examples/text/text’:
+     <text>
+         <label>This is a label...</label>
+     </text>
 
 
-File: gtkdialog.info,  Node: Pushbutton,  Next: Pre-defined pushbuttons,  Prev: Static label,  Up: Widgets
+File: gtkdialog.info,  Node: button,  Next: entry,  Prev: text,  Up: Widgets
 
-4.2 Pushbutton
-==============
+5.2 ‘<button>’ -- Pushbutton
+============================
 
-The pushbutton is a clickable widget defined with the
-`<button></button>' tags.
+A clickable button.  When clicked, its action chain runs.  If no action
+is given, clicking the button exits the dialog and sets ‘EXIT’ to the
+button's label.
 
-4.2.1 `<label></label>'
------------------------
+   Buttons can display a text label, an icon image, or both.  Use
+‘<label>’ for the text and ‘<input file>’ for the icon.  If neither is
+given, the label defaults to ‘OK’.
 
-The `<label>STRING</label>' directive sets the text label of the
-pushbutton. If no label and pixmap is given for the button, gtkdialog
-will use OK as default.
+   Gtkdialog3 searches for icon files in the directories listed in the
+‘GTKDIALOG_PIXMAP_PATH’ environment variable if the file cannot be
+opened directly.
 
-4.2.2 `<input file></input>'
-----------------------------
+   Tag attributes for button layout:
 
-When creating buttons, the `<input file>FILENAME</input>' tag can be
-used to insert a pixmap into the button. The FILENAME must be a pixmap
-file. Gtkdialog will find this file with the `locate' utility if
-necessary.
+‘image-position’
+     Icon position relative to the label: ‘0’ (left), ‘1’ (right), ‘2’
+     (top), ‘3’ (bottom).
+‘spacing’
+     Gap in pixels between icon and label (default 6).
+‘border-width’
+     Inner padding between the button frame and its content.
 
-   The pushbuttons can contain a label and a pixmap simultaneously. For
-this you have to use the `<label></label>' and the `<input
-file></input>' as the next example shows:
-
+From ‘examples/button/button_action_functions’:
      <button>
-       <input file>/usr/share/GUIcompletion/button_save.xpm</input>
-       <label>The label</label>
+         <label>exit</label>
+         <action>echo You pressed the exit button</action>
+         <action function="exit">Exit by button</action>
      </button>
 
-4.2.3 `<action></action>'
--------------------------
+5.2.1 Pre-defined stock buttons
+-------------------------------
 
-The `<action>COMMAND</action>' directive tells the gtkdialog what to
-do, when the button is pressed. If the action is not given explicitly
-the gtkdialog uses the default action, which is to exit the program. In
-this case the printed variable list will contain a variable named EXIT,
-with the label of the activated button as value.
+Gtkdialog3 provides shorthand stock buttons with a built-in label and
+icon:
 
-   The buttons can handle more than one actions simultaneously. If there
-are more `<action></action>' directive for the given button, they will
-be executed one by one, in the right order.
-
-4.2.4 `<visible></visible>'
----------------------------
-
-The `<visible>STATE</visible>' specify the initial visibility of the
-button. The STATE can be either `enabled' or `disabled'. When a button
-is disabled, it is shaded and can not be activated by mouse or keyboard.
+   • ‘<button stock="ok"/>’
+   • ‘<button stock="cancel"/>’
+   • ‘<button stock="help"/>’
+   • ‘<button stock="yes"/>’
+   • ‘<button stock="no"/>’
 
 
-File: gtkdialog.info,  Node: Pre-defined pushbuttons,  Next: Entry,  Prev: Pushbutton,  Up: Widgets
+File: gtkdialog.info,  Node: entry,  Next: checkbox,  Prev: button,  Up: Widgets
 
-4.3 Pre-defined pushbuttons
-===========================
+5.3 ‘<entry>’ -- Single-line text input
+=======================================
 
-Gtkdialog supports a few pre-defined pushbuttons for simplify the
-creation of dialog boxes. The pre-defined buttons can be used the same
-manner the normal pushbuttons, but they have a default text, pixmap and
-output variable.  Here is the list of available pre-defined pushbuttons:
+A single-line text field for entering strings.  Actions fire when the
+user changes the content or presses Enter.
 
-   * `<button stock="ok"/>'
+   Use ‘<default>’ to set the initial text.  The ‘<sensitive>’
+sub-element accepts ‘enabled’, ‘disabled’, or ‘password’.  In password
+mode the text is hidden with dots.
 
-   * `<button stock="cancel"/>'
+   Exports the current text as the variable value.
 
-   * `<button stock="help"/>'
-
-   * `<button stock="yes"/>'
-
-   * `<button stock="no"/>'
-
-
-File: gtkdialog.info,  Node: Entry,  Next: Checkbox,  Prev: Pre-defined pushbuttons,  Up: Widgets
-
-4.4 Entry
-=========
-
-The entry widget is a simple text input field, which can be used to get
-a string from the user.
-
-4.4.1 `<default></default>'
----------------------------
-
-The `<default>STRING</default>' directive sets the default content of
-the entry.
-
-4.4.2 `<visible></visible>'
----------------------------
-
-The `<visible>VISIBILITY</visible>' sets the initial state of the entry
-widget. The VISIBILITY can be `enabled', which means the entry can be
-used, `disabled', which means the content of the entry can not be
-altered or `password'.
-
-   The entry widgets with the visibility set to `password' are
-editable, but unreadable as it is common with entries holding password
-style information.
-
-4.4.3 `<action></action>'
--------------------------
-
-The entry widgets are activating actions after their contents are
-changed.
+From ‘examples/entry/entry’:
+     <entry>
+         <default>Default entry text</default>
+         <variable>ENTRY</variable>
+     </entry>
 
 
-File: gtkdialog.info,  Node: Checkbox,  Next: Pixmap,  Prev: Entry,  Up: Widgets
+File: gtkdialog.info,  Node: checkbox,  Next: radiobutton,  Prev: entry,  Up: Widgets
 
-4.5 Checkbox
-============
+5.4 ‘<checkbox>’ -- Check mark
+==============================
 
-The checkbox is a simple widget with a label and a check mark which can
-be turned on and off by the user. Checkboxes are made with the
-`<checkbox></checkbox>' directive.
+A labelled check box that the user can toggle on and off.  Use
+‘<default>’ with ‘true’ or ‘false’ to set the initial state.
 
-4.5.1 `<label></label>'
------------------------
+   Actions fire when the state changes.  Conditional actions with ‘if
+true’ and ‘if false’ prefixes let you run different commands depending
+on the new state.
 
-The label is the text shown beside the check mark. Every checkbox
-should have a label.
+   Exports ‘true’ or ‘false’ as the variable value.
 
-4.5.2 `<default></default>'
----------------------------
-
-The initial state of the checkbox can be set by the
-`<default>STATE</default>' directive, where the STATE can be either
-`yes' or `no'.
-
-4.5.3 `<action></action>'
--------------------------
-
-The `<action></action>' directive tells the gtkdialog what to do, when
-the state of the checkbox is changed. As every widgets, the checkbox
-can hold multiply actions which are executed serially in the order they
-are written.
-
-   Actions of checkboxes can be written as conditional instructions with
-`if true' and `if false' prefixes as in the next example:
-
+From ‘examples/checkbox/checkbox’:
      <checkbox>
-     	<label>This is a checkbox...</label>
-     	<variable>CHECKBOX</variable>
-     	<action>echo Checkbox is $CHECKBOX now.</action>
-     	<action>if true enable:ENTRY</action>
-     	<action>if false disable:ENTRY</action>
+         <label>This is a checkbox...</label>
+         <variable>CHECKBOX</variable>
+         <action>echo Checkbox is $CHECKBOX now.</action>
+         <action>if true enable:ENTRY</action>
+         <action>if false disable:ENTRY</action>
      </checkbox>
 
-4.5.4 `<visible></visible>'
----------------------------
+
+File: gtkdialog.info,  Node: radiobutton,  Next: togglebutton,  Prev: checkbox,  Up: Widgets
 
-The `<visible>STATE</visible>' specify the initial visibility of the
-checkbox. The STATE can be either `enabled' or `disabled'. When a
-checkbox is disabled, it is shaded and its state can not be altered
-anyway.
+5.5 ‘<radiobutton>’ -- Mutually exclusive choice
+================================================
 
-4.5.5 `<variable></variable>'
------------------------------
+A radio button that automatically groups with adjacent radio buttons.
+Only one button in a group can be active at a time -- selecting one
+deselects the others.
 
-The value of a checkbox can be `true' or `false' and depends only on
-its state.
+   Use ‘<default>’ with ‘true’ or ‘false’ to set the initial state.
+Actions fire on the ‘toggled’ signal.
+
+   Exports ‘true’ or ‘false’ as the variable value.
+
+From ‘examples/radiobutton/radiobutton_attributes’:
+     <radiobutton active="true">
+         <label>First choice</label>
+         <variable>RADIOBUTTON1</variable>
+         <action>echo RADIOBUTTON1 is $RADIOBUTTON1</action>
+     </radiobutton>
+     <radiobutton>
+         <label>Second choice</label>
+         <variable>RADIOBUTTON2</variable>
+         <action>echo RADIOBUTTON2 is $RADIOBUTTON2</action>
+     </radiobutton>
 
 
-File: gtkdialog.info,  Node: Pixmap,  Next: Menus,  Prev: Checkbox,  Up: Widgets
+File: gtkdialog.info,  Node: togglebutton,  Next: switch,  Prev: radiobutton,  Up: Widgets
 
-4.6 Pixmap
-==========
+5.6 ‘<togglebutton>’ -- Toggle button
+=====================================
 
-The `<pixmap></pixmap>' defines a static pixmap widget.
+A button that stays pressed when clicked and releases on the next click.
+Like regular buttons, toggle buttons can display a label, an icon, or
+both.
 
-4.6.1 `<input file></input>'
-----------------------------
+   Use ‘<default>’ with ‘true’ or ‘false’ to set the initial state.
+Actions fire on the ‘toggled’ signal.
 
-The widget must have an input file defined with the `<input
-file>FILENAME</input>' tags. The FILENAME is the graphic image file for
-the pixmap. Gtkdialog will load this file if it can be opened for read,
-or will try to find a file with similar name (using the `locate'
-utility program) if the file is unreadable.
+   Exports ‘true’ or ‘false’ as the variable value.
 
-   The next example defines a static pixmap:
+From ‘examples/togglebutton/togglebutton_advanced’:
+     <togglebutton>
+         <default>true</default>
+         <label>Toggle</label>
+         <variable>tgb0</variable>
+         <action>save:tgb0</action>
+         <output file>/tmp/outputfile</output>
+     </togglebutton>
 
+
+File: gtkdialog.info,  Node: switch,  Next: combobox,  Prev: togglebutton,  Up: Widgets
+
+5.7 ‘<switch>’ -- On/off switch
+===============================
+
+A sliding toggle switch, similar in function to a checkbox but with a
+modern visual appearance.  Use ‘<default>’ with ‘true’ or ‘false’ to set
+the initial state.  Actions fire when the switch is toggled.
+
+   Exports ‘true’ or ‘false’ as the variable value.
+
+From ‘examples/switch/switch’:
+     <hbox homogeneous="true">
+         <text space-expand="true" space-fill="true">
+             <label>Enable notifications:</label>
+         </text>
+         <switch>
+             <variable>NOTIFICATIONS</variable>
+             <default>true</default>
+         </switch>
+     </hbox>
+
+
+File: gtkdialog.info,  Node: combobox,  Next: comboboxtext,  Prev: switch,  Up: Widgets
+
+5.8 ‘<combobox>’ -- Editable drop-down
+======================================
+
+A drop-down list with an editable text field.  Items can be added with
+‘<item>’ sub-elements or loaded from a shell command with ‘<input>’.
+The user can select an existing item or type a new value.
+
+   Exports the current text (typed or selected) as the variable value.
+
+From ‘examples/combobox/combobox’:
+     <combobox>
+         <variable>COMBOBOX</variable>
+         <item>First item</item>
+         <item>Second item</item>
+         <item>Third item</item>
+     </combobox>
+
+
+File: gtkdialog.info,  Node: comboboxtext,  Next: comboboxentry,  Prev: combobox,  Up: Widgets
+
+5.9 ‘<comboboxtext>’ -- Fixed drop-down
+=======================================
+
+A drop-down list where the user must choose from the available items (no
+free-form typing).  Items can come from ‘<item>’ elements, ‘<input>’
+commands, or ‘<input file>’.  Use ‘<default>’ to pre-select an item by
+its text.
+
+   Exports the selected item text as the variable value.
+
+From ‘examples/comboboxtext/comboboxtext_advanced’:
+     <comboboxtext>
+         <variable>cboComboBoxText0</variable>
+         <item>First choice</item>
+         <item>Second choice</item>
+         <input>echo "This came from a shell command"</input>
+         <action signal="changed">echo "Changed to $cboComboBoxText0"</action>
+     </comboboxtext>
+
+
+File: gtkdialog.info,  Node: comboboxentry,  Next: list,  Prev: comboboxtext,  Up: Widgets
+
+5.10 ‘<comboboxentry>’ -- Drop-down with entry
+==============================================
+
+A drop-down list combined with an editable entry field.  This is a
+variant of ‘<comboboxtext>’ that additionally allows the user to type
+arbitrary text.  It supports the ‘activate’ signal, which fires when the
+user presses Enter in the entry field.
+
+   Exports the current text as the variable value.
+
+From ‘examples/comboboxentry/comboboxentry_advanced’:
+     <comboboxentry has-focus="true">
+         <variable>cboComboBoxEntry3</variable>
+         <default>Type something here...</default>
+         <input file>/tmp/inoutfile</input>
+         <output file>/tmp/inoutfile</output>
+         <action signal="activate">save:cboComboBoxEntry3</action>
+         <action signal="activate">refresh:cboComboBoxEntry3</action>
+     </comboboxentry>
+
+
+File: gtkdialog.info,  Node: list,  Next: table,  Prev: comboboxentry,  Up: Widgets
+
+5.11 ‘<list>’ -- Single-column list
+===================================
+
+A scrollable single-column list.  Items can be added with ‘<item>’
+elements or loaded one-per-line from ‘<input>’ or ‘<input file>’.  Use
+the ‘selected-row’ tag attribute to pre-select a row by index.
+
+   Actions fire when the selection changes.
+
+   Exports the text of the selected row as the variable value.
+
+From ‘examples/list/list_attributes’:
+     <list selected-row="1">
+         <variable>LIST</variable>
+         <input>printf "First item\nSecond item\nThird item"</input>
+         <action>echo "The chosen item is \"$LIST\""</action>
+     </list>
+
+
+File: gtkdialog.info,  Node: table,  Next: tree,  Prev: list,  Up: Widgets
+
+5.12 ‘<table>’ -- Multi-column table
+====================================
+
+A sortable multi-column table.  Column headers are defined by a
+pipe-separated ‘<label>’ and rows by pipe-separated ‘<item>’ elements or
+pipe-separated lines from ‘<input>’ / ‘<input file>’.  Clicking a column
+header sorts the table by that column.
+
+   Key tag attributes:
+
+‘exported-column’
+     Which column's value to export (default 0).
+‘selected-row’
+     Pre-select a row by index.
+‘selection-mode’
+     ‘single’, ‘multiple’, ‘browse’, or ‘none’.
+‘sort-function’
+     Sort type: ‘0’ (default), ‘1’ (natural), ‘2’ (natural,
+     case-insensitive).
+‘column-visible’
+     Pipe-separated ‘true’/‘false’ per column.
+‘column-header-active’
+     Pipe-separated ‘true’/‘false’ to enable sorting per column.
+
+   Exports the selected cell text (from the exported column) as the
+variable value.  With multiple selection, values are newline-separated.
+
+From ‘examples/table/table’:
+     <table exported-column='2' selected-row='1'
+         sort-function='1'
+         column-header-active='true|true|true|false'>
+         <variable>tbl0</variable>
+         <label>Column 0  |Column 1  |Column 2  |Column 3</label>
+         <input file>/tmp/inputfile</input>
+         <item>1002|$RANDOM|0|$RANDOM</item>
+         <action>echo "tbl0=$tbl0"</action>
+     </table>
+
+
+File: gtkdialog.info,  Node: tree,  Next: edit,  Prev: table,  Up: Widgets
+
+5.13 ‘<tree>’ -- Multi-column tree view
+=======================================
+
+A multi-column tree view, similar to ‘<table>’ but predating it.  Column
+headers are defined by a pipe-separated ‘<label>’ and rows by
+pipe-separated ‘<item>’ elements or input sources.
+
+   Exports the selected row as the variable value.
+
+From ‘examples/tree/tree_insert’:
+     <tree>
+         <label>Device    |Directory        |File</label>
+         <item>Hard drive |/usr/            |letter.tex</item>
+         <item>Hard drive |/etc/            |fstab</item>
+         <item>Network    |alpha:/home      |quota.user</item>
+         <variable>TREE</variable>
+         <action>echo "TREE=$TREE"</action>
+     </tree>
+
+
+File: gtkdialog.info,  Node: edit,  Next: pixmap,  Prev: tree,  Up: Widgets
+
+5.14 ‘<edit>’ -- Multi-line text editor
+=======================================
+
+A multi-line text editing area with scrollbars.  Use ‘<default>’ to set
+initial text, or ‘<input file>’ to load the contents of a file.  The
+‘save:’ action writes the buffer to the file specified by ‘<output
+file>’.
+
+   Supports clipboard actions: ‘cut:’, ‘copy:’, ‘paste:’, and
+‘selectall:’ (*note Clipboard actions::).
+
+   Exports the full buffer text as the variable value.
+
+From ‘examples/edit/edit’:
+     <edit>
+         <variable>EDITOR</variable>
+         <height>150</height>
+         <width>350</width>
+         <default>
+     "This is the default text of the editor."
+         </default>
+     </edit>
+
+
+File: gtkdialog.info,  Node: pixmap,  Next: hscale and vscale,  Prev: edit,  Up: Widgets
+
+5.15 ‘<pixmap>’ -- Static image
+===============================
+
+Displays a static image.  The image file is specified with ‘<input
+file>’.  Gtkdialog3 searches for the file in directories listed in the
+‘GTKDIALOG_PIXMAP_PATH’ environment variable if it cannot be opened
+directly.
+
+   Refreshing the widget reloads the image, which is useful for
+displaying dynamically generated graphics.
+
+From ‘examples/pixmap/pixmap’:
      <pixmap>
-       <input file>help.png</input>
+         <input file>help.png</input>
      </pixmap>
 
 
-File: gtkdialog.info,  Node: Menus,  Next: Trees,  Prev: Pixmap,  Up: Widgets
+File: gtkdialog.info,  Node: hscale and vscale,  Next: spinbutton,  Prev: pixmap,  Up: Widgets
 
-4.7 Menubar
-===========
+5.16 ‘<hscale>’, ‘<vscale>’ -- Sliders
+======================================
 
-The `<menubar></menubar>' defines menu bar which can be placed as any
-other screen elements. In the menubar widget you have to create menus
-with the `<menu></menu>' tag, and inside the menu must be at least one
-menu item created by the `<menuitem></menuitem>' tag.
+Horizontal and vertical slider controls for selecting a numeric value
+within a range.  Use ‘<item>’ elements to place custom marks along the
+scale.
 
-   The next example shows how to create a simple menubar with only one
-menu:
+   Key tag attributes:
 
+‘range-min’
+     Minimum value (default 0).
+‘range-max’
+     Maximum value (default 100).
+‘range-step’
+     Step increment (default 1).
+‘range-value’
+     Initial value (default 0).
+
+   Actions fire when the value changes.  Exports the current numeric
+value as the variable value.
+
+From ‘examples/hscale/hscale_advanced’:
+     <hscale width-request="420" range-value="4">
+         <variable>hscHScale0</variable>
+         <action>echo "hscHScale0 changed to $hscHScale0"</action>
+     </hscale>
+
+
+File: gtkdialog.info,  Node: spinbutton,  Next: colorbutton,  Prev: hscale and vscale,  Up: Widgets
+
+5.17 ‘<spinbutton>’ -- Numeric spinner
+======================================
+
+A text entry for numeric values with up/down arrow buttons.  Supports
+the same ‘range-min’, ‘range-max’, ‘range-step’, and ‘range-value’ tag
+attributes as scales.
+
+   Actions fire on ‘value-changed’ (arrow clicks or typing) and
+‘activate’ (pressing Enter).  Exports the current numeric value as the
+variable value.
+
+From ‘examples/spinbutton/spinbutton’:
+     <spinbutton range-min="-50" range-max="50"
+         range-step="5" range-value="10">
+         <variable>SPB_RANGE</variable>
+     </spinbutton>
+
+
+File: gtkdialog.info,  Node: colorbutton,  Next: fontbutton,  Prev: spinbutton,  Up: Widgets
+
+5.18 ‘<colorbutton>’ -- Colour picker
+=====================================
+
+A button that displays a colour swatch and opens a colour chooser dialog
+when clicked.  Use ‘<default>’ to set the initial colour in ‘#rrggbb’
+format.  If the ‘use-alpha’ tag attribute is set to ‘true’, an alpha
+channel is also available and the format becomes ‘#rrggbb|alpha’.
+
+   Actions fire when a new colour is selected.  Exports the colour
+string as the variable value.
+
+From ‘examples/colorbutton/colorbutton_advanced’:
+     <colorbutton use-alpha="true">
+         <default>#4488cc|32768</default>
+         <variable>clb3</variable>
+         <action>echo clb3 changed to $clb3</action>
+     </colorbutton>
+
+
+File: gtkdialog.info,  Node: fontbutton,  Next: progressbar,  Prev: colorbutton,  Up: Widgets
+
+5.19 ‘<fontbutton>’ -- Font picker
+==================================
+
+A button that displays a font name and opens a font chooser dialog when
+clicked.  Use ‘<default>’ or the ‘font-name’ tag attribute to set the
+initial font using Pango syntax (e.g. ‘Sans Bold 12’).
+
+   Actions fire when a new font is selected.  Exports the Pango font
+description string as the variable value.
+
+From ‘examples/fontbutton/fontbutton’:
+     <fontbutton font-name="Monospace 18" use-font="true">
+         <variable>ftb1</variable>
+         <action>echo ftb1 changed to $ftb1</action>
+     </fontbutton>
+
+
+File: gtkdialog.info,  Node: progressbar,  Next: statusbar,  Prev: fontbutton,  Up: Widgets
+
+5.20 ‘<progressbar>’ -- Progress indicator
+==========================================
+
+A horizontal progress bar.  The ‘<input>’ command runs in a background
+thread; each line of output is interpreted as either a number (0-100,
+setting the bar position) or text (updating the bar label).  When the
+value reaches 100, the action chain fires.
+
+   Use ‘<label>’ to set the initial bar text.
+
+From ‘examples/progressbar/progressbar’:
+     <progressbar>
+         <label>Some Text</label>
+         <input>for i in $(seq 0 10 100); do
+             echo $i; sleep 0.3; done</input>
+         <action function="exit">Ready</action>
+     </progressbar>
+
+
+File: gtkdialog.info,  Node: statusbar,  Next: timer,  Prev: progressbar,  Up: Widgets
+
+5.21 ‘<statusbar>’ -- Status message bar
+========================================
+
+A message bar typically placed at the bottom of a window.  The message
+can be set with ‘<label>’, ‘<default>’, ‘<input>’, or ‘<input file>’.
+Refreshing the widget re-evaluates its input source.
+
+   Exports the current message text as the variable value.
+
+From ‘examples/statusbar/statusbar_advanced’:
+     <statusbar>
+         <default>Ready</default>
+         <variable>stb0</variable>
+         <input>echo Status from a command</input>
+         <output file>/tmp/outputfile</output>
+     </statusbar>
+
+
+File: gtkdialog.info,  Node: timer,  Next: hseparator and vseparator,  Prev: statusbar,  Up: Widgets
+
+5.22 ‘<timer>’ -- Periodic timer
+================================
+
+An invisible widget that fires its action chain at regular intervals.
+Use it to periodically refresh other widgets or run commands.
+
+   Key tag attributes:
+
+‘interval’
+     The timer period (default 1).
+‘milliseconds’
+     Set to ‘true’ for millisecond precision; otherwise the interval is
+     in seconds.
+
+   The timer runs while it is sensitive.  Disabling the timer stops it;
+enabling it restarts it.  Use ‘visible="false"’ to hide the timer's
+internal label widget.
+
+   Exports ‘true’ (running) or ‘false’ (stopped) as the variable value.
+
+From ‘examples/timer/timer_advanced’:
+     <timer milliseconds="true" interval="500"
+         visible="false">
+         <variable>tmr3</variable>
+         <action>refresh:pix30</action>
+         <action>refresh:pix31</action>
+     </timer>
+
+
+File: gtkdialog.info,  Node: hseparator and vseparator,  Next: menubar,  Prev: timer,  Up: Widgets
+
+5.23 ‘<hseparator>’, ‘<vseparator>’ -- Separators
+=================================================
+
+Purely decorative horizontal or vertical lines used to visually separate
+groups of widgets.  They have no value, input, or actions.
+
+From ‘examples/hseparator/hseparator_advanced’:
+     <hseparator width-request="400"></hseparator>
+
+
+File: gtkdialog.info,  Node: menubar,  Next: terminal,  Prev: hseparator and vseparator,  Up: Widgets
+
+5.24 ‘<menubar>’ -- Menu bar
+============================
+
+A menu bar containing drop-down menus.  Build the menu hierarchy with
+‘<menu>’ elements (each containing a ‘<label>’ for the menu title) and
+‘<menuitem>’ elements inside.  Use ‘<menuitemseparator/>’ to insert
+separator lines between items.
+
+   Menu items support ‘<label>’, ‘<variable>’, and ‘<action>’
+sub-elements.  A menuitem with ‘checkbox="true"’ as a tag attribute
+becomes a check menu item that toggles on click.
+
+From ‘examples/menubar/menubar’:
      <menubar>
-       <menu>
-         <menuitem>
-           <label>gtk-open</label>
-         </menuitem>
-         <menuitem>
-           <label>gtk-save</label>
-         </menuitem>
-         <menuitem>
-           <label>gtk-quit</label>
-           <action>EXIT="quit"</action>
-         </menuitem>
-         <label>File</label>
-       </menu>
+         <menu>
+             <menuitem>
+                 <label>Open</label>
+             </menuitem>
+             <menuitemseparator></menuitemseparator>
+             <menuitem>
+                 <label>Quit</label>
+                 <action>exit:quit</action>
+             </menuitem>
+             <label>File</label>
+         </menu>
      </menubar>
 
 
-File: gtkdialog.info,  Node: Trees,  Prev: Menus,  Up: Widgets
+File: gtkdialog.info,  Node: terminal,  Next: sourceview,  Prev: menubar,  Up: Widgets
 
-4.8 The tree
-============
+5.25 ‘<terminal>’ -- Terminal emulator (optional)
+=================================================
 
-OK, it is not complete, but the next example seems to be just fine.
+An embedded VTE terminal emulator.  Requires libvte (VTE 2.91) at build
+time.  Use ‘gtkdialog3 --version’ to check availability.
 
-     <vbox>
-       <tree>
-         <label>Device    |Directory        |File         </label>
-         <item>Hard drive |/usr/            |letter.tex    </item>
-         <item>Hard drive |/etc/            |inittab       </item>
-         <item>Hard drive |/etc/            |fstab         </item>
-         <item>Network    |alpha:/home      |quota.user    </item>
-         <item>Network    |alpha:/home      |quota.group   </item>
-         <item>Network    |beta:/home/pipas |tmp           </item>
-         <item>Network    |beta:/home/pipas |latexfiles    </item>
-         <item>Network    |beta:/home/pipas |book          </item>
-         <item>Network    |beta:/home/pipas |bin           </item>
-         <item>Network    |beta:/home/pipas |documentation </item>
-       </tree>
-       <button stock="ok"/>
-     </vbox>
+   The terminal spawns a shell process (‘/bin/sh’ by default).  Feed
+commands to it with ‘<input>’ or ‘<input file>’.  Actions fire on the
+‘child-exited’ signal when the shell exits.
+
+   Key tag attributes:
+
+‘argv0 ... argv127’
+     Command-line arguments for the spawned process.
+‘text-foreground-color, text-background-color’
+     Terminal colours.
+‘font-name’
+     Terminal font (Pango syntax).
+
+   Exports the child process PID as the variable value.
+
+From ‘examples/terminal/terminal’:
+     <terminal has-focus="true">
+         <variable>vte0</variable>
+         <action signal="child-exited">clear:vte0</action>
+     </terminal>
+
+
+File: gtkdialog.info,  Node: sourceview,  Next: webview,  Prev: terminal,  Up: Widgets
+
+5.26 ‘<sourceview>’ -- Source editor (optional)
+===============================================
+
+A text editor with syntax highlighting, line numbers, and
+auto-indentation.  Requires libgtksourceview-4 at build time.
+
+   Use ‘<input file>’ to load a source file.  A companion ‘.lang’
+sidecar file (containing just the language ID) switches the highlighting
+language automatically on refresh.
+
+   Key tag attributes:
+
+‘language’
+     Syntax highlighting language (e.g. ‘c’, ‘sh’, ‘python’, ‘json’).
+‘font-name’
+     Font name and size (e.g. ‘Monospace 12’).
+‘show-line-numbers’
+     Show line numbers (‘true’/‘false’, default ‘true’).
+‘highlight-current-line’
+     Highlight the current line (‘true’/‘false’, default ‘true’).
+‘tab-width’
+     Tab width in characters (default 4).
+
+   Exports the full buffer text as the variable value.
+
+From ‘examples/standard/sourceview’:
+     <sourceview language="c" font-name="Monospace 12">
+         <variable>srcEditor</variable>
+         <input file>/tmp/code.c</input>
+     </sourceview>
+
+
+File: gtkdialog.info,  Node: webview,  Prev: sourceview,  Up: Widgets
+
+5.27 ‘<webview>’ -- Web browser (optional)
+==========================================
+
+An embedded web browser using WebKitGTK. Requires libwebkit2gtk at build
+time.
+
+   Use ‘<default>’ to set the initial URL, or ‘<input file>’ to load
+content dynamically.  The input file may contain a URL (starting with
+‘http://’ or ‘https://’), a local file path (starting with ‘/’), or raw
+HTML.
+
+   Exports the current URI as the variable value.
+
+From ‘examples/standard/webview’:
+     <webview space-expand="true" space-fill="true">
+         <variable>webPage</variable>
+         <input file>/tmp/nav</input>
+     </webview>
 
 
 File: gtkdialog.info,  Node: Containers,  Next: Actions,  Prev: Widgets,  Up: Top
 
-5 Containers
+6 Containers
 ************
+
+Containers are layout widgets that hold other widgets and arrange them
+on screen.  Every widget must be placed inside a container.
+
+* Menu:
+
+* vbox and hbox::       Vertical and horizontal box layouts
+* frame::               Labelled frame
+* notebook::            Tabbed pages
+* eventbox::            Invisible event-catching container
+* expander::            Collapsible container
+* buttonbox::           Button layout container
+* window::              Top-level window
+
+
+File: gtkdialog.info,  Node: vbox and hbox,  Next: frame,  Up: Containers
+
+6.1 ‘<vbox>’, ‘<hbox>’ -- Box layouts
+=====================================
+
+The most common containers.  A ‘<vbox>’ stacks its children vertically;
+an ‘<hbox>’ arranges them horizontally.  Boxes can be nested to create
+complex layouts.
+
+   Key tag attributes:
+
+‘spacing’
+     Pixel gap between children (default 5).
+‘homogeneous’
+     Give all children equal size (‘true’/‘false’).
+‘space-expand’
+     Default expand packing for children (‘true’/‘false’).
+‘space-fill’
+     Default fill packing for children (‘true’/‘false’).
+‘border-width’
+     Padding inside the container.
+
+From ‘examples/vbox/vbox’:
+     <vbox>
+         <text><label>First</label></text>
+         <text><label>Second</label></text>
+         <hbox>
+             <button stock="ok"/>
+             <button stock="cancel"/>
+         </hbox>
+     </vbox>
+
+
+File: gtkdialog.info,  Node: frame,  Next: notebook,  Prev: vbox and hbox,  Up: Containers
+
+6.2 ‘<frame>’ -- Labelled frame
+===============================
+
+A container with a visible border and a title label.  Use the ‘title’
+tag attribute to set the frame label.  The frame label can also be set
+dynamically via ‘<input>’ or ‘<input file>’.
+
+From ‘examples/frame/frame’:
+     <frame title="Frame1">
+         <text><label>Label1</label></text>
+         <entry></entry>
+     </frame>
+
+
+File: gtkdialog.info,  Node: notebook,  Next: eventbox,  Prev: frame,  Up: Containers
+
+6.3 ‘<notebook>’ -- Tabbed pages
+================================
+
+A container with tabbed pages.  Each direct child becomes a page.  Tab
+labels are set with the ‘labels’ tag attribute (pipe-separated), or
+auto-generated as ‘Page 1’, ‘Page 2’, etc.
+
+   Exports the current page index (starting at 0) as the variable value.
+
+From ‘examples/notebook/notebook’:
+     <notebook labels="Checkbox|Radiobutton|Tree">
+         <vbox>
+             <checkbox><label>A checkbox</label></checkbox>
+         </vbox>
+         <vbox>
+             <radiobutton><label>First</label></radiobutton>
+             <radiobutton><label>Second</label></radiobutton>
+         </vbox>
+         <vbox>
+             <text><label>Third page</label></text>
+         </vbox>
+     </notebook>
+
+
+File: gtkdialog.info,  Node: eventbox,  Next: expander,  Prev: notebook,  Up: Containers
+
+6.4 ‘<eventbox>’ -- Event container
+===================================
+
+An invisible container that adds mouse and keyboard event handling to
+its single child widget.  Useful for detecting clicks, mouse movement,
+or key presses on widgets that do not normally emit those signals.
+
+From ‘examples/eventbox/eventbox’:
+     <eventbox above-child="false" visible-window="true">
+         <text><label>Click me</label></text>
+         <action signal="button-press-event">
+             echo "Clicked!"</action>
+         <action signal="enter-notify-event">
+             echo "Mouse entered"</action>
+     </eventbox>
+
+
+File: gtkdialog.info,  Node: expander,  Next: buttonbox,  Prev: eventbox,  Up: Containers
+
+6.5 ‘<expander>’ -- Collapsible container
+=========================================
+
+A container with a clickable header that expands or collapses to show or
+hide its children.  Use the ‘expanded’ tag attribute to set the initial
+state (‘true’ or ‘false’).
+
+   Actions fire when the expander is toggled.  Exports ‘true’ (expanded)
+or ‘false’ (collapsed) as the variable value.
+
+From ‘examples/expander/expander’:
+     <expander expanded="true">
+         <vbox>
+             <entry><default>entry</default></entry>
+         </vbox>
+         <label>Details</label>
+         <variable>exp0</variable>
+         <action>echo "exp0=$exp0"</action>
+     </expander>
+
+
+File: gtkdialog.info,  Node: buttonbox,  Next: window,  Prev: expander,  Up: Containers
+
+6.6 ‘<buttonbox>’ -- Button layout
+==================================
+
+A container that arranges buttons with consistent spacing.  Use it
+instead of ‘<hbox>’ for dialog button rows to get standard
+platform-appropriate layout.
+
+   Key tag attributes:
+
+‘layout’
+     Button arrangement: ‘spread’, ‘edge’, ‘start’, ‘end’ (default), or
+     ‘center’.
+‘orientation’
+     ‘horizontal’ (default) or ‘vertical’.
+
+From ‘examples/hbox/hbox’:
+     <buttonbox layout='end'>
+         <button stock='cancel'/>
+         <button stock='help'/>
+     </buttonbox>
+
+
+File: gtkdialog.info,  Node: window,  Prev: buttonbox,  Up: Containers
+
+6.7 ‘<window>’ -- Top-level window
+==================================
+
+The outermost container.  Every dialog has at least one window.  Use the
+‘title’ tag attribute to set the title bar text, and ‘icon-name’ to set
+the title bar icon.
+
+   Multiple windows can be opened using the ‘launch:’ action (*note
+launch::).
+
+From ‘examples/window/window_attributes’:
+     <window title="Example Window"
+         icon-name="gtk-dialog-warning">
+         <vbox>
+             <text><label>Hello, World!</label></text>
+             <hbox>
+                 <button stock="ok"/>
+                 <button stock="cancel"/>
+             </hbox>
+         </vbox>
+     </window>
 
 
 File: gtkdialog.info,  Node: Actions,  Prev: Containers,  Up: Top
 
-6 Actions
+7 Actions
 *********
 
-When the user changes the state of a widget, gtkdialog checks if there
-is something to do with it. If the tampered widget have one or more
-actions, the program will execute them for the new situation to be
-handled.
+When the user changes the state of a widget, gtkdialog3 checks whether
+actions are attached to it.  If the widget has one or more actions, the
+program executes them so the new situation can be handled.
 
-   Every widget can have multiply actions, a list of commands must be
-executed when the widget changed. Gtkdialog executes the axtions in the
-order they found in the dialog description program, so one can write a
-complet program as a series of instructions.
+   Every widget can have multiple actions.  Gtkdialog3 executes them in
+the order they appear in the dialog description, so you can write a
+sequence of instructions that runs as a small program.
+
+   Actions can be written in two equivalent syntaxes:
+
+     Colon syntax:     <action>TYPE:ARGUMENT</action>
+     Attribute syntax: <action function="TYPE">ARGUMENT</action>
+
+   The colon syntax is shorter; the attribute syntax allows additional
+attributes such as ‘signal’, ‘condition’, and ‘when’.  Both forms are
+case-insensitive in the action type.
 
 * Menu:
 
-* Start and exit::	Actions that starts programs and exits dialogs
-* Widget manipulation:: Actions affect widgets
+* Shell commands::	Running external programs
+* exit::		Closing the dialog
+* launch::		Opening additional windows
+* closewindow::		Closing additional windows
+* presentwindow::	Bringing a window to the front
+* enable::		Making a widget interactive
+* disable::		Greying out a widget
+* show::		Making a widget visible
+* hide::		Making a widget invisible
+* activate::		Simulating a user click
+* grabfocus::		Giving keyboard focus to a widget
+* refresh::		Reloading a widget's content
+* save::		Writing widget data to a file
+* fileselect::		Opening a file chooser dialog
+* clear::		Clearing a widget's content
+* removeselected::	Removing the selected item
+* break::		Stopping the action chain
+* insert::		Inserting data from one widget into another
+* append::		Appending data from one widget to another
+* Clipboard actions::	Cut, copy, paste, select all
 
 
-File: gtkdialog.info,  Node: Start and exit,  Next: Widget manipulation,  Up: Actions
+File: gtkdialog.info,  Node: Shell commands,  Next: exit,  Up: Actions
 
-6.1 Start and exit
+7.1 Shell commands
 ==================
 
-6.1.1 Start programs
---------------------
+If no action type is given, the action text is executed as a shell
+command.  Gtkdialog3 starts the user's ‘$SHELL’ (falling back to
+‘/bin/sh’) to run the command.  Before the command runs:
 
-If the action of a widget is created with the simple
-`<action>COMMAND</action>' directive, gtkdialog will execute it in a
-subshell. That means it will start up `/bin/sh' to handle the
-operation. Here is how the subshell operation works:
-  1. First gtkdialog updates the environment variables holds the  state
-     and value of the widgets. This is how the child process will  know
-     what is happening in the GUI called it.
+  1. All widget variables are exported as environment variables so the
+     command can read the current state of the dialog.
 
-  2. Next the include file is checked. If the gtkdialog started  with
-     the `-i FILE' option gtkdialog will ask the  subshell to include
-     the FILE before the execution of command.
+  2. If gtkdialog3 was started with the ‘-i FILE’ option, that file is
+     sourced by the subshell first, making its functions available to
+     the command.
 
-     This strange method is needed for the action driven programs, where
-     the subshell have to load the shell functions from the calling
-     script.
+  3. The command runs and gtkdialog3 waits for it to finish.  Append ‘&’
+     to the command to run it in the background without waiting.
 
-  3. At the third step gtkdialog starts the command and waits for  it
-     to complete. (Commands usually can be run in the background by
-     writing a `&' as last character, so the subshell will not wait
-     the program to complete.)
-
-6.1.2 Exit dialog
------------------
-
-The `Exit:VALUE' command exits `gtkdialog' immediately. The VALUE will
-be printed to standard output as the value of the variable named EXIT.
+From ‘examples/button/button_action_functions’:
+     <button>
+         <label>exit</label>
+         <action>echo You pressed the exit button</action>
+         <action function="exit">Exit by button</action>
+     </button>
 
 
-File: gtkdialog.info,  Node: Widget manipulation,  Prev: Start and exit,  Up: Actions
+File: gtkdialog.info,  Node: exit,  Next: launch,  Prev: Shell commands,  Up: Actions
 
-6.2 Widget manipulation
-=======================
+7.2 ‘exit:VALUE’
+================
 
-6.2.1 `Closewindow:NAME'
-------------------------
+Closes the dialog immediately.  All widget variables are printed to
+standard output, followed by ‘EXIT="VALUE"’.  The calling script can
+evaluate this output to find out which button or action caused the
+dialog to close.
 
-The command closes the named window opened by the `Launch:' command.
-The program remain active if there are more windows active.
+From ‘examples/button/button_action_functions’:
+     <button>
+         <label>exit</label>
+         <action>echo You pressed the exit button</action>
+         <action function="exit">Exit by button</action>
+     </button>
 
-6.2.2 `Launch:NAME'
--------------------
+
+File: gtkdialog.info,  Node: launch,  Next: closewindow,  Prev: exit,  Up: Actions
 
-The command opens a new window using the environment variable `Widget'.
+7.3 ‘launch:NAME’
+=================
 
-6.2.3 `Disable:NAME'
---------------------
+Opens a new window whose definition is stored in the environment
+variable NAME.  If a window with that variable name already exists, it
+is brought to the front instead of creating a duplicate.  The target
+window must be defined in a separate exported shell variable containing
+a ‘<window>’ element.
 
-The command disables the given widget if it is enabled. If the widget
-is disabled when the command is activated, nothing happens.
+From ‘examples/languages/bash_script_multi_window’:
+     <button>
+         <label>launch winLaunch1</label>
+         <action function="launch">winLaunch1</action>
+     </button>
 
-   The disabled widgets are insensitive to user actions, their shapes
-are indicating they are temporary unavailable.
+
+File: gtkdialog.info,  Node: closewindow,  Next: presentwindow,  Prev: launch,  Up: Actions
 
-6.2.4 `Enable:NAME'
--------------------
+7.4 ‘closewindow:NAME’
+======================
 
-The command enables the given widget if it is diabled. If the widget is
-enabled nothing happens.
+Closes the window identified by NAME.  All variables belonging to that
+window are removed.  If other windows remain open, the program continues
+running; if this was the last window, the program exits and prints all
+remaining variables.
 
-6.2.5 `Refresh:NAME'
---------------------
+From ‘examples/languages/bash_script_multi_window’:
+     <button>
+         <label>closewindow winLaunch1</label>
+         <action function="closewindow">winLaunch1</action>
+     </button>
 
-The command refresh the named widget. If the widget have one or more
-input actions, they will be called by `gtkdialog'.
+
+File: gtkdialog.info,  Node: presentwindow,  Next: enable,  Prev: closewindow,  Up: Actions
 
-6.2.6 `Save:NAME'
+7.5 ‘presentwindow:NAME’
+========================
+
+Brings the named window to the front and gives it keyboard focus.
+Unlike ‘launch:’, this does not create a new window -- it only raises an
+existing one.  Useful when you have multiple windows open and want to
+direct the user's attention to a specific one.
+
+From ‘examples/miscellaneous/presentwindow’:
+     <button>
+         <label>presentwindow winLaunch1</label>
+         <action function="presentwindow">winLaunch1</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: enable,  Next: disable,  Prev: presentwindow,  Up: Actions
+
+7.6 ‘enable:NAME’
+=================
+
+Makes the named widget interactive again after it has been disabled.  If
+the widget is already enabled, nothing happens.  Works on any widget
+type.
+
+From ‘examples/button/button_action_functions’:
+     <button>
+         <label>enable</label>
+         <action function="enable">ENTRY</action>
+         <action function="enable">CHECKBOX</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: disable,  Next: show,  Prev: enable,  Up: Actions
+
+7.7 ‘disable:NAME’
+==================
+
+Greys out the named widget and prevents all user interaction with it.
+If the widget is already disabled, nothing happens.  Works on any widget
+type.
+
+From ‘examples/button/button_action_functions’:
+     <button>
+         <label>disable</label>
+         <action function="disable">ENTRY</action>
+         <action function="disable">CHECKBOX</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: show,  Next: hide,  Prev: disable,  Up: Actions
+
+7.8 ‘show:NAME’
+===============
+
+Makes the named widget visible.  If the widget is inside a scrolled
+container, the container is also shown so the widget actually appears on
+screen.
+
+   Typically used together with ‘hide:’ and conditional prefixes to
+toggle parts of the interface:
+
+From ‘examples/miscellaneous/show_and_hide’:
+     <togglebutton active="true">
+         <label>button</label>
+         <action>if true show:btnExample</action>
+         <action>if false hide:btnExample</action>
+     </togglebutton>
+
+
+File: gtkdialog.info,  Node: hide,  Next: activate,  Prev: show,  Up: Actions
+
+7.9 ‘hide:NAME’
+===============
+
+Makes the named widget invisible.  The widget still exists and keeps its
+value, but it is removed from the visible layout.  If the widget is
+inside a scrolled container, the container is also hidden.
+
+From ‘examples/miscellaneous/show_and_hide’:
+     <menuitem checkbox="true" label="vbox Left">
+         <action>if true show:vbxLeft</action>
+         <action>if false hide:vbxLeft</action>
+     </menuitem>
+
+
+File: gtkdialog.info,  Node: activate,  Next: grabfocus,  Prev: hide,  Up: Actions
+
+7.10 ‘activate:NAME’
+====================
+
+Simulates the default activation of the named widget -- clicking a
+button, toggling a checkbox, pressing Enter in an entry, and so on.
+This triggers the widget's own action chain as if the user had
+interacted with it directly.
+
+From ‘examples/miscellaneous/activate’:
+     <button>
+         <label>Activate everything else</label>
+         <action function="activate">button</action>
+         <action function="activate">checkbox</action>
+         <action function="activate">entry</action>
+         <action function="activate">togglebutton</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: grabfocus,  Next: refresh,  Prev: activate,  Up: Actions
+
+7.11 ‘grabfocus:NAME’
+=====================
+
+Gives keyboard focus to the named widget.  After this action, keyboard
+input goes to the target widget.  Useful for directing the user to a
+specific entry field or text editor after an event.
+
+From ‘examples/miscellaneous/grabfocus’:
+     <button>
+         <label>entry</label>
+         <action>grabfocus:entEntry</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: refresh,  Next: save,  Prev: grabfocus,  Up: Actions
+
+7.12 ‘refresh:NAME’
+===================
+
+Reloads the content of the named widget from its data source.  If the
+widget has an ‘<input>’ or ‘<input file>’ directive, it is re-evaluated
+and the widget is updated with the new data.  All widget variables are
+exported before the refresh, so input commands can access the current
+state of the dialog.
+
+From ‘examples/checkbox/checkbox_conditional_refreshing’:
+     <checkbox sensitive="false">
+         <variable>chkCheck</variable>
+         <input file>/tmp/inputdir/chkCheck</input>
+         <action>refresh:txt0</action>
+         <action>refresh:txt1</action>
+     </checkbox>
+
+
+File: gtkdialog.info,  Node: save,  Next: fileselect,  Prev: refresh,  Up: Actions
+
+7.13 ‘save:NAME’
+================
+
+Writes the current value of the named widget to the file specified by
+its ‘<output file>’ attribute.  Works on most widget types including
+entries, text editors, checkboxes, comboboxes, scales, and spinbuttons.
+
+From ‘examples/edit/edit_actions’:
+     <button>
+         <label>Save</label>
+         <action function="save">EDITOR</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: fileselect,  Next: clear,  Prev: save,  Up: Actions
+
+7.14 ‘fileselect:NAME’
+======================
+
+Opens a file chooser dialog and places the selected path into the named
+widget (typically an entry).  The file chooser's behaviour is controlled
+by tag attributes on the target widget:
+
+‘fs-action’
+     The type of selection: ‘file’, ‘newfile’, ‘folder’, or ‘newfolder’.
+‘fs-title’
+     The title of the file chooser dialog.
+‘fs-folder’
+     The initial directory shown.
+‘fs-filters’
+     Pipe-separated file glob patterns, e.g. ‘*.txt|*.html’.
+‘fs-filters-mime’
+     Pipe-separated MIME types, e.g. ‘text/plain|text/html’.
+
+From ‘examples/miscellaneous/fileselect_advanced’:
+     <entry fs-action="file" fs-folder="/usr/share/doc"
+         fs-filters="*.txt|*.html"
+         fs-title="Select an existing file">
+         <variable>ent1</variable>
+     </entry>
+     <button>
+         <input file stock="gtk-new"></input>
+         <action>fileselect:ent1</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: clear,  Next: removeselected,  Prev: fileselect,  Up: Actions
+
+7.15 ‘clear:NAME’
+=================
+
+Removes all content from the named widget.  For text editors and entries
+this clears the text; for lists, trees, and tables this removes all
+rows; for comboboxes this removes all items.
+
+From ‘examples/edit/edit_actions’:
+     <button>
+         <label>Clear</label>
+         <action function="clear">EDITOR</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: removeselected,  Next: break,  Prev: clear,  Up: Actions
+
+7.16 ‘removeselected:NAME’
+==========================
+
+Removes the currently selected item from the named widget.  Most
+commonly used with list, tree, and table widgets to let the user delete
+individual rows.  For text editors, it removes the selected text range.
+
+From ‘examples/tree/tree_insert’:
+     <button>
+         <input file stock="gtk-remove"></input>
+         <action function="removeselected">TREE</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: break,  Next: insert,  Prev: removeselected,  Up: Actions
+
+7.17 ‘break’
+============
+
+Stops executing the remaining actions in the current action chain.
+Actions listed before the ‘break’ run normally; actions listed after it
+are skipped.  Typically used with a ‘condition’ attribute to
+conditionally stop the chain.
+
+From ‘examples/miscellaneous/break’:
+     <button label="Break">
+         <action>echo This action is above the break</action>
+         <action condition="active_is_true(CHECKBOX)"
+                 function="break">""</action>
+         <action>echo This action is below the break</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: insert,  Next: append,  Prev: break,  Up: Actions
+
+7.18 ‘insert:SOURCE,TARGET’
+===========================
+
+Takes the value from the SOURCE widget and inserts it into the TARGET
+widget.  For list and tree widgets, a new row is added.  For entry
+widgets, the text is set.  For edit widgets, the text is inserted at the
+cursor position.
+
+From ‘examples/tree/tree_insert’:
+     <entry>
+         <variable>ENTRY</variable>
+     </entry>
+     <button>
+         <input file stock="gtk-add"></input>
+         <action function="insert">ENTRY,TREE</action>
+     </button>
+
+
+File: gtkdialog.info,  Node: append,  Next: Clipboard actions,  Prev: insert,  Up: Actions
+
+7.19 ‘append:SOURCE,TARGET’
+===========================
+
+Works the same way as ‘insert:’ -- takes the value from SOURCE and adds
+it to TARGET.  Both ‘insert:’ and ‘append:’ add new rows to list and
+tree widgets and set text in entry and edit widgets.
+
+
+File: gtkdialog.info,  Node: Clipboard actions,  Prev: append,  Up: Actions
+
+7.20 Clipboard actions
+======================
+
+The following four actions operate on text editor (‘<edit>’) widgets and
+use the system clipboard.
+
+7.20.1 ‘cut:NAME’
 -----------------
 
-Some widgets can hold much data. (Currently only the edit widget
-capable to perform this action.)
+Cuts the selected text from the named editor to the clipboard.
 
-   The `Save:' action will save the data found in the named widget to
-the filename found in `<output file>' attribute.
+7.20.2 ‘copy:NAME’
+------------------
 
-   FIXME: This function is not working now, need to be fixed.
+Copies the selected text from the named editor to the clipboard without
+removing it.
 
-6.2.7 `Fileselect:WIDGET'
--------------------------
+7.20.3 ‘paste:NAME’
+-------------------
 
-6.2.8 `Clear:WIDGET'
---------------------
+Pastes the clipboard contents into the named editor at the cursor
+position.
 
-6.2.9 `RemoveSelected:WIDGET'
------------------------------
+7.20.4 ‘selectall:NAME’
+-----------------------
+
+Selects all text in the named editor.
+
+From ‘examples/edit/edit_actions’:
+     <button>
+         <label>Select All</label>
+         <action function="selectall">EDITOR</action>
+     </button>
+     <button>
+         <label>Cut</label>
+         <action function="cut">EDITOR</action>
+     </button>
+     <button>
+         <label>Copy</label>
+         <action function="copy">EDITOR</action>
+     </button>
+     <button>
+         <label>Paste</label>
+         <action function="paste">EDITOR</action>
+     </button>
 
 
 
 Tag Table:
-Node: Top659
-Node: Getting Gtkdialog1755
-Node: Introduction3006
-Node: Invoking the Program3502
-Node: Widgets6158
-Node: Static label7186
-Node: Pushbutton7490
-Node: Pre-defined pushbuttons9347
-Node: Entry9942
-Node: Checkbox10872
-Node: Pixmap12564
-Node: Menus13213
-Node: Trees14021
-Node: Containers15003
-Node: Actions15115
-Node: Start and exit15803
-Node: Widget manipulation17162
+Node: Top638
+Node: Getting Gtkdialog1775
+Node: Introduction3041
+Node: The Description Language3554
+Node: Backslash escaping4637
+Node: Space in tag names5409
+Node: Imperative constructs6088
+Node: Implicit window element7291
+Node: Unsupported XML features8089
+Node: Invoking the Program8780
+Node: Command-line options9755
+Node: Environment variable11822
+Node: Capturing output12814
+Node: Output formats13614
+Node: Reading from a file14843
+Node: Standard input15765
+Node: Including function libraries16209
+Node: Multiple windows16895
+Node: Layout options18226
+Node: Window placement18990
+Node: Widgets19490
+Node: text21987
+Node: button22525
+Node: entry24045
+Node: checkbox24714
+Node: radiobutton25548
+Node: togglebutton26524
+Node: switch27313
+Node: combobox28074
+Node: comboboxtext28739
+Node: comboboxentry29577
+Node: list30525
+Node: table31267
+Node: tree32767
+Node: edit33566
+Node: pixmap34378
+Node: hscale and vscale34975
+Node: spinbutton35853
+Node: colorbutton36572
+Node: fontbutton37387
+Node: progressbar38091
+Node: statusbar38845
+Node: timer39546
+Node: hseparator and vseparator40535
+Node: menubar40983
+Node: terminal42008
+Node: sourceview43005
+Node: webview44205
+Node: Containers44922
+Node: vbox and hbox45506
+Node: frame46470
+Node: notebook46977
+Node: eventbox47848
+Node: expander48560
+Node: buttonbox49341
+Node: window50027
+Node: Actions50782
+Node: Shell commands52495
+Node: exit53467
+Node: launch54048
+Node: closewindow54662
+Node: presentwindow55238
+Node: enable55839
+Node: disable56336
+Node: show56830
+Node: hide57438
+Node: activate57969
+Node: grabfocus58672
+Node: refresh59153
+Node: save59879
+Node: fileselect60367
+Node: clear61429
+Node: removeselected61900
+Node: break62432
+Node: insert63101
+Node: append63704
+Node: Clipboard actions64066
 
 End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:
