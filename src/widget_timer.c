@@ -53,11 +53,9 @@ gboolean widget_timer_timer_callback(gpointer data);
 void widget_timer_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -68,7 +66,6 @@ GtkWidget *widget_timer_create(
 {
 	GtkWidget        *widget;
 
-	GDG_DEBUG("Entering.");
 
 	widget = gtk_label_new("");
 
@@ -84,7 +81,6 @@ GtkWidget *widget_timer_create(
 	 * These things are accomplished in the refresh function which is
 	 * called next */
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -97,11 +93,9 @@ gchar *widget_timer_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -114,7 +108,6 @@ gchar *widget_timer_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 #if GTK_CHECK_VERSION(2,18,0)
 	if (gtk_widget_get_sensitive(widget))
@@ -127,7 +120,6 @@ gchar *widget_timer_envvar_construct(GtkWidget *widget)
 		string = g_strdup("false");
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -140,11 +132,9 @@ void widget_timer_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -161,7 +151,6 @@ void widget_timer_refresh(variable *var)
 	guint             interval = 1;
 	guint             timer_id;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -241,7 +230,6 @@ void widget_timer_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -251,12 +239,10 @@ void widget_timer_refresh(variable *var)
 void widget_timer_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -266,11 +252,9 @@ void widget_timer_removeselected(variable *var)
 void widget_timer_save(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -284,7 +268,6 @@ static void widget_timer_input_by_command(variable *var, char *command)
 	gint              count;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -314,7 +297,6 @@ static void widget_timer_input_by_command(variable *var, char *command)
 			command);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -328,7 +310,6 @@ static void widget_timer_input_by_file(variable *var, char *filename)
 	gint              count;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
@@ -355,7 +336,6 @@ static void widget_timer_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -365,11 +345,9 @@ static void widget_timer_input_by_file(variable *var, char *filename)
 static void widget_timer_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -382,7 +360,6 @@ gboolean widget_timer_timer_callback(gpointer data)
 	G_GNUC_UNUSED GList *element;
 	variable         *var = (variable*)data;
 
-	GDG_DEBUG("Entering.");
 
 	if (var && var->Widget) {
 
@@ -406,7 +383,6 @@ gboolean widget_timer_timer_callback(gpointer data)
 		retval = FALSE;
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return retval;
 }

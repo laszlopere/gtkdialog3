@@ -46,13 +46,11 @@ static void widget_edit_input_by_items(variable *var);
 void widget_edit_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	gtk_text_buffer_set_text(gtk_text_view_get_buffer(
 		GTK_TEXT_VIEW(var->Widget)), "", 0);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -64,7 +62,6 @@ GtkWidget *widget_edit_create(
 {
 	GtkWidget        *widget;
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 #if GTK_CHECK_VERSION(2, 4, 0)
@@ -79,7 +76,6 @@ GtkWidget *widget_edit_create(
 
 #endif
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -92,13 +88,11 @@ gchar *widget_edit_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -113,7 +107,6 @@ gchar *widget_edit_envvar_construct(GtkWidget *widget)
 	GtkTextIter       start, end;		
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
@@ -122,7 +115,6 @@ gchar *widget_edit_envvar_construct(GtkWidget *widget)
 	/* This function returns an allocated string so no need to strdup */
 	string = gtk_text_buffer_get_text(text_buffer, &start, &end, TRUE);
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -135,11 +127,9 @@ void widget_edit_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -153,7 +143,6 @@ void widget_edit_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -201,7 +190,6 @@ void widget_edit_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -211,13 +199,11 @@ void widget_edit_refresh(variable *var)
 void widget_edit_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	gtk_text_buffer_delete_selection(gtk_text_view_get_buffer(
 		GTK_TEXT_VIEW(var->Widget)), FALSE, TRUE);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -234,7 +220,6 @@ void widget_edit_save(variable *var)
 	gchar            *filename = NULL;
 	gchar            *text;
 
-	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -268,7 +253,6 @@ void widget_edit_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -278,11 +262,9 @@ void widget_edit_save(variable *var)
 static void widget_edit_input_by_command(variable *var, char *command)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -297,7 +279,6 @@ static void widget_edit_input_by_file(variable *var, char *filename)
 	ssize_t           bytes_read;
 	struct stat       st;
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is restructured original code moved across when refactoring */
 	if (stat(filename, &st) == 0) {
@@ -326,7 +307,6 @@ static void widget_edit_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -336,9 +316,7 @@ static void widget_edit_input_by_file(variable *var, char *filename)
 static void widget_edit_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }

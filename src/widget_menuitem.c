@@ -56,11 +56,9 @@ static void widget_menuitem_input_by_items(variable *var);
 void widget_menuitem_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -77,7 +75,6 @@ GtkWidget *widget_menu_create(
 	gint              n;
 	stackelement      s;
 
-	GDG_DEBUG("Entering.");
 
 	/* Create the menu shell */
 	menu = gtk_menu_new();
@@ -112,7 +109,6 @@ GtkWidget *widget_menu_create(
 	/* This widget has one or more children which require registering */
 	widget_visibility_list_add(menu, attr);
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -138,7 +134,6 @@ GtkWidget *widget_menuitem_create(
 	gint              menuitemtype = TYPE_MENUITEM;
 	guint             accel_key = 0, accel_mods = 0, custom_accel = 0;
 
-	GDG_DEBUG("Entering.");
 
 	/* We need to decode exactly what it is the user is trying to create
 	 * and then make the right widget.
@@ -379,7 +374,6 @@ GtkWidget *widget_menuitem_create(
 		gtk_menu_item_set_accel_path(GTK_MENU_ITEM(widget), accel_path);
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -392,13 +386,11 @@ gchar *widget_menuitem_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -411,7 +403,6 @@ gchar *widget_menuitem_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(widget)) {
@@ -424,7 +415,6 @@ gchar *widget_menuitem_envvar_construct(GtkWidget *widget)
 		string = g_strdup("");
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -437,11 +427,9 @@ void widget_menuitem_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -455,7 +443,6 @@ void widget_menuitem_refresh(variable *var)
 	gchar            *value, *image_name;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -548,7 +535,6 @@ void widget_menuitem_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -558,12 +544,10 @@ void widget_menuitem_refresh(variable *var)
 void widget_menuitem_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -578,7 +562,6 @@ void widget_menuitem_save(variable *var)
 	gchar            *filename = NULL;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
@@ -618,7 +601,6 @@ void widget_menuitem_save(variable *var)
 			__func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -631,7 +613,6 @@ static void widget_menuitem_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count, is_active;
 
-	GDG_DEBUG("Entering.");
 
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
@@ -668,7 +649,6 @@ static void widget_menuitem_input_by_command(variable *var, char *command)
 			__func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -681,7 +661,6 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 	gint              count, is_active;
 
-	GDG_DEBUG("Entering.");
 
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
@@ -717,7 +696,6 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 			__func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -727,9 +705,7 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 static void widget_menuitem_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }

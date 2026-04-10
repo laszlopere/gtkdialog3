@@ -59,12 +59,10 @@ void widget_table_clear(variable *var)
 {
 	GtkTreeModel     *model;
 
-	GDG_DEBUG("Entering.");
 
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
 	gtk_list_store_clear(GTK_LIST_STORE(model));
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -86,7 +84,6 @@ GtkWidget *widget_table_create(
 	gint              sort_function;
 	list_t           *sliced = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	/* Determine column count and titles from label attribute */
 	if (attributeset_is_avail(Attr, ATTR_LABEL)) {
@@ -207,7 +204,6 @@ GtkWidget *widget_table_create(
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -228,7 +224,6 @@ gchar *widget_table_envvar_all_construct(variable *var)
 	gint              row = 0;
 	gboolean          valid;
 
-	GDG_DEBUG("Entering.");
 
 	/* Which column should we export */
 	if (var->widget_tag_attr) {
@@ -256,7 +251,6 @@ gchar *widget_table_envvar_all_construct(variable *var)
 	string = g_strconcat(line, "\"\n", NULL);
 	g_free(line);
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -280,7 +274,6 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 	GList            *selected_rows, *node;
 	variable         *var = find_variable_by_widget(widget);
 
-	GDG_DEBUG("Entering.");
 
 	if (var->widget_tag_attr) {
 		/* Get current selection-mode */
@@ -330,7 +323,6 @@ gchar *widget_table_envvar_construct(GtkWidget *widget)
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -343,11 +335,9 @@ void widget_table_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -363,7 +353,6 @@ void widget_table_refresh(variable *var)
 	gint              initialised = FALSE;
 	gint              selected_row;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -444,7 +433,6 @@ void widget_table_refresh(variable *var)
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -460,7 +448,6 @@ void widget_table_removeselected(variable *var)
 	gint              selectionmode = GTK_SELECTION_SINGLE;
 	GList            *selected_rows, *node, *row_refs = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	if (var->widget_tag_attr) {
 		/* Get current selection-mode */
@@ -505,7 +492,6 @@ void widget_table_removeselected(variable *var)
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -527,7 +513,6 @@ void widget_table_save(variable *var)
 	gint              row = 0;
 	gboolean          valid;
 
-	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -584,7 +569,6 @@ void widget_table_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -604,7 +588,6 @@ static void widget_table_input_by_command(variable *var, char *filename,
 	gint              n_columns;
 	list_t           *sliced;
 
-	GDG_DEBUG("Entering.");
 
 	if (command_or_file) {
 		infile = widget_opencommand(filename);
@@ -643,7 +626,6 @@ static void widget_table_input_by_command(variable *var, char *filename,
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -652,11 +634,9 @@ static void widget_table_input_by_command(variable *var, char *filename,
 
 static void widget_table_input_by_file(variable *var, char *filename)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_table_input_by_command(var, filename, FALSE);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -674,7 +654,6 @@ static void widget_table_input_by_items(variable *var)
 	gint              n_columns;
 	list_t           *sliced;
 
-	GDG_DEBUG("Entering.");
 
 	g_assert(var->Attributes != NULL && var->Widget != NULL);
 
@@ -697,7 +676,6 @@ static void widget_table_input_by_items(variable *var)
 		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -725,7 +703,6 @@ static void widget_table_click_column_callback(GtkTreeViewColumn *tvcol,
 	GtkSortType       sort_type;
 	gint              current_sort_col;
 
-	GDG_DEBUG("Entering.");
 
 	column = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(tvcol), "_column-index"));
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
@@ -758,7 +735,6 @@ static void widget_table_click_column_callback(GtkTreeViewColumn *tvcol,
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model),
 		column, sort_type);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -768,14 +744,12 @@ static void widget_table_click_column_callback(GtkTreeViewColumn *tvcol,
 gboolean widget_table_changed_callback(GtkTreeSelection *treeselection,
 	variable *var)
 {
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("treeselection=%p var->Widget=%p", treeselection, var->Widget);
 
 	/* Pass the correct var->Widget which will be the GtkTreeView */
 	on_any_widget_changed_event(var->Widget, var->Attributes);
 
-	GDG_DEBUG("Exiting.");
 
 	return TRUE;
 }
@@ -803,7 +777,6 @@ static gint _widget_table_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 	gchar            *r2 = NULL;
 	gint              retval;
 
-	GDG_DEBUG("Entering.");
 
 	gtk_tree_model_get(model, a, GPOINTER_TO_INT(user_data), &r1, -1);
 	gtk_tree_model_get(model, b, GPOINTER_TO_INT(user_data), &r2, -1);
@@ -815,7 +788,6 @@ static gint _widget_table_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 	g_free(r1);
 	g_free(r2);
 
-	GDG_DEBUG("Exiting.");
 
 	return retval;
 }

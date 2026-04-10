@@ -47,7 +47,6 @@ void widget_combobox_clear(variable *var)
 	GtkTreeModel     *model;
 	gint              n_items, i;
 
-	GDG_DEBUG("Entering.");
 
 	/* Remove all items from the combo box text model */
 	model = gtk_combo_box_get_model(GTK_COMBO_BOX(var->Widget));
@@ -58,7 +57,6 @@ void widget_combobox_clear(variable *var)
 	/* Clear the entry */
 	gtk_entry_set_text(GTK_ENTRY(gtk_bin_get_child(GTK_BIN(var->Widget))), "");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -70,11 +68,9 @@ GtkWidget *widget_combobox_create(
 {
 	GtkWidget        *widget;
 
-	GDG_DEBUG("Entering.");
 
 	widget = gtk_combo_box_text_new_with_entry();
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -87,13 +83,11 @@ gchar *widget_combobox_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -107,12 +101,10 @@ gchar *widget_combobox_envvar_construct(GtkWidget *widget)
 	gchar            *string;
 	gchar            *text;
 
-	GDG_DEBUG("Entering.");
 
 	text = (gchar*)gtk_entry_get_text(GTK_ENTRY(gtk_bin_get_child(GTK_BIN(widget))));
 	string = g_strdup(text);
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -125,11 +117,9 @@ void widget_combobox_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -142,7 +132,6 @@ void widget_combobox_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -189,7 +178,6 @@ void widget_combobox_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -199,12 +187,10 @@ void widget_combobox_refresh(variable *var)
 void widget_combobox_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -214,11 +200,9 @@ void widget_combobox_removeselected(variable *var)
 void widget_combobox_save(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -231,7 +215,6 @@ static void widget_combobox_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -253,7 +236,6 @@ static void widget_combobox_input_by_command(variable *var, char *command)
 			command);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -266,7 +248,6 @@ static void widget_combobox_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 	gint              count;
 
-	GDG_DEBUG("Entering.");
 
 	if ((infile = fopen(filename, "r"))) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
@@ -285,7 +266,6 @@ static void widget_combobox_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -297,7 +277,6 @@ static void widget_combobox_input_by_items(variable *var)
 	GList            *element;
 	gchar            *text;
 
-	GDG_DEBUG("Entering.");
 
 	g_assert(var->Attributes != NULL && var->Widget != NULL);
 
@@ -310,5 +289,4 @@ static void widget_combobox_input_by_items(variable *var)
 		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
 
-	GDG_DEBUG("Exiting.");
 }

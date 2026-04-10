@@ -46,11 +46,9 @@ static void widget_eventbox_input_by_items(variable *var);
 void widget_eventbox_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -62,7 +60,6 @@ GtkWidget *widget_eventbox_create(
 	GtkWidget        *widget;
 	stackelement      s;
 
-	GDG_DEBUG("Entering.");
 
 	/* Create the eventbox widget */
 	widget = gtk_event_box_new();
@@ -71,7 +68,6 @@ GtkWidget *widget_eventbox_create(
 	s = pop();
 	gtk_container_add(GTK_CONTAINER(widget), s.widgets[0]);
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -84,13 +80,11 @@ gchar *widget_eventbox_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -103,11 +97,9 @@ gchar *widget_eventbox_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	string = g_strdup("");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -120,11 +112,9 @@ void widget_eventbox_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -136,7 +126,6 @@ void widget_eventbox_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -182,7 +171,6 @@ void widget_eventbox_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -192,12 +180,10 @@ void widget_eventbox_refresh(variable *var)
 void widget_eventbox_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -206,7 +192,6 @@ void widget_eventbox_removeselected(variable *var)
 
 void widget_eventbox_save(variable *var)
 {
-	GDG_DEBUG("Entering.");
 
 #if 0	/* Pointless since loading doesn't work at run-time */
 	FILE             *outfile;
@@ -258,7 +243,6 @@ void widget_eventbox_save(variable *var)
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -268,11 +252,9 @@ void widget_eventbox_save(variable *var)
 static void widget_eventbox_input_by_command(variable *var, char *command)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -281,7 +263,6 @@ static void widget_eventbox_input_by_command(variable *var, char *command)
 
 static void widget_eventbox_input_by_file(variable *var, char *filename)
 {
-	GDG_DEBUG("Entering.");
 
 #if 0	/* At run-time this has no effect -- shame */
 	FILE             *infile;
@@ -342,7 +323,6 @@ GDG_DEBUG("setting count=%i FALSE", count);
 
 	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -352,9 +332,7 @@ GDG_DEBUG("setting count=%i FALSE", count);
 static void widget_eventbox_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }

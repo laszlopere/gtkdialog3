@@ -46,11 +46,9 @@ static void widget_hscale_input_by_items(variable *var);
 void widget_hscale_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -67,7 +65,6 @@ GtkWidget *widget_hscale_create(
 	gdouble           range_value = 0;
 	gchar            *value;
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: These "range-*" names are consistent with the spinbutton widget */
 	if (attr) {
@@ -95,7 +92,6 @@ GtkWidget *widget_hscale_create(
 	}
 	gtk_range_set_value(GTK_RANGE(widget), range_value);
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -108,13 +104,11 @@ gchar *widget_hscale_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -130,7 +124,6 @@ gchar *widget_hscale_envvar_construct(GtkWidget *widget)
 	gdouble           val;
 	gint              digits;
 
-	GDG_DEBUG("Entering.");
 
 	digits = gtk_scale_get_digits(GTK_SCALE(widget));
 	val = gtk_range_get_value(GTK_RANGE(widget));
@@ -193,7 +186,6 @@ gchar *widget_hscale_envvar_construct(GtkWidget *widget)
 	}
 	string = g_strdup(value);
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -206,11 +198,9 @@ void widget_hscale_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -223,7 +213,6 @@ void widget_hscale_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -281,7 +270,6 @@ void widget_hscale_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -291,12 +279,10 @@ void widget_hscale_refresh(variable *var)
 void widget_hscale_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -312,7 +298,6 @@ void widget_hscale_save(variable *var)
 	gdouble           value;
 	guint             digits;
 
-	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -398,7 +383,6 @@ void widget_hscale_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -411,7 +395,6 @@ static void widget_hscale_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -435,7 +418,6 @@ static void widget_hscale_input_by_command(variable *var, char *command)
 			command);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -448,7 +430,6 @@ static void widget_hscale_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 	gint              count;
 
-	GDG_DEBUG("Entering.");
 
 	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
@@ -469,7 +450,6 @@ static void widget_hscale_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -483,7 +463,6 @@ static void widget_hscale_input_by_items(variable *var)
 	gdouble           value;
 	gint              position, count;
 
-	GDG_DEBUG("Entering.");
 
 #if GTK_CHECK_VERSION(2,16,0)
 
@@ -506,5 +485,4 @@ static void widget_hscale_input_by_items(variable *var)
 	}
 #endif
 
-	GDG_DEBUG("Exiting.");
 }

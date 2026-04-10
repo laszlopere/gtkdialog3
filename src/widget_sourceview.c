@@ -50,12 +50,10 @@ static void widget_sourceview_input_by_file(variable *var, char *filename);
 
 void widget_sourceview_clear(variable *var)
 {
-	GDG_DEBUG("Entering.");
 
 	gtk_text_buffer_set_text(gtk_text_view_get_buffer(
 		GTK_TEXT_VIEW(var->Widget)), "", 0);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -67,7 +65,6 @@ GtkWidget *widget_sourceview_create(
 {
 	GtkWidget        *widget;
 
-	GDG_DEBUG("Entering.");
 
 #if HAVE_GTKSOURCEVIEW
 	{
@@ -135,7 +132,6 @@ GtkWidget *widget_sourceview_create(
 	widget = gtk_label_new(GTKSOURCEVIEW_WARNING);
 #endif
 
-	GDG_DEBUG("Exiting.");
 	return widget;
 }
 
@@ -149,14 +145,12 @@ gchar *widget_sourceview_envvar_construct(GtkWidget *widget)
 	GtkTextIter       start, end;
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
 	gtk_text_buffer_get_start_iter(buffer, &start);
 	gtk_text_buffer_get_end_iter(buffer, &end);
 	string = gtk_text_buffer_get_text(buffer, &start, &end, TRUE);
 
-	GDG_DEBUG("Exiting.");
 	return string;
 }
 
@@ -167,9 +161,7 @@ gchar *widget_sourceview_envvar_construct(GtkWidget *widget)
 void widget_sourceview_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	GDG_DEBUG("Entering.");
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -183,7 +175,6 @@ void widget_sourceview_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -216,7 +207,6 @@ void widget_sourceview_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -225,10 +215,8 @@ void widget_sourceview_refresh(variable *var)
 
 void widget_sourceview_removeselected(variable *var)
 {
-	GDG_DEBUG("Entering.");
 	gtk_text_buffer_delete_selection(gtk_text_view_get_buffer(
 		GTK_TEXT_VIEW(var->Widget)), FALSE, TRUE);
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -245,7 +233,6 @@ void widget_sourceview_save(variable *var)
 	gchar            *filename = NULL;
 	gchar            *text;
 
-	GDG_DEBUG("Entering.");
 
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
@@ -272,7 +259,6 @@ void widget_sourceview_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -339,7 +325,6 @@ static void widget_sourceview_input_by_file(variable *var, char *filename)
 	ssize_t           bytes_read;
 	struct stat       st;
 
-	GDG_DEBUG("Entering.");
 
 	if (stat(filename, &st) == 0) {
 		filebuffer = g_malloc(st.st_size);
@@ -393,5 +378,4 @@ static void widget_sourceview_input_by_file(variable *var, char *filename)
 	}
 #endif
 
-	GDG_DEBUG("Exiting.");
 }

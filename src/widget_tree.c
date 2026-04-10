@@ -88,7 +88,6 @@ void widget_tree_clear(variable *var)
 {
 	GtkTreeModel     *model;
 
-	GDG_DEBUG("Entering.");
 
 	/* We drop all the lines here */
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
@@ -97,7 +96,6 @@ void widget_tree_clear(variable *var)
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model),
 		GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -123,7 +121,6 @@ GtkWidget *widget_tree_create(
 	GtkWidget         *widget;
 	gchar             *value;	
 
-	GDG_DEBUG("Entering.");
 
 	/* We need a label so set a default if one wasn't declared */
 	if (!attributeset_is_avail(Attr, ATTR_LABEL))
@@ -159,7 +156,6 @@ GtkWidget *widget_tree_create(
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -178,7 +174,6 @@ gchar *widget_tree_envvar_all_construct(variable *var)
 	gint              column;
 	gint              index;
 
-	GDG_DEBUG("Entering.");
 
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
 	gtk_tree_model_get_iter_first(model, &iter);
@@ -209,7 +204,6 @@ gchar *widget_tree_envvar_all_construct(variable *var)
 	string = g_strconcat(line, "\"\n", NULL);
 	g_free(line);
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -236,7 +230,6 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 	gint64             valint64;
 	guint64            valuint64;
 
-	GDG_DEBUG("Entering.");
 
 	/* Searching the selected row */
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
@@ -376,7 +369,6 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -389,11 +381,9 @@ void widget_tree_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -416,7 +406,6 @@ void widget_tree_refresh(variable *var)
 	gint              sort_column;
 	gint              sort_type;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get default icon from the custom tag attributes if available */
 	icon_name = stock_id = NULL;
@@ -572,7 +561,6 @@ void widget_tree_refresh(variable *var)
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -588,7 +576,6 @@ void widget_tree_removeselected(variable *var)
 	GtkTreeSelection  *selection;
 	gint               selectionmode;
 
-	GDG_DEBUG("Entering.");
 
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(var->Widget));
 	selectionmode = gtk_tree_selection_get_mode(selection);
@@ -641,7 +628,6 @@ void widget_tree_removeselected(variable *var)
 			gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -666,7 +652,6 @@ void widget_tree_save(variable *var)
 	gint64            valint64;
 	guint64           valuint64;
 
-	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -748,7 +733,6 @@ void widget_tree_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -770,7 +754,6 @@ static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr,
 	list_t           *columns = NULL;
 	list_t           *column_type = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	/* We create as many columns as the label tag suggests */
 	label = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
@@ -819,7 +802,6 @@ static GtkTreeStore *widget_tree_create_tree_store(AttributeSet *Attr,
 	if (columns) list_t_free(columns);
 	if (column_type) list_t_free(column_type);
 
-	GDG_DEBUG("Exiting.");
 
 	return treestore;
 }
@@ -844,7 +826,6 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 	list_t            *column_visible = NULL;
 	list_t            *columns = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	headline = g_strdup(attributeset_get_first(&element, Attr, ATTR_LABEL));
 	columns = linecutter(headline, '|');
@@ -948,7 +929,6 @@ sorting is compatible only with columns of type string.\n", __func__);
 	if (column_visible) list_t_free(column_visible);
 	if (columns) list_t_free(columns);
 
-	GDG_DEBUG("Exiting.");
 
 	return tree_view;
 }
@@ -973,7 +953,6 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 	gint              hiddencolumns;
 	gint              n, ncolumns;
 
-	GDG_DEBUG("Entering.");
 
 	if (command_or_file) {
 		infile = widget_opencommand(filename);
@@ -1079,7 +1058,6 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 			__func__, filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1088,11 +1066,9 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 
 static void widget_tree_input_by_file(variable *var, char *filename)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_tree_input_by_command(var, filename, FALSE);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1112,7 +1088,6 @@ static void widget_tree_input_by_items(variable *var)
 	gchar            *value;
 	gint              n, ncolumns;
 
-	GDG_DEBUG("Entering.");
 
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(var->Widget));
 
@@ -1191,7 +1166,6 @@ static void widget_tree_input_by_items(variable *var)
 		act = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1206,7 +1180,6 @@ static void widget_tree_pixmap_column_cell_layout_function(
 	gchar            *icon_name;
 	gchar            *stock_id;
 
-	GDG_DEBUG("Entering.");
 
 	gtk_tree_model_get(tree_model, iter, ColumnStockId, &stock_id,
 		ColumnIconName, &icon_name, -1);
@@ -1225,7 +1198,6 @@ static void widget_tree_pixmap_column_cell_layout_function(
 		g_object_set(G_OBJECT(cell), "icon-name", NULL, NULL);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1235,14 +1207,12 @@ static void widget_tree_pixmap_column_cell_layout_function(
 gboolean widget_tree_changed_callback(GtkTreeSelection *treeselection,
 	variable *var)
 {
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("treeselection=%p var->Widget=%p", treeselection, var->Widget);
 
 	/* Pass the correct var->Widget which will be the GtkTreeView */
 	on_any_widget_changed_event(var->Widget, var->Attributes);
 
-	GDG_DEBUG("Exiting.");
 
 	return TRUE;
 }
@@ -1270,7 +1240,6 @@ static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 	gchar            *r2 = NULL;
 	gint              retval;
 
-	GDG_DEBUG("Entering.");
 
 	gtk_tree_model_get(model, a, GPOINTER_TO_INT(user_data), &r1, -1);
 	gtk_tree_model_get(model, b, GPOINTER_TO_INT(user_data), &r2, -1);
@@ -1279,7 +1248,6 @@ static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 
 	retval = strnatcmp(r1, r2, sensitive);
 
-	GDG_DEBUG("Exiting.");
 
 	return retval;
 }

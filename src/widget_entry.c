@@ -46,12 +46,10 @@ static void widget_entry_input_by_items(variable *var);
 void widget_entry_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	gtk_entry_set_text(GTK_ENTRY(var->Widget), "");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -63,12 +61,10 @@ GtkWidget *widget_entry_create(
 {
 	GtkWidget        *widget;
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	widget = gtk_entry_new();
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -81,13 +77,11 @@ gchar *widget_entry_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -101,14 +95,12 @@ gchar *widget_entry_envvar_construct(GtkWidget *widget)
 	gchar            *string;
 	gchar            *text;
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	text = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget));
 
 	string = g_strdup(text);
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -121,12 +113,10 @@ void widget_entry_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	gtk_entry_set_text(GTK_ENTRY(var->Widget), value);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -139,7 +129,6 @@ void widget_entry_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -212,7 +201,6 @@ void widget_entry_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -222,12 +210,10 @@ void widget_entry_refresh(variable *var)
 void widget_entry_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	gtk_entry_set_text(GTK_ENTRY(var->Widget), "");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -242,7 +228,6 @@ void widget_entry_save(variable *var)
 	gchar            *filename = NULL;
 	const gchar      *text;
 
-	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -273,7 +258,6 @@ void widget_entry_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -286,7 +270,6 @@ static void widget_entry_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -311,7 +294,6 @@ static void widget_entry_input_by_command(variable *var, char *command)
 			command);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -324,7 +306,6 @@ static void widget_entry_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 	gint              count;
 
-	GDG_DEBUG("Entering.");
 
 	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
@@ -346,7 +327,6 @@ static void widget_entry_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -356,9 +336,7 @@ static void widget_entry_input_by_file(variable *var, char *filename)
 static void widget_entry_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }

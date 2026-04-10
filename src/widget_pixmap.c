@@ -47,11 +47,9 @@ static void widget_pixmap_input_by_items(variable *var);
 void widget_pixmap_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -75,7 +73,6 @@ GtkWidget *widget_pixmap_create(
 	gint              theme_icon_size = 32;
 	gint              stock_icon_size = GTK_ICON_SIZE_DND;
 
-	GDG_DEBUG("Entering.");
 
 	if (attributeset_is_avail(Attr, ATTR_HEIGHT))
 		height = atoi(attributeset_get_first(&element, Attr, ATTR_HEIGHT));
@@ -151,7 +148,6 @@ GtkWidget *widget_pixmap_create(
 		widget = gtk_image_new_from_file("");
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -164,11 +160,9 @@ gchar *widget_pixmap_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -181,11 +175,9 @@ gchar *widget_pixmap_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	string = g_strdup("");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -198,11 +190,9 @@ void widget_pixmap_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -215,7 +205,6 @@ void widget_pixmap_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -264,7 +253,6 @@ void widget_pixmap_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -274,12 +262,10 @@ void widget_pixmap_refresh(variable *var)
 void widget_pixmap_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -289,11 +275,9 @@ void widget_pixmap_removeselected(variable *var)
 void widget_pixmap_save(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -303,11 +287,9 @@ void widget_pixmap_save(variable *var)
 static void widget_pixmap_input_by_command(variable *var, char *command)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -320,7 +302,6 @@ static void widget_pixmap_input_by_file(variable *var, char *filename)
 	GList            *element;
 	gint              width = -1, height = -1;
 
-	GDG_DEBUG("Entering.");
 
 	if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 		width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
@@ -345,7 +326,6 @@ static void widget_pixmap_input_by_file(variable *var, char *filename)
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -355,9 +335,7 @@ static void widget_pixmap_input_by_file(variable *var, char *filename)
 static void widget_pixmap_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }

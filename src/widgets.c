@@ -580,7 +580,6 @@ static void on_any_widget_size_allocate_debug(
 
 gboolean widget_connect_signals(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	g_return_val_if_fail(GTK_IS_WIDGET(widget), FALSE);
 
@@ -621,7 +620,6 @@ gboolean widget_connect_signals(GtkWidget *widget, AttributeSet *Attr)
 		g_signal_connect(G_OBJECT(widget), "size-allocate",
 			G_CALLBACK(on_any_widget_size_allocate_debug), NULL);
 
-	GDG_DEBUG("Exiting.");
 
 	return TRUE;
 }
@@ -636,7 +634,6 @@ void widget_visibility_list_add(GtkWidget *widget, tag_attr *attr)
 	gchar            *value;
 	gint              visible = TRUE;
 
-	GDG_DEBUG("Entering.");
 
 	if (widget) {
 		if (attr) {
@@ -655,7 +652,6 @@ void widget_visibility_list_add(GtkWidget *widget, tag_attr *attr)
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -673,7 +669,6 @@ void widget_show_all(void)
 {
 	GList            *element;
 
-	GDG_DEBUG("Entering.");
 
 	/* Show visible widgets */
 	if (widget_show_list) {
@@ -704,5 +699,4 @@ void widget_show_all(void)
 		widget_hide_list = NULL;
 	}
 
-	GDG_DEBUG("Exiting.");
 }

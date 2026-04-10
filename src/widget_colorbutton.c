@@ -45,11 +45,9 @@ static void widget_colorbutton_input_by_items(variable *var);
 void widget_colorbutton_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -60,11 +58,9 @@ GtkWidget *widget_colorbutton_create(
 {
 	GtkWidget        *widget;
 
-	GDG_DEBUG("Entering.");
 
 	widget = gtk_color_button_new();
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -77,11 +73,9 @@ gchar *widget_colorbutton_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -96,7 +90,6 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 	gchar             envvar[32];
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(widget), &color);
 
@@ -120,7 +113,6 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 
 	string = g_strdup(envvar);
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -133,11 +125,9 @@ void widget_colorbutton_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -152,7 +142,6 @@ void widget_colorbutton_refresh(variable *var)
 	guint             alpha;
 	list_t           *values = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -227,7 +216,6 @@ void widget_colorbutton_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -237,12 +225,10 @@ void widget_colorbutton_refresh(variable *var)
 void widget_colorbutton_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -257,7 +243,6 @@ void widget_colorbutton_save(variable *var)
 	gchar            *act;
 	gchar            *filename = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -297,7 +282,6 @@ void widget_colorbutton_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -313,7 +297,6 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 	gint              count;
 	guint             alpha;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -354,7 +337,6 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 			command);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -370,7 +352,6 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 	gint              count;
 	guint             alpha;
 
-	GDG_DEBUG("Entering.");
 
 	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
@@ -408,7 +389,6 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -418,9 +398,7 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 static void widget_colorbutton_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }

@@ -55,7 +55,6 @@ static void widget_window_fix_size(GtkWidget *window, gpointer data);
 void widget_window_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	/* Well, it can't be null because something changes it to
 	 * "Unnamed Window", and since the default is PACKAGE when
@@ -63,7 +62,6 @@ void widget_window_clear(variable *var)
 
 	gtk_window_set_title(GTK_WINDOW(var->Widget), PACKAGE);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -80,7 +78,6 @@ GtkWidget *widget_window_create(
 	GtkWidget        *widget;
 	stackelement      s;
 
-	GDG_DEBUG("Entering.");
 
 	/* Create the window widget */
 	widget = gtk_window_new(GTK_WINDOW_TOPLEVEL);  
@@ -144,7 +141,6 @@ GtkWidget *widget_window_create(
 		accel_groups = NULL;
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -157,13 +153,11 @@ gchar *widget_window_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -176,7 +170,6 @@ gchar *widget_window_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: Variables are exported before a window is launched which
 	 * can be a problem if launching from a launched window because
@@ -190,7 +183,6 @@ gchar *widget_window_envvar_construct(GtkWidget *widget)
 	 * string = g_strdup(gtk_window_get_title(GTK_WINDOW(widget))); */
 	string = NULL;
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -203,11 +195,9 @@ void widget_window_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -219,7 +209,6 @@ void widget_window_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -269,7 +258,6 @@ void widget_window_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -279,12 +267,10 @@ void widget_window_refresh(variable *var)
 void widget_window_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -298,7 +284,6 @@ void widget_window_save(variable *var)
 	gchar            *act;
 	gchar            *filename = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -325,7 +310,6 @@ void widget_window_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -338,7 +322,6 @@ static void widget_window_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -362,7 +345,6 @@ static void widget_window_input_by_command(variable *var, char *command)
 			command);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -375,7 +357,6 @@ static void widget_window_input_by_file(variable *var, char *filename)
 	gchar             line[512];
 	gint              count;
 
-	GDG_DEBUG("Entering.");
 
 	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
@@ -396,7 +377,6 @@ static void widget_window_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -406,11 +386,9 @@ static void widget_window_input_by_file(variable *var, char *filename)
 static void widget_window_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************

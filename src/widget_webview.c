@@ -50,7 +50,6 @@ GtkWidget *widget_webview_create(
 	gchar            *value;
 #endif
 
-	GDG_DEBUG("Entering.");
 
 #if HAVE_WEBKIT
 	widget = webkit_web_view_new();
@@ -76,7 +75,6 @@ GtkWidget *widget_webview_create(
 	widget = gtk_label_new(WEBKIT_WARNING);
 #endif
 
-	GDG_DEBUG("Exiting.");
 	return widget;
 }
 
@@ -91,7 +89,6 @@ void widget_webview_refresh(variable *var)
 	gchar             line[512];
 	FILE             *infile;
 
-	GDG_DEBUG("Entering.");
 
 #if HAVE_WEBKIT
 	/* The <input> tag: execute command and load its output as HTML */
@@ -144,7 +141,6 @@ void widget_webview_refresh(variable *var)
 	}
 #endif
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************

@@ -39,9 +39,7 @@
 
 void widget_buttonbox_clear(variable *var)
 {
-	GDG_DEBUG("Entering.");
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -58,7 +56,6 @@ GtkWidget *widget_buttonbox_create(
 	GtkWidget        *widget;
 	stackelement      s;
 
-	GDG_DEBUG("Entering.");
 
 	/* Support orientation attribute */
 	if (attr &&
@@ -98,7 +95,6 @@ GtkWidget *widget_buttonbox_create(
 		gtk_container_add(GTK_CONTAINER(widget), s.widgets[n]);
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -109,8 +105,6 @@ GtkWidget *widget_buttonbox_create(
 
 gchar *widget_buttonbox_envvar_all_construct(variable *var)
 {
-	GDG_DEBUG("Entering.");
-	GDG_DEBUG("Exiting.");
 	return g_strdup("");
 }
 
@@ -120,8 +114,6 @@ gchar *widget_buttonbox_envvar_all_construct(variable *var)
 
 gchar *widget_buttonbox_envvar_construct(GtkWidget *widget)
 {
-	GDG_DEBUG("Entering.");
-	GDG_DEBUG("Exiting.");
 	return g_strdup("");
 }
 
@@ -132,9 +124,7 @@ gchar *widget_buttonbox_envvar_construct(GtkWidget *widget)
 void widget_buttonbox_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	GDG_DEBUG("Entering.");
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -144,7 +134,6 @@ void widget_buttonbox_refresh(variable *var)
 {
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -160,7 +149,6 @@ void widget_buttonbox_refresh(variable *var)
 			gtk_widget_set_sensitive(var->Widget, FALSE);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -169,9 +157,7 @@ void widget_buttonbox_refresh(variable *var)
 
 void widget_buttonbox_removeselected(variable *var)
 {
-	GDG_DEBUG("Entering.");
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n", __func__);
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -180,7 +166,5 @@ void widget_buttonbox_removeselected(variable *var)
 
 void widget_buttonbox_save(variable *var)
 {
-	GDG_DEBUG("Entering.");
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
-	GDG_DEBUG("Exiting.");
 }

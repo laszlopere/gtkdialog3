@@ -66,11 +66,9 @@ void widget_progressbar_realized_callback(GtkWidget *widget, AttributeSet *Attr)
 void widget_progressbar_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -84,7 +82,6 @@ GtkWidget *widget_progressbar_create(
 	GtkWidget        *widget;
 	gchar            *text;
 
-	GDG_DEBUG("Entering.");
 
 	/* Thunor: This is all original code moved across when refactoring */
 	widget = gtk_progress_bar_new();
@@ -95,7 +92,6 @@ GtkWidget *widget_progressbar_create(
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(widget), text);
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -108,13 +104,11 @@ gchar *widget_progressbar_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -127,11 +121,9 @@ gchar *widget_progressbar_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	string = g_strdup("");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -144,11 +136,9 @@ void widget_progressbar_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -161,7 +151,6 @@ void widget_progressbar_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -211,7 +200,6 @@ void widget_progressbar_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -221,12 +209,10 @@ void widget_progressbar_refresh(variable *var)
 void widget_progressbar_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -236,11 +222,9 @@ void widget_progressbar_removeselected(variable *var)
 void widget_progressbar_save(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -249,11 +233,9 @@ void widget_progressbar_save(variable *var)
 
 static void widget_progressbar_input_by_command(variable *var, char *command)
 {
-	GDG_DEBUG("Entering.");
 
 	/* <input> is handled elsewhere for this widget */
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -263,11 +245,9 @@ static void widget_progressbar_input_by_command(variable *var, char *command)
 static void widget_progressbar_input_by_file(variable *var, char *filename)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -277,11 +257,9 @@ static void widget_progressbar_input_by_file(variable *var, char *filename)
 static void widget_progressbar_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************

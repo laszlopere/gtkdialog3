@@ -87,7 +87,6 @@ void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
 	gchar *signal;
 	gchar *type; */
 
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "clicked");
 
@@ -111,7 +110,6 @@ void button_clicked_attr(GtkWidget *button, AttributeSet *Attr)
 		GDG_DEBUG("element=%p", element);
 	} */
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -125,7 +123,6 @@ void button_entered_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSe
 	gchar *signal;
 	gchar *type; */
 
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "enter");
 
@@ -141,7 +138,6 @@ void button_entered_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSe
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -155,7 +151,6 @@ void button_leaved_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSet
 	gchar *signal;
 	gchar *type; */
 
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "leave");
 
@@ -171,7 +166,6 @@ void button_leaved_attr(GtkWidget *button, GdkEventCrossing *event, AttributeSet
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -196,7 +190,6 @@ void button_pressed_attr(GtkWidget *button, GdkEventButton *event, AttributeSet 
 	gchar *signal;
 	gchar *type; */
 
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "pressed");
 
@@ -212,7 +205,6 @@ void button_pressed_attr(GtkWidget *button, GdkEventButton *event, AttributeSet 
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -226,7 +218,6 @@ void button_released_attr(GtkWidget *button, GdkEventButton *event, AttributeSet
 	gchar *signal;
 	gchar *type; */
 
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(button, Attr, "released");
 
@@ -242,7 +233,6 @@ void button_released_attr(GtkWidget *button, GdkEventButton *event, AttributeSet
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -251,11 +241,9 @@ void button_released_attr(GtkWidget *button, GdkEventButton *event, AttributeSet
 
 void on_any_widget_activate_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "activate");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -273,7 +261,6 @@ gboolean on_any_widget_button_pressed(GtkWidget *widget,
 	gchar *ptrxroot = g_strdup_printf("%.0f", event->x_root);
 	gchar *ptryroot = g_strdup_printf("%.0f", event->y_root);
 
-	GDG_DEBUG("Entering.");
 
 	g_setenv("PTR_X", ptrx, TRUE);
 	g_setenv("PTR_Y", ptry, TRUE);
@@ -300,7 +287,6 @@ gboolean on_any_widget_button_pressed(GtkWidget *widget,
 	g_free(ptrxroot);
 	g_free(ptryroot);
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -320,7 +306,6 @@ gboolean on_any_widget_button_released(GtkWidget *widget,
 	gchar *ptrxroot = g_strdup_printf("%.0f", event->x_root);
 	gchar *ptryroot = g_strdup_printf("%.0f", event->y_root);
 
-	GDG_DEBUG("Entering.");
 
 	g_setenv("PTR_X", ptrx, TRUE);
 	g_setenv("PTR_Y", ptry, TRUE);
@@ -347,7 +332,6 @@ gboolean on_any_widget_button_released(GtkWidget *widget,
 	g_free(ptrxroot);
 	g_free(ptryroot);
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -358,11 +342,9 @@ gboolean on_any_widget_button_released(GtkWidget *widget,
 
 void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "changed");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -371,11 +353,9 @@ void on_any_widget_changed_event(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_color_set_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "color-set");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -384,11 +364,9 @@ void on_any_widget_color_set_event(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_font_set_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "font-set");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -398,11 +376,9 @@ void on_any_widget_font_set_event(GtkWidget *widget, AttributeSet *Attr)
 gboolean on_any_widget_configure_event(GtkWidget *widget,
 	GdkEventConfigure *event, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "configure-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -414,11 +390,9 @@ gboolean on_any_widget_configure_event(GtkWidget *widget,
 gboolean on_any_widget_delete_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "delete-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -430,11 +404,9 @@ gboolean on_any_widget_delete_event(GtkWidget *widget, GdkEvent *event,
 gboolean on_any_widget_destroy_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "destroy-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -446,11 +418,9 @@ gboolean on_any_widget_destroy_event(GtkWidget *widget, GdkEvent *event,
 gboolean on_any_widget_enter_notify_event(GtkWidget *widget,
 	GdkEventCrossing *event, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "enter-notify-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -462,11 +432,9 @@ gboolean on_any_widget_enter_notify_event(GtkWidget *widget,
 gboolean on_any_widget_focus_in_event(GtkWidget *widget,
 	GdkEventFocus *event, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "focus-in-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -478,11 +446,9 @@ gboolean on_any_widget_focus_in_event(GtkWidget *widget,
 gboolean on_any_widget_focus_out_event(GtkWidget *widget,
 	GdkEventFocus *event, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "focus-out-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -493,11 +459,9 @@ gboolean on_any_widget_focus_out_event(GtkWidget *widget,
 
 void on_any_widget_hide(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "hide");
 
-	GDG_DEBUG("Exiting.");
 }
 
 #if GTK_CHECK_VERSION(2,16,0)
@@ -508,14 +472,12 @@ void on_any_widget_hide(GtkWidget *widget, AttributeSet *Attr)
 void on_any_widget_icon_press_event(GtkWidget *widget,
 	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	if (pos == GTK_ENTRY_ICON_PRIMARY)
 		widget_signal_executor(widget, Attr, "primary-icon-press");
 	else
 		widget_signal_executor(widget, Attr, "secondary-icon-press");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -525,14 +487,12 @@ void on_any_widget_icon_press_event(GtkWidget *widget,
 void on_any_widget_icon_release_event(GtkWidget *widget,
 	GtkEntryIconPosition pos, GdkEvent *event, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	if (pos == GTK_ENTRY_ICON_PRIMARY)
 		widget_signal_executor(widget, Attr, "primary-icon-release");
 	else
 		widget_signal_executor(widget, Attr, "secondary-icon-release");
 
-	GDG_DEBUG("Exiting.");
 }
 #endif
 
@@ -542,7 +502,6 @@ void on_any_widget_icon_release_event(GtkWidget *widget,
 
 void on_any_widget_child_exited_event(GtkWidget *widget, gint status, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 #if HAVE_VTE
 	if (VTE_IS_TERMINAL(widget)) {
@@ -553,7 +512,6 @@ void on_any_widget_child_exited_event(GtkWidget *widget, gint status, AttributeS
 
 	widget_signal_executor(widget, Attr, "child-exited");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -569,7 +527,6 @@ gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	gchar *keymod = g_strdup_printf("%u", event->state);
 	gchar *keyraw = g_strdup_printf("0x%x", event->hardware_keycode);
 
-	GDG_DEBUG("Entering.");
 
 	g_setenv("KEY_VAL", keyval, TRUE);
 	g_setenv("KEY_SYM", keysym, TRUE);
@@ -590,7 +547,6 @@ gboolean on_any_widget_key_press_event(GtkWidget *widget,
 	g_free(keymod);
 	g_free(keyraw);
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -608,7 +564,6 @@ gboolean on_any_widget_key_release_event(GtkWidget*widget,
 	gchar *keymod = g_strdup_printf("%u", event->state);
 	gchar *keyraw = g_strdup_printf("0x%x", event->hardware_keycode);
 
-	GDG_DEBUG("Entering.");
 
 	g_setenv("KEY_VAL", keyval, TRUE);
 	g_setenv("KEY_SYM", keysym, TRUE);
@@ -629,7 +584,6 @@ gboolean on_any_widget_key_release_event(GtkWidget*widget,
 	g_free(keymod);
 	g_free(keyraw);
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -641,11 +595,9 @@ gboolean on_any_widget_key_release_event(GtkWidget*widget,
 gboolean on_any_widget_leave_notify_event(GtkWidget *widget,
 	GdkEventCrossing *event, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "leave-notify-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -657,11 +609,9 @@ gboolean on_any_widget_leave_notify_event(GtkWidget *widget,
 gboolean on_any_widget_map_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "map-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -674,7 +624,6 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 {
 	variable         *var = find_variable_by_widget(widget);
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("widget=%p tag_attributes=%p", widget, tag_attributes);
 
@@ -689,7 +638,6 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 		widget_signal_executor(widget, var->Attributes, "realize");
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -698,11 +646,9 @@ void on_any_widget_realized(GtkWidget *widget, tag_attr *tag_attributes)
 
 void on_any_widget_show(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "show");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -711,11 +657,9 @@ void on_any_widget_show(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "toggled");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -725,11 +669,9 @@ void on_any_widget_toggled_event(GtkWidget *widget, AttributeSet *Attr)
 gboolean on_any_widget_unmap_event(GtkWidget *widget, GdkEvent *event,
 	AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "unmap-event");
 
-	GDG_DEBUG("Exiting.");
 
 	return FALSE;
 }
@@ -740,11 +682,9 @@ gboolean on_any_widget_unmap_event(GtkWidget *widget, GdkEvent *event,
 
 void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "value-changed");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -753,7 +693,6 @@ void on_any_widget_value_changed_event(GtkWidget *widget, AttributeSet *Attr)
 
 void on_any_widget_select_row_event(GtkWidget *widget, gpointer Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "cursor-changed");
 
@@ -783,7 +722,6 @@ void on_any_widget_select_row_event(GtkWidget *widget, gpointer Attr)
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	} */
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -792,11 +730,9 @@ void on_any_widget_select_row_event(GtkWidget *widget, gpointer Attr)
 
 void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "selection-changed");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -806,11 +742,9 @@ void on_any_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr
 void on_any_widget_row_activated_event(GtkWidget *widget,
 	GtkTreePath *path, GtkTreeViewColumn *column, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "row-activated");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /* Redundant
@@ -822,7 +756,6 @@ void tree_row_activated_attr(GtkTreeView *tree_view, GtkTreePath *path,
 	gchar *signal;
 	gchar *type;
 
-	GDG_DEBUG("Entering.");
 
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL){
@@ -836,7 +769,6 @@ next_command:
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 
-	GDG_DEBUG("Exiting.");
 }*/
 
 /***********************************************************************
@@ -845,11 +777,9 @@ next_command:
 
 void on_any_widget_cursor_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	GDG_DEBUG("Entering.");
 
 	widget_signal_executor(widget, Attr, "cursor-changed");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /* Redundant
@@ -860,7 +790,6 @@ gboolean tree_cursor_changed(GtkTreeView *tree_view, AttributeSet *Attr)
 	gchar *signal;
 	gchar *type;
 
-	GDG_DEBUG("Entering.");
 
 	command = attributeset_get_first(&element, Attr, ATTR_ACTION);
 	while (command != NULL){
@@ -874,7 +803,6 @@ next_command:
 		command = attributeset_get_next(&element, Attr, ATTR_ACTION);
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return TRUE;
 }*/
@@ -913,7 +841,6 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	variable         *var = (variable*)data;
 #endif
 
-	GDG_DEBUG("Entering.");
 
 #if HAVE_SYS_INOTIFY_H
 	/* Just clearing, don't care the type */
@@ -926,7 +853,6 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 #endif
 	widget_signal_executor(var->Widget, var->Attributes, "file-changed");
 
-	GDG_DEBUG("Exiting.");
 #if HAVE_SYS_INOTIFY_H
 	return TRUE;
 #endif
@@ -950,7 +876,6 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	variable         *var = (variable*)data;
 #endif
 
-	GDG_DEBUG("Entering.");
 
 #if HAVE_SYS_INOTIFY_H
 	/* Just clearing, don't care the type */
@@ -1040,7 +965,6 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 			break;
 	}
 
-	GDG_DEBUG("Exiting.");
 #if HAVE_SYS_INOTIFY_H
 	return TRUE;
 #endif
@@ -1055,7 +979,6 @@ gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 {
 	variable         *var;
 
-	GDG_DEBUG("Entering.");
 
 	//Redundant: variables_drop_by_parent(NULL, widget);
 	var = find_variable_by_widget(widget);
@@ -1094,7 +1017,6 @@ gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 		gtkdialog_exit(EXIT_SUCCESS);
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return TRUE;
 }
@@ -1118,7 +1040,6 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 	gchar            *signal;
 	gint              execute, is_active;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("Executing signal '%s' on widget %p", signal_name, widget);
 
@@ -1297,7 +1218,6 @@ void widget_signal_executor(GtkWidget *widget, AttributeSet *Attr,
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -1328,7 +1248,6 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 	gint              state = -1;
 	variable         *var;
 
-	GDG_DEBUG("Entering.");
 	GDG_DEBUG("condition=%s", condition);
 
 	if (condition != NULL) {
@@ -1543,7 +1462,6 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 	}
 
 	GDG_DEBUG("retval=%i", retval);
-	GDG_DEBUG("Exiting.");
 
 	return retval;
 }
@@ -1576,7 +1494,6 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gint              fd, wd;
 	gint              index = 0;
 
-	GDG_DEBUG("Entering.");
 
 	/* Is this file going to be monitored? */
 	if (var->widget_tag_attr) {
@@ -1653,7 +1570,6 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gint              count;
 	gint              index = 0;
 
-	GDG_DEBUG("Entering.");
 
 	/* Is this file going to be monitored? */
 	if (var->widget_tag_attr) {

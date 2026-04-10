@@ -46,11 +46,9 @@ static void widget_text_input_by_items(variable *var);
 void widget_text_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	gtk_label_set_text(GTK_LABEL(var->Widget), "");
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -63,7 +61,6 @@ GtkWidget *widget_text_create(
 	GtkWidget        *widget;
 	gchar            *value;
 
-	GDG_DEBUG("Entering.");
 
 	/* Set a default label if unset */
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "text");
@@ -119,7 +116,6 @@ GtkWidget *widget_text_create(
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -132,11 +128,9 @@ gchar *widget_text_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -149,11 +143,9 @@ gchar *widget_text_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	string = g_strdup(gtk_label_get_text(GTK_LABEL(widget)));
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -166,11 +158,9 @@ void widget_text_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	gtk_label_set_text(GTK_LABEL(var->Widget), value);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -182,7 +172,6 @@ void widget_text_refresh(variable *var)
 	gchar            *act;
 	gint              initialised = FALSE;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -230,7 +219,6 @@ void widget_text_refresh(variable *var)
 
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -240,12 +228,10 @@ void widget_text_refresh(variable *var)
 void widget_text_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -255,11 +241,9 @@ void widget_text_removeselected(variable *var)
 void widget_text_save(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -272,7 +256,6 @@ static void widget_text_input_by_command(variable *var, char *command)
 	GString          *text = g_string_sized_new(512);
 	gchar             line[512];
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -297,7 +280,6 @@ static void widget_text_input_by_command(variable *var, char *command)
 			command);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -310,7 +292,6 @@ static void widget_text_input_by_file(variable *var, char *filename)
 	GString          *text = g_string_sized_new(512);
 	gchar             line[512];
 
-	GDG_DEBUG("Entering.");
 
 	if ((infile = fopen(filename, "r"))) {
 		/* Read the file one line at a time */
@@ -332,7 +313,6 @@ static void widget_text_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -342,9 +322,7 @@ static void widget_text_input_by_file(variable *var, char *filename)
 static void widget_text_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }

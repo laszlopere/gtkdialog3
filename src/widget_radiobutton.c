@@ -45,11 +45,9 @@ static void widget_radiobutton_input_by_items(variable *var);
 void widget_radiobutton_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(var->Widget), FALSE);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -61,7 +59,6 @@ GtkWidget *widget_radiobutton_create(
 	GList            *element;
 	GtkWidget        *widget;
 
-	GDG_DEBUG("Entering.");
 
 	attributeset_set_if_unset(Attr, ATTR_LABEL, "radiobutton");
 
@@ -75,7 +72,6 @@ GtkWidget *widget_radiobutton_create(
 			attributeset_get_first(&element, Attr, ATTR_LABEL));
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -88,13 +84,11 @@ gchar *widget_radiobutton_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
 	GDG_DEBUG("Hello.");
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -107,7 +101,6 @@ gchar *widget_radiobutton_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
 		string = g_strdup("true");
@@ -115,7 +108,6 @@ gchar *widget_radiobutton_envvar_construct(GtkWidget *widget)
 		string = g_strdup("false");
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -128,11 +120,9 @@ void widget_radiobutton_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -146,7 +136,6 @@ void widget_radiobutton_refresh(variable *var)
 	gint              initialised = FALSE;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -202,7 +191,6 @@ void widget_radiobutton_refresh(variable *var)
 			G_CALLBACK(on_any_widget_toggled_event), (gpointer)var->Attributes);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -212,12 +200,10 @@ void widget_radiobutton_refresh(variable *var)
 void widget_radiobutton_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -232,7 +218,6 @@ void widget_radiobutton_save(variable *var)
 	gchar            *filename = NULL;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
@@ -261,7 +246,6 @@ void widget_radiobutton_save(variable *var)
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -275,7 +259,6 @@ static void widget_radiobutton_input_by_command(variable *var, char *command)
 	gint              count;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -305,7 +288,6 @@ static void widget_radiobutton_input_by_command(variable *var, char *command)
 			command);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -319,7 +301,6 @@ static void widget_radiobutton_input_by_file(variable *var, char *filename)
 	gint              count;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
@@ -346,7 +327,6 @@ static void widget_radiobutton_input_by_file(variable *var, char *filename)
 			filename);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -356,9 +336,7 @@ static void widget_radiobutton_input_by_file(variable *var, char *filename)
 static void widget_radiobutton_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }

@@ -197,7 +197,6 @@ gchar *attributeset_get_first(GList **element, AttributeSet *set, gint type)
 	Attribute        *attribute = NULL;
 	gchar            *text = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("*element=%p set=%p type=%i", *element, set, type);
 
@@ -212,7 +211,6 @@ gchar *attributeset_get_first(GList **element, AttributeSet *set, gint type)
 
 	GDG_DEBUG("*element=%p set=%p type=%i text=%s", *element, set, type, text);
 
-	GDG_DEBUG("Exiting.");
 
 	return text;
 }
@@ -227,7 +225,6 @@ gchar *attributeset_get_next(GList **element, AttributeSet *set, gint type)
 	Attribute        *attribute = NULL;
 	gchar            *text = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("*element=%p set=%p type=%i", *element, set, type);
 
@@ -244,7 +241,6 @@ gchar *attributeset_get_next(GList **element, AttributeSet *set, gint type)
 
 	GDG_DEBUG("*element=%p set=%p type=%i text=%s", *element, set, type, text);
 
-	GDG_DEBUG("Exiting.");
 
 	return text;
 }
@@ -260,7 +256,6 @@ gchar *attributeset_get_this_tagattr(GList **element, AttributeSet *set,
 	Attribute        *attribute = NULL;
 	gchar            *value = NULL;	
 	
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("*element=%p set=%p type=%i name=%s", *element, set, type, name);
 
@@ -277,7 +272,6 @@ gchar *attributeset_get_this_tagattr(GList **element, AttributeSet *set,
 
 	GDG_DEBUG("*element=%p set=%p type=%i name=%s value=%s", *element, set, type, name, value);
 
-	GDG_DEBUG("Exiting.");
 
 	return value;
 }
@@ -292,7 +286,6 @@ void attributeset_set_this_tagattr(
 {
 	Attribute        *attribute = NULL;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("*element=%p set=%p type=%i name=%s value=%s", *element, set, type, name, value);
 
@@ -309,6 +302,5 @@ void attributeset_set_this_tagattr(
 
 	GDG_DEBUG("*element=%p set=%p type=%i name=%s value=%s", *element, set, type, name, value);
 
-	GDG_DEBUG("Exiting.");
 }
 

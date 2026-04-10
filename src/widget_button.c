@@ -49,11 +49,9 @@ static void widget_button_input_by_items(variable *var);
 void widget_button_clear(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Clear not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -89,7 +87,6 @@ GtkWidget *widget_button_create(
 	gint              buttontype = TYPE_BUTTON;
 	gint              width = -1, height = -1;
 
-	GDG_DEBUG("Entering.");
 
 	switch (Type) {
 		case WIDGET_CANCELBUTTON:
@@ -354,7 +351,6 @@ GtkWidget *widget_button_create(
 	widget_visibility_list_add(icon, attr);
 	widget_visibility_list_add(label, attr);
 
-	GDG_DEBUG("Exiting.");
 
 	return widget;
 }
@@ -367,11 +363,9 @@ gchar *widget_button_envvar_all_construct(variable *var)
 {
 	gchar            *string = g_strdup("");
 
-	GDG_DEBUG("Entering.");
 
 	/* This function should not be connected-up by default */
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -384,7 +378,6 @@ gchar *widget_button_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
 
-	GDG_DEBUG("Entering.");
 
 	if (GTK_IS_TOGGLE_BUTTON(widget)) {
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
@@ -396,7 +389,6 @@ gchar *widget_button_envvar_construct(GtkWidget *widget)
 		string = g_strdup("");
 	}
 
-	GDG_DEBUG("Exiting.");
 
 	return string;
 }
@@ -409,11 +401,9 @@ void widget_button_fileselect(
 	variable *var, const char *name, const char *value)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Fileselect not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -427,7 +417,6 @@ void widget_button_refresh(variable *var)
 	gint              initialised = FALSE;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
@@ -504,7 +493,6 @@ void widget_button_refresh(variable *var)
 		}
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -514,12 +502,10 @@ void widget_button_refresh(variable *var)
 void widget_button_removeselected(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): Removeselected not implemented for this widget.\n",
 		__func__);
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -534,7 +520,6 @@ void widget_button_save(variable *var)
 	gchar            *filename = NULL;
 	gint              is_active;
 
-	GDG_DEBUG("Entering.");
 
 	if (var->Type == WIDGET_TOGGLEBUTTON) {
 		/* We'll use the output file filename if available */
@@ -567,7 +552,6 @@ void widget_button_save(variable *var)
 		fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -580,7 +564,6 @@ static void widget_button_input_by_command(variable *var, char *command)
 	gchar             line[512];
 	gint              count, is_active;
 
-	GDG_DEBUG("Entering.");
 
 	GDG_DEBUG("command: '%s'", command);
 
@@ -612,7 +595,6 @@ static void widget_button_input_by_command(variable *var, char *command)
 		fprintf(stderr, "%s(): <input> not implemented for this widget.\n", __func__);
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -628,7 +610,6 @@ static void widget_button_input_by_file(variable *var, char *filename)
 	GList            *element;
 	gint              width = -1, height = -1;
 
-	GDG_DEBUG("Entering.");
 
 	if (attributeset_is_avail(var->Attributes, ATTR_WIDTH))
 		width = atoi(attributeset_get_first(&element, var->Attributes, ATTR_WIDTH));
@@ -673,7 +654,6 @@ static void widget_button_input_by_file(variable *var, char *filename)
 		btnchildren = NULL;
 	}
 
-	GDG_DEBUG("Exiting.");
 }
 
 /***********************************************************************
@@ -683,9 +663,7 @@ static void widget_button_input_by_file(variable *var, char *filename)
 static void widget_button_input_by_items(variable *var)
 {
 
-	GDG_DEBUG("Entering.");
 
 	fprintf(stderr, "%s(): <item> not implemented for this widget.\n", __func__);
 
-	GDG_DEBUG("Exiting.");
 }
