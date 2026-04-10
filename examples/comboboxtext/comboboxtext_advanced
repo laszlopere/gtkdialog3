@@ -5,12 +5,20 @@ GTKDIALOG=gtkdialog3
 TMPDIR=/tmp/gtkdialog3/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
+cat <<EOF > "$TMPDIR"/list.txt
+gtk-cdrom    | CD_ROM Drive  | /cdrom/    | ak.tex
+gtk-floppy   | Floppy Disk   | /floppy/   | ak.dvi
+gtk-harddisk | Hard Disk     | /harddisk/ | ak.ps
+gtk-network  | Network Drive | /network/  | ak.pdf
+gtk-delete   | Trash         | /trash/    |
+EOF
+
 funcbtnCreate() {
-	echo '<button>
-			<label>"'"$2"'"</label>
-			<action>echo "'"$3"' cboComboBox'$1'"</action>
-			<action function="'"$4"'">cboComboBox'$1'</action>
-		</button>'
+	echo "<button>
+			<label>'$2'</label>
+			<action>echo '$3 cboComboBox$1'</action>
+			<action function='$4'>cboComboBox$1</action>
+		</button>"
 }
 
 funccboCreate() {
@@ -21,9 +29,9 @@ funccboCreate() {
 	elif [ $1 = 2 ]; then
 		echo '<combobox case-sensitive="true" value-in-list="true">'
 	fi
-	echo '<variable>cboComboBox'$1'</variable>
+	echo "<variable>cboComboBox$1</variable>
 			<sensitive>enabled</sensitive>
-			<item>cboComboBox'$1'</item>'
+			<item>cboComboBox$1</item>"
 	if [ $1 = 0 ]; then
 		echo '<item>tag attributes none</item>'
 	elif [ $1 = 1 ]; then
@@ -33,11 +41,11 @@ funccboCreate() {
 		echo '<item>tag attribute case-sensitive="true"</item>
 			<item>tag attribute value-in-list="true"</item>'
 	fi
-	echo '</combobox>
-		<hbox homogeneous="true">
-			'"`funcbtnCreate $1 Clear Clearing clear`"'
-			'"`funcbtnCreate $1 Refresh Reloading refresh`"'
-		</hbox>'
+	echo "</combobox>
+		<hbox homogeneous='true'>
+			$(funcbtnCreate $1 Clear Clearing clear)
+			$(funcbtnCreate $1 Refresh Reloading refresh)
+		</hbox>"
 	if [ $1 -lt 2 ]; then echo '<hseparator></hseparator>'; fi
 }
 
@@ -49,10 +57,10 @@ funccboTextCreate() {
 	elif [ $1 = 2 ]; then
 		echo '<comboboxtext fs-action="file" focus-on-click="false">'
 	fi
-	echo '<variable>cboComboBoxText'$1'</variable>
+	echo "<variable>cboComboBoxText$1</variable>
 			<sensitive>enabled</sensitive>
-			<item>cboComboBoxText'$1'</item>
-			<item>tag attribute fs-action="file"</item>'
+			<item>cboComboBoxText$1</item>
+			<item>tag attribute fs-action='file'</item>"
 	if [ $1 = 1 ]; then
 		echo '<item>tag attribute active="4"</item>
 			<item>tag attribute button-sensitivity="1"</item>'
@@ -63,24 +71,24 @@ funccboTextCreate() {
 		echo '<item>This is the default directive text but the active index will override it if declared</item>
 			<default>This is the default directive text but the active index will override it if declared</default>'
 	fi
-	echo '<input>echo "This came from a shell command"</input>
-			<input file>'"$TMPDIR"'/inputfile</input>
-			<output file>'"$TMPDIR"'/outputfile</output>
-			<action signal="changed">echo "cboComboBoxText'$1' changed to $cboComboBoxText'$1'"</action>
-			<action>echo "cboComboBoxText'$1' action for default signal triggered"</action>
-			<action function="command">echo "cboComboBoxText'$1' action function for default signal triggered"</action>
+	echo "<input>echo 'This came from a shell command'</input>
+			<input file>$TMPDIR/inputfile</input>
+			<output file>$TMPDIR/outputfile</output>
+			<action signal='changed'>echo 'cboComboBoxText$1 changed to \$cboComboBoxText$1'</action>
+			<action>echo 'cboComboBoxText$1 action for default signal triggered'</action>
+			<action function='command'>echo 'cboComboBoxText$1 action function for default signal triggered'</action>
 		</comboboxtext>
-		<hbox homogeneous="true">
-			'"`funcbtnCreate Text$1 Clear Clearing clear`"'
-			'"`funcbtnCreate Text$1 Delete Deleting removeselected`"'
-			'"`funcbtnCreate Text$1 Refresh Reloading refresh`"'
-			'"`funcbtnCreate Text$1 Save Saving save`"'
+		<hbox homogeneous='true'>
+			$(funcbtnCreate Text$1 Clear Clearing clear)
+			$(funcbtnCreate Text$1 Delete Deleting removeselected)
+			$(funcbtnCreate Text$1 Refresh Reloading refresh)
+			$(funcbtnCreate Text$1 Save Saving save)
 		</hbox>
-		<hbox homogeneous="true">
-			'"`funcbtnCreate Text$1 Disable Disabling disable`"'
-			'"`funcbtnCreate Text$1 Enable Enabling enable`"'
-			'"`funcbtnCreate Text$1 Fileselect """Inserting into""" fileselect`"'
-		</hbox>'
+		<hbox homogeneous='true'>
+			$(funcbtnCreate Text$1 Disable Disabling disable)
+			$(funcbtnCreate Text$1 Enable Enabling enable)
+			$(funcbtnCreate "Text$1" Fileselect "Inserting into" fileselect)
+		</hbox>"
 	if [ $1 -lt 2 ]; then echo '<hseparator></hseparator>'; fi
 }
 
@@ -88,31 +96,31 @@ if [ ! -f "$TMPDIR"/inputfile ]; then
 	echo "This came from an input file" > "$TMPDIR"/inputfile
 fi
 
-MAIN_DIALOG='
-<window title="ComboBoxText Advanced" resizable="false">
+MAIN_DIALOG="
+<window title='ComboBoxText Advanced' resizable='false'>
 	<vbox>
 		<hbox>
-			<frame title="combobox widget (deprecated)">
+			<frame title='combobox widget (deprecated)'>
 				<vbox>
-					'"`funccboCreate 0`"'
-					'"`funccboCreate 1`"'
-					'"`funccboCreate 2`"'
+					$(funccboCreate 0)
+					$(funccboCreate 1)
+					$(funccboCreate 2)
 				</vbox>
 			</frame>
-			<frame title="comboboxtext widget">
-				<vbox width-request="300">
-					'"`funccboTextCreate 0`"'
-					'"`funccboTextCreate 1`"'
-					'"`funccboTextCreate 2`"'
+			<frame title='comboboxtext widget'>
+				<vbox width-request='300'>
+					$(funccboTextCreate 0)
+					$(funccboTextCreate 1)
+					$(funccboTextCreate 2)
 				</vbox>
 			</frame>
 		</hbox>
-		<hbox homogeneous="true">
-			<button stock="ok"/>
+		<hbox homogeneous='true'>
+			<button stock='ok'/>
 		</hbox>
 	</vbox>
 </window>
-'
+"
 export MAIN_DIALOG
 
 case $1 in
