@@ -143,11 +143,10 @@ void action_closewindow(GtkWidget *widget, char *string)
 		/* If we are closing the last window then we can exit gtkdialog */
 		if (variables_count_widgets() == 0) {
 
-			printf("EXIT=\"closewindow\"\n");
-
-			/* Redundant: Since being here requires that there are no
-			 * remaining variables therefore there's nothing to print.
-			 * print_variables(NULL); */
+			if (option_output_format == OUTPUT_FORMAT_JSON)
+				print_variables_json_with_exit("closewindow");
+			else
+				printf("EXIT=\"closewindow\"\n");
 
 #ifdef DEBUG
 			fprintf(stderr, "%s(): Calling gtkdialog_exit(EXIT_SUCCESS)\n", __func__);
@@ -228,13 +227,23 @@ void action_launchwindow(GtkWidget *widget, char *string)
 
 void action_exitprogram(GtkWidget *widget, char *string)
 {
-	print_variables(NULL);
+	gchar *exit_value;
 
 	if (string[0] == '=')
-		/* Thunor: An interesting undocumented feature temp temp */
-		printf("EXIT%s", string);
+		exit_value = string;  /* raw "=value" form */
 	else
-		printf("EXIT=\"%s\"\n", string);
+		exit_value = string;
+
+	if (option_output_format == OUTPUT_FORMAT_JSON) {
+		print_variables_json_with_exit(exit_value);
+	} else {
+		print_variables(NULL);
+		if (string[0] == '=')
+			/* Thunor: An interesting undocumented feature temp temp */
+			printf("EXIT%s", string);
+		else
+			printf("EXIT=\"%s\"\n", string);
+	}
 
 #ifdef DEBUG
 	fprintf(stderr, "%s(): Calling gtkdialog_exit(EXIT_SUCCESS)\n", __func__);

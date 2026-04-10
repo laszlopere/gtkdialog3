@@ -1083,7 +1083,10 @@ gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 	GDG_DEBUG("variables_count_widgets()=%i", variables_count_widgets());
 
 	if (variables_count_widgets() == 0) {
-		printf("EXIT=\"abort\"\n");
+		if (option_output_format == OUTPUT_FORMAT_JSON)
+			print_variables_json_with_exit("abort");
+		else
+			printf("EXIT=\"abort\"\n");
 
 		GDG_DEBUG("Calling gtkdialog_exit(EXIT_SUCCESS)");
 

@@ -1575,15 +1575,39 @@ static void _variables_export(variable *actual)
 /***********************************************************************
  *                                                                     *
  ***********************************************************************/
-/* This function is called when we want to send the variable's values
- * to the standard output */
-
-void print_variables(variable *actual)
+/* Check whether a variable should be exported */
+static gboolean variable_is_exportable(variable *var)
 {
-	GList            *element;
-	gchar            *act;
+	GList *element;
+	gchar *act;
+	gchar *value;
+
+	if (var->Widget == NULL || var->autonamed)
+		return FALSE;
+
+	if ((act = attributeset_get_first(&element, var->Attributes,
+		ATTR_VARIABLE)) &&
+		(value = attributeset_get_this_tagattr(&element, var->Attributes,
+		ATTR_VARIABLE, "export")) &&
+		((strcasecmp(value, "false") == 0) ||
+		(strcasecmp(value, "no") == 0) ||
+		(strcasecmp(value, "0") == 0))) {
+#ifdef DEBUG
+		fprintf(stderr, "%s(): variable=%s export=%s\n",
+			__func__, act, value);
+#endif
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/* This function is called when we want to send the variable's values
+ * to the standard output in bash format (VAR="value") */
+
+static void print_variables_bash(variable *actual)
+{
 	gchar            *value;
-	gint              export = TRUE;
 
 	if (actual == NULL)
 		actual = root;
@@ -1592,38 +1616,10 @@ void print_variables(variable *actual)
 		return;
 
 	if (actual->left != NULL)
-		print_variables(actual->left);
+		print_variables_bash(actual->left);
 
-	/* Thunor: It's now possible to prevent the exporting of declared
-	 * variables by using <variable export="false">VARNAME</variable> */
-	if ((act = attributeset_get_first(&element, actual->Attributes,
-		ATTR_VARIABLE)) &&
-		(value = attributeset_get_this_tagattr(&element, actual->Attributes,
-		ATTR_VARIABLE, "export")) &&
-		((strcasecmp(value, "false") == 0) ||
-		(strcasecmp(value, "no") == 0) ||
-		(strcasecmp(value, "0") == 0))) {
-		export = FALSE;
-#ifdef DEBUG
-		fprintf(stderr, "%s(): variable=%s export=%s\n",
-			__func__, act, value);
-#endif
-	}
-
-	if (actual->Widget != NULL && !actual->autonamed && export) {
-		//
-		// To print only the active element
-		//
+	if (variable_is_exportable(actual)) {
 		value = widget_get_text_value(actual->Widget, actual->Type);
-
-		/* Redundant.
-		 ** FIXME: awfull
-		 *
-		if (actual->Type == WIDGET_TABLE && actual->row != -1) {
-			gtk_clist_get_text(GTK_CLIST(actual->Widget),
-					   actual->row, 0, &value);
-		} */
-
 		if (value == NULL)
 			value = "";
 		/* Escape double quotes and backslashes so output is valid for shell eval */
@@ -1637,63 +1633,160 @@ void print_variables(variable *actual)
 			}
 			printf("\"\n");
 		}
-
-		/* Thunor: I've disabled this for performance reasons. Zigbert was
-		 * experiencing terrible table performance which I've tested too.
-		 * Initially it may have been practicable with simple dialogs to
-		 * dump the entire contents of a widget on every signal, but it
-		 * definitely isn't anymore */
-#if 0
-		//
-		// To print all of the elements in the list
-		//
-		switch (actual->Type) {
-			case WIDGET_LIST:
-				n = 0;
-				printf("%s_ALL=\"", actual->Name);
-				itemlist = GTK_LIST(actual->Widget)->children;
-				while (itemlist != NULL) {
-					if (itemlist->data == NULL)
-						goto next_item;
-					if (n == 0)
-						printf("'%s'", (char*)g_object_get_data(G_OBJECT(itemlist->data), "user_data"));
-					else
-						printf(" '%s'", (char*)g_object_get_data(G_OBJECT(itemlist->data), "user_data"));
-next_item:
-					itemlist = itemlist->next;
-					++n;
-				}
-				printf("\"\n");
-				break;
-
-			case WIDGET_TABLE:
-				tmp = widget_table_envvar_all_construct(actual);
-				g_printf("%s", tmp);
-				g_free(tmp);
-				break;
-
-#if GTK_CHECK_VERSION(2,4,0)
-			case WIDGET_TREE:
-				tmp = widget_tree_envvar_all_construct(actual);
-				g_printf("%s", tmp);
-				g_free(tmp);
-				break;
-#endif
-
-			case WIDGET_COMBOBOXENTRY:
-			case WIDGET_COMBOBOXTEXT:
-				tmp = widget_comboboxtext_envvar_all_construct(actual);
-				g_printf("%s", tmp);
-				g_free(tmp);
-				break;
-		}
-#endif
-
 	}
 
 	if (actual->right != NULL)
-		print_variables(actual->right);
+		print_variables_bash(actual->right);
+}
 
+/* Print a JSON-escaped string to stdout */
+static void json_print_escaped(const gchar *s)
+{
+	const gchar *p;
+	for (p = s; *p; p++) {
+		switch (*p) {
+		case '"':  printf("\\\""); break;
+		case '\\': printf("\\\\"); break;
+		case '\b': printf("\\b");  break;
+		case '\f': printf("\\f");  break;
+		case '\n': printf("\\n");  break;
+		case '\r': printf("\\r");  break;
+		case '\t': printf("\\t");  break;
+		default:
+			if ((guchar)*p < 0x20)
+				printf("\\u%04x", (guchar)*p);
+			else
+				putchar(*p);
+			break;
+		}
+	}
+}
+
+/* Collect exportable variables into a GList (in-order traversal) */
+static void collect_variables(variable *actual, GList **list)
+{
+	if (actual == NULL)
+		return;
+	if (actual->left != NULL)
+		collect_variables(actual->left, list);
+	if (variable_is_exportable(actual))
+		*list = g_list_append(*list, actual);
+	if (actual->right != NULL)
+		collect_variables(actual->right, list);
+}
+
+/* Find the window variable name for a given window_id by searching
+ * the variable tree for a WIDGET_WINDOW with matching window_id */
+static const gchar *find_window_name(variable *actual, gint wid)
+{
+	const gchar *result;
+	if (actual == NULL)
+		return NULL;
+	if (actual->left != NULL) {
+		result = find_window_name(actual->left, wid);
+		if (result) return result;
+	}
+	if (actual->Type == WIDGET_WINDOW && actual->window_id == wid)
+		return actual->Name;
+	if (actual->right != NULL)
+		return find_window_name(actual->right, wid);
+	return NULL;
+}
+
+/* Print all variable values in JSON format grouped by window */
+static void print_variables_json(const gchar *exit_value)
+{
+	GList *vars = NULL;
+	GList *iter;
+	GList *window_ids = NULL;
+	gboolean first_window, first_var;
+
+	collect_variables(root, &vars);
+
+	/* Collect unique window_ids in order */
+	for (iter = vars; iter; iter = iter->next) {
+		variable *v = iter->data;
+		if (!g_list_find(window_ids, GINT_TO_POINTER(v->window_id)))
+			window_ids = g_list_append(window_ids,
+				GINT_TO_POINTER(v->window_id));
+	}
+
+	printf("{\n  \"widget_contents\": {\n");
+
+	first_window = TRUE;
+	for (GList *witer = window_ids; witer; witer = witer->next) {
+		gint wid = GPOINTER_TO_INT(witer->data);
+		const gchar *wname = find_window_name(root, wid);
+		if (wname == NULL)
+			wname = "unknown";
+
+		if (!first_window)
+			printf(",\n");
+		first_window = FALSE;
+
+		printf("    \"");
+		json_print_escaped(wname);
+		printf("\": {\n");
+
+		first_var = TRUE;
+		for (iter = vars; iter; iter = iter->next) {
+			variable *v = iter->data;
+			gchar *value;
+			if (v->window_id != wid)
+				continue;
+			/* Skip the window variable itself */
+			if (v->Type == WIDGET_WINDOW)
+				continue;
+
+			value = widget_get_text_value(v->Widget, v->Type);
+			if (value == NULL)
+				value = "";
+
+			if (!first_var)
+				printf(",\n");
+			first_var = FALSE;
+
+			printf("      \"");
+			json_print_escaped(v->Name);
+			printf("\": \"");
+			json_print_escaped(value);
+			printf("\"");
+		}
+		printf("\n    }");
+	}
+
+	printf("\n  }");
+
+	if (exit_value != NULL) {
+		printf(",\n  \"exit\": \"");
+		json_print_escaped(exit_value);
+		printf("\"");
+	}
+
+	printf("\n}\n");
+
+	g_list_free(vars);
+	g_list_free(window_ids);
+}
+
+/* Public entry point: print variables in the configured output format */
+void print_variables(variable *actual)
+{
+	if (option_output_format == OUTPUT_FORMAT_JSON) {
+		/* JSON output is handled by print_variables_json() which is
+		 * called from the exit points with the EXIT value */
+		return;
+	}
+
+	print_variables_bash(actual);
+	fflush(stdout);
+}
+
+/* Print variables and exit status in JSON format.
+ * Called from exit points instead of separate print_variables + printf. */
+void print_variables_json_with_exit(const gchar *exit_value)
+{
+	print_variables_json(exit_value);
 	fflush(stdout);
 }
 

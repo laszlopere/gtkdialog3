@@ -68,6 +68,8 @@ gboolean option_no_warning = FALSE;
 gboolean option_print_ir = FALSE;
 gboolean option_centering = FALSE;
 gboolean option_debug_geometry = FALSE;
+gint option_output_format = OUTPUT_FORMAT_BASH;
+static gchar *option_output_format_str = NULL;
 
 static gint source = PRG_UNKNOWN;    // Where the program is coming from?
 gchar *program_src = NULL;           // The actual program source.
@@ -231,6 +233,11 @@ gtkdialog_init(
 		"Print widget geometry negotiations to stderr.", NULL
 	},
 	{
+		"output-format", '\0',
+		0, G_OPTION_ARG_STRING, &option_output_format_str,
+		"Output format for variable export: bash or json.", "format"
+	},
+	{
 		NULL
 	}
     };
@@ -311,6 +318,17 @@ gtkdialog_init(
 	/* Also enable debug-geometry via environment variable */
 	if (!option_debug_geometry && g_getenv("GTKDIALOG_DEBUG_GEOMETRY") != NULL)
 		option_debug_geometry = TRUE;
+
+	/* Parse --output-format (case insensitive, default bash) */
+	if (option_output_format_str != NULL) {
+		if (g_ascii_strcasecmp(option_output_format_str, "bash") == 0)
+			option_output_format = OUTPUT_FORMAT_BASH;
+		else if (g_ascii_strcasecmp(option_output_format_str, "json") == 0)
+			option_output_format = OUTPUT_FORMAT_JSON;
+		else
+			g_error("Invalid output format '%s'. Use 'bash' or 'json'.",
+				option_output_format_str);
+	}
 }
 
 gint get_program_from_variable(gchar *name)

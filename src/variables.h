@@ -67,6 +67,7 @@ variable *find_variable_by_widget(GtkWidget *widget);
 void variables_initialize_all(void);
 void variables_export_all(void);
 void print_variables(variable *actual);
+void print_variables_json_with_exit(const gchar *exit_value);
 int append_fromto_variable(const char *from, const char *to);
 variable *variables_clear(const char *name);
 int remove_selected_variable(const char *name);

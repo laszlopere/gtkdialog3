@@ -36,6 +36,11 @@
 #define PRG_STDIN   2
 #define PRG_FILE    3
 
+/* Output format for variable export */
+#define OUTPUT_FORMAT_BASH 0
+#define OUTPUT_FORMAT_JSON 1
+extern gint option_output_format;
+
 /* Thunor: Used to block signal emissions from action functions */
 #define GTKD_FUNCTION_SIGNALS_BLOCK (function_signals_block++)
 #define GTKD_FUNCTION_SIGNALS_UNBLOCK (function_signals_block--)
