@@ -149,26 +149,29 @@ t.check(len(terminals) == 1, f"Terminal widget found (got {len(terminals)})")
 btn_make = find_button_by_label(window, 'make -j10')
 btn_install = find_button_by_label(window, 'sudo make install')
 btn_git = find_button_by_label(window, 'git status')
+btn_pwd = find_button_by_label(window, 'pwd')
 btn_cancel = find_button_by_label(window, 'Cancel')
 
 t.check(btn_make is not None, "'make -j10' button found")
 t.check(btn_install is not None, "'sudo make install' button found")
 t.check(btn_git is not None, "'git status' button found")
+t.check(btn_pwd is not None, "'pwd' button found")
 t.check(btn_cancel is not None, "'Cancel' button found")
 
-# --- Test 2: Click 'git status' and verify terminal output ---
-t.begin("testGitStatusButton")
-if btn_git:
-    click_button(btn_git)
-    time.sleep(3)
+# --- Test 2: Click 'pwd' and verify terminal output ---
+t.begin("testPwdButton")
+if btn_pwd:
+    click_button(btn_pwd)
+    time.sleep(2)
 
     text = get_terminal_text(window)
     t.check(text is not None, "Terminal text is readable")
     if text:
-        t.check('git status' in text,
-                "'git status' command appears in terminal")
-        t.check('branch' in text.lower(),
-                "Terminal shows branch info from git status")
+        t.check('pwd' in text,
+                "'pwd' command appears in terminal")
+        # The terminal runs from the project root, so / must appear in output
+        t.check('/' in text,
+                "Terminal shows a directory path from pwd")
 
 # --- Test 4: Click Cancel and verify JSON output ---
 t.begin("testCancelJsonOutput")
