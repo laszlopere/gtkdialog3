@@ -67,7 +67,7 @@ static inline void
 start_up(void) 
 {
 	if (!option_print_ir) {
-		run_program();
+		save_program_block();
 		return;
 	} else {
 		print_program();

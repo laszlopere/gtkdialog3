@@ -62,12 +62,15 @@ extern gint window_id;
 /* Debug geometry flag: print widget size negotiations to stderr */
 extern gboolean option_debug_geometry;
 
+void gtkdialog_exit(int status);
+
 void reset_program_source(void);
 //Redundant: gint set_program_source(gchar *name);
 gint get_program_from_variable(gchar *name);
 void set_program_name(gchar *name);
 gchar *get_program_name(void);
 int gtkdialog_parse(void);
+void gtkdialog_lexer_reset(void);
 int yywarning(char *c);
 
 #endif

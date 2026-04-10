@@ -32,7 +32,8 @@ Thunor: These still remain:
      required because the program uses exit() to terminate. Refactoring
      to use gtk_main_quit() and a single main loop would fix AT-SPI and
      allow proper automated testing of multi-window examples.
-     See examples/languages/bash_script_multi_window.
+     See examples/languages/bash_script_multi_window and its test
+     tests/ft_bash_script_multi_window/ft_bash_script_multi_window.py. DONE.
 
 Unsupported GTK3 widgets:
 -------------------------

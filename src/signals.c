@@ -1067,27 +1067,33 @@ gboolean window_delete_event_handler(GtkWidget *widget, GtkWidget *event,
 		 * and then close the main window via the window manager.
 		 * Read my notes atop variables_new_with_widget() to understand
 		 * why this might happen and why it has to be accepted.
-		 * 
+		 *
 		 * Simply put, a widget's variable including all of its assets
 		 * will be stolen by a widget with a duplicate variable name */
 		fprintf(stderr, "%s(): Window widget with NULL variable detected.\n",
 			__func__);
-		exit(EXIT_FAILURE);
+		gtkdialog_exit(EXIT_FAILURE);
+		return TRUE;
 	}
+
+	/* Destroy the window explicitly so that child widgets are cleaned
+	 * up after variables have been dropped (mirrors action_closewindow) */
+	gtk_widget_destroy(widget);
 
 	GDG_DEBUG("variables_count_widgets()=%i", variables_count_widgets());
 
 	if (variables_count_widgets() == 0) {
 		printf("EXIT=\"abort\"\n");
 
-		GDG_DEBUG("Calling exit(EXIT_SUCCESS)");
+		GDG_DEBUG("Calling gtkdialog_exit(EXIT_SUCCESS)");
 
-		exit(EXIT_SUCCESS);
+		fflush(stdout);
+		gtkdialog_exit(EXIT_SUCCESS);
 	}
 
 	GDG_DEBUG("Exiting.");
 
-	return FALSE;
+	return TRUE;
 }
 
 /***********************************************************************

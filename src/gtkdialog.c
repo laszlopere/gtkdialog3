@@ -323,12 +323,13 @@ gint get_program_from_variable(gchar *name)
 	set_program_name(name);
 	program_src = g_strdup(g_getenv(name));
 
-	if (program_src == NULL) 
+	if (program_src == NULL)
 		g_error(
 "Gtkdialog: Could not find the dialog description in the environment "
 "variable '%s'.", name);
 
 	source = PRG_MEMORY;
+	charsreaded = 0;
 	return 0;
 }
 
@@ -396,7 +397,20 @@ print_version_exit(int exitcode)
 	exit(exitcode);
 }
 
-int 
+/***********************************************************************
+ * Exit gtkdialog cleanly via gtk_main_quit().                         *
+ * Called instead of exit() once the main event loop is running.        *
+ ***********************************************************************/
+
+static int exit_status = EXIT_SUCCESS;
+
+void gtkdialog_exit(int status)
+{
+	exit_status = status;
+	gtk_main_quit();
+}
+
+int
 getnextchar(void)
 {
 	int c = EOF;
@@ -590,4 +604,8 @@ gtkdialog_initialized:
 #endif
 	
 	gtkdialog_parse();
+	build_window(get_program_name());
+	gtk_main();
+	fflush(stdout);
+	return exit_status;
 }

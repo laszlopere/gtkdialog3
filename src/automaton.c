@@ -349,22 +349,79 @@ print_program()
 /*
 ** This function will run the program in memory.
 */
-void run_program()
+/*
+** Saved program blocks: each window definition is parsed once
+** and its instruction array is stored here for later execution.
+*/
+typedef struct {
+	char        *name;
+	instruction *instructions;
+	int          count;
+} program_block;
+
+#define MAX_PROGRAM_BLOCKS 64
+static program_block blocks[MAX_PROGRAM_BLOCKS];
+static int block_count = 0;
+
+/*
+** Save the current program[] as a named block.
+** Called from the parser after a window definition is fully parsed.
+** Resets instruction_counter so the parser is ready for the next parse.
+*/
+void save_program_block(void)
+{
+	gchar *name = get_program_name();
+
+	g_assert(block_count < MAX_PROGRAM_BLOCKS);
+
+	blocks[block_count].name = g_strdup(name);
+	blocks[block_count].instructions =
+		g_memdup2(program, instruction_counter * sizeof(instruction));
+	blocks[block_count].count = instruction_counter;
+	block_count++;
+
+	instruction_counter = 0;
+}
+
+/*
+** Find a saved program block by name. Returns NULL if not found.
+*/
+static program_block *
+find_program_block(const char *name)
+{
+	int i;
+
+	for (i = 0; i < block_count; i++) {
+		if (strcmp(blocks[i].name, name) == 0)
+			return &blocks[i];
+	}
+	return NULL;
+}
+
+/*
+** Build a window from a saved program block.
+** Executes the block's instructions to create widgets, shows them,
+** and initializes variables. Does NOT enter an event loop.
+*/
+void build_window(const char *name)
 {
 	static int        is_launched = 0;
+	program_block    *block;
 	int               pc;
 	variable         *var;
-	gchar            *progname;
 
-	PIP_DEBUG("Program starting.");
+	block = find_program_block(name);
+	g_assert(block != NULL);
+
+	PIP_DEBUG("Program starting: %s", name);
 
 	window_id++;	/* Generate a new unique window id */
 
 	/*
-	 * This is the main loop which creates the widgets, runs the program.
+	 * Execute the saved instructions to create the widgets.
 	 */
-	for (pc = 0; pc < instruction_counter; ++pc) {
-		instruction_execute(program[pc]);
+	for (pc = 0; pc < block->count; ++pc) {
+		instruction_execute(block->instructions[pc]);
 	}
 
 	PIP_DEBUG("Program ended.");
@@ -391,23 +448,39 @@ void run_program()
 	 * might break, but I can dump a warning to the terminal */
 	if (is_launched++) {
 
-		progname = get_program_name();
-		var = variables_get_by_name(progname);
+		var = variables_get_by_name(name);
 
 #ifdef DEBUG
-		fprintf(stderr, "%s(): program_name=%s variable->Name=%s\n",
-			__func__, progname, var->Name);
+		fprintf(stderr, "%s(): name=%s variable->Name=%s\n",
+			__func__, name, var->Name);
 #endif
 		if (var->Name[0] == '\0') {
 			g_warning("The recently launched window \"%s\" is missing \
 an equivalently named variable directive <variable>%s</variable> which \
-is a requirement of the launch action.", progname, progname);
+is a requirement of the launch action.", name, name);
 		}
 
 	}
+}
 
-	instruction_counter = 0;
-	reset_program_source();
+/*
+** Check whether a program block has been parsed and saved.
+*/
+gboolean program_block_exists(const char *name)
+{
+	return find_program_block(name) != NULL;
+}
+
+/*
+** This function will run the program in memory.
+** Called only once from the initial program startup.
+*/
+void run_program(void)
+{
+	gchar *name = get_program_name();
+
+	save_program_block();
+	build_window(name);
 
 #ifdef DEBUG
 	fprintf(stderr, "%s(): Calling gtk_main()\n", __func__);

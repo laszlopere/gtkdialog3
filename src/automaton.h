@@ -177,6 +177,9 @@ gboolean token_store_with_tag_attributes(token command, GList *attr);
 
 gint instruction_get_pc(void);
 void instruction_set_jump(gint from, gint where);
+void save_program_block(void);
+void build_window(const char *name);
+gboolean program_block_exists(const char *name);
 void run_program(void);
 void print_program(void);
 

@@ -919,3 +919,15 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 												}
 %%
 
+/*
+** Reset the lexer state so it can be used for a new parse.
+** Must be called before gtkdialog_parse() when re-parsing
+** (e.g., when launching a new window).
+*/
+void gtkdialog_lexer_reset(void)
+{
+	YY_FLUSH_BUFFER;
+	BEGIN(INITIAL);
+	linenumber = 1;
+}
+
