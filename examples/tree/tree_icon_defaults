@@ -33,7 +33,7 @@ MAIN_DIALOG='
 			<item icon-name="scribus">Floppy Disk | /floppy/  | ak.ps</item>
 			<item icon-name="top">Floppy Disk | /floppy/  | ak.pdf</item>
 			<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-			<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
+			<input type="file" stock-column="0">'"$TMPDIR"'/inputfile</input>
 		</tree>
 		<hseparator></hseparator>
 		<text label="Default theme icon is gimp"></text>
@@ -47,7 +47,7 @@ MAIN_DIALOG='
 			<item icon-name="abiword">Floppy Disk | /floppy/  | ak.ps</item>
 			<item icon-name="geany">Floppy Disk | /floppy/  | ak.pdf</item>
 			<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
-			<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
+			<input type="file" stock-column="0">'"$TMPDIR"'/inputfile</input>
 		</tree>
 		<hseparator></hseparator>
 		<hbox homogeneous="true">

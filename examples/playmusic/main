@@ -64,7 +64,7 @@ funcButtonsCreate() {
 	for f in $@; do
 		echo '
 			<button>
-				<input file stock="gtk-media-'`echo $f | tr A-Z a-z`'"></input>
+				<input type="stock">gtk-media-'`echo $f | tr A-Z a-z`'</input>
 				'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 					echo "<action>echo \"btn$f: IN\"</action>"
 				fi`'
@@ -158,7 +158,7 @@ DIALOG_COVER='
 		<variable>btnDialogCover</variable>
 		<width>'$COVER_SIZE'</width>
 		<height>'$COVER_SIZE'</height>
-		<input file>'$TEMP_DIR'/cover</input>
+		<input type="file">'$TEMP_DIR'/cover</input>
 		<action>closewindow:DIALOG_COVER</action>
 	</button>
 	<variable>DIALOG_COVER</variable>
@@ -173,7 +173,7 @@ echo '
 		<entry name="entTrackInfo" editable="false" has-frame="false" can-focus="false"
 			tooltip-text="Left-click to toggle between artist/album and track info">
 			<variable>entTrackInfo</variable>
-			<input file>'$TEMP_DIR'/trackinfo</input>
+			<input type="file">'$TEMP_DIR'/trackinfo</input>
 			<action signal="button-press-event">"
 				if [ $BUTTON -eq 1 ]; then
 					. funcTrackInfoSet; funcTrackInfoSet 2
@@ -196,7 +196,7 @@ Right-click: Previous album">
 				<variable>btnCover</variable>
 				<width>'$COVER_THUMB_SIZE'</width>
 				<height>'$COVER_THUMB_SIZE'</height>
-				<input file>'$TEMP_DIR'/cover</input>
+				<input type="file">'$TEMP_DIR'/cover</input>
 				'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 					echo "<action>echo \"btnCover-click: IN\"</action>"
 					echo "<action signal=\"button-press-event\">echo \
@@ -248,7 +248,7 @@ Right-click: Previous album">
 				</hbox>
 				<hbox>
 					<button>
-						<input file stock="gtk-media-stop"></input>
+						<input type="stock">gtk-media-stop</input>
 						'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 							echo "<action>echo \"btnStop: IN\"</action>"
 						fi`'
@@ -266,12 +266,12 @@ Right-click: Previous album">
 					<notebook show-tabs="false" show-border="false">
 						'"`funcButtonsCreate Play Pause`"'
 						<variable>nbkPlayPause</variable>
-						<input file>'$TEMP_DIR'/playpause</input>
+						<input type="file">'$TEMP_DIR'/playpause</input>
 					</notebook>
 				</hbox>
 				<hbox>
 					<button>
-						<input file stock="gtk-open"></input>
+						<input type="stock">gtk-open</input>
 						'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 							echo "<action>echo \"btnFolderOpen: IN\"</action>"
 						fi`'
@@ -281,7 +281,7 @@ Right-click: Previous album">
 						fi`'
 					</button>
 					<button>
-						<input file stock="gtk-quit"></input>
+						<input type="stock">gtk-quit</input>
 					</button>
 				</hbox>
 			</vbox>
@@ -306,7 +306,7 @@ Right-click: Previous album">
 ## `'
 				<menuitem checkbox="false">
 					<variable>muiAutoNextCheck</variable>
-					<input file>'$TEMP_DIR'/autonextcheck</input>
+					<input type="file">'$TEMP_DIR'/autonextcheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiAutoNextCheck: IN\"</action>"
 					fi`'
@@ -317,7 +317,7 @@ Right-click: Previous album">
 				</menuitem>
 				<menuitem checkbox="false">
 					<variable>muiCoverRefreshCheck</variable>
-					<input file>'$TEMP_DIR'/coverrefreshcheck</input>
+					<input type="file">'$TEMP_DIR'/coverrefreshcheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiCoverRefreshCheck: IN\"</action>"
 					fi`'
@@ -330,7 +330,7 @@ Right-click: Previous album">
 				</menuitem>
 				<menuitem checkbox="false">
 					<variable>muiTrackInfoRefreshCheck</variable>
-					<input file>'$TEMP_DIR'/trackinforefreshcheck</input>
+					<input type="file">'$TEMP_DIR'/trackinforefreshcheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiTrackInfoRefreshCheck: IN\"</action>"
 					fi`'
@@ -342,7 +342,7 @@ Right-click: Previous album">
 				</menuitem>
 				<menuitem checkbox="false">
 					<variable>muiDialogCoverCheck</variable>
-					<input file>'$TEMP_DIR'/dialogcovercheck</input>
+					<input type="file">'$TEMP_DIR'/dialogcovercheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiDialogCoverCheck: IN\"</action>"
 					fi`'
@@ -357,7 +357,7 @@ Right-click: Previous album">
 				</menuitem>
 				<menuitem checkbox="false">
 					<variable>muiCoverPressCheck</variable>
-					<input file>'$TEMP_DIR'/coverpresscheck</input>
+					<input type="file">'$TEMP_DIR'/coverpresscheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiCoverPressCheck: IN\"</action>"
 					fi`'
@@ -372,7 +372,7 @@ Right-click: Previous album">
 				</menuitem>
 				<menuitem checkbox="false">
 					<variable>muiFolderOpenCheck</variable>
-					<input file>'$TEMP_DIR'/folderopencheck</input>
+					<input type="file">'$TEMP_DIR'/folderopencheck</input>
 					'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 						echo "<action>echo \"muiFolderOpenCheck: IN\"</action>"
 					fi`'
@@ -402,7 +402,7 @@ Right-click: Previous album">
 		<entry editable="false" fs-action="folder"
 			fs-title="Select a folder to play">
 			<variable>entFolderOpen</variable>
-			<input file>'$TEMP_DIR'/folderopen</input>
+			<input type="file">'$TEMP_DIR'/folderopen</input>
 			'`if [ $DEBUG_TRANSITS -ne 0 ]; then
 				echo "<action>echo \"entFolderOpen: IN\"</action>"
 			fi`'

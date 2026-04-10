@@ -76,7 +76,7 @@ MAIN_DIALOG='
 				background-tint-color="#223"
 				text-foreground-color="#fff">
 				<variable>vte2</variable>
-				<input file>'"$TMPDIR"'/feed</input>
+				<input type="file">'"$TMPDIR"'/feed</input>
 				<action signal="show">echo "vte2=$vte2 - show signal"</action>
 			</terminal>
 		</notebook>

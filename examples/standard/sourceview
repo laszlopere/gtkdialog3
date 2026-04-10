@@ -178,7 +178,7 @@ generated dynamically by a shell function.</label>
 				</hbox>
 				<sourceview language="c" font-name="Monospace 12">
 					<variable>srcEditor</variable>
-					<input file>'"$TMPDIR"'/code</input>
+					<input type="file">'"$TMPDIR"'/code</input>
 				</sourceview>
 			</vbox>
 		</frame>

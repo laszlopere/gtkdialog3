@@ -62,7 +62,7 @@ MAIN_DIALOG='
 		<hbox>
 			<button can-default="true" has-default="true">
 				<label>OK</label>
-				<input file stock="gtk-ok"></input>
+				<input type="stock">gtk-ok</input>
 			</button>
 			<button stock="cancel"/>
 		</hbox>

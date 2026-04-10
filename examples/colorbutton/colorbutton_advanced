@@ -8,7 +8,7 @@ mkdir -p "$TMPDIR"
 funcbtnCreate() {
 	echo '<button>
 			<label>'"$2"'</label>
-			<input file stock="'$3'"></input>
+			<input type="stock">'$3'</input>
 			<action>echo "'"$4"' '$1'"</action>
 			<action function="'"$2"'">'$1'</action>
 		</button>'
@@ -50,7 +50,7 @@ MAIN_DIALOG='
 					<input>echo "#cc8844"</input>
 					'"`funcclbCreate clb4 "Colour from input directive." 1`"'
 				<colorbutton use-alpha="true">
-					<input file>'"$TMPDIR"'/inputfile</input>
+					<input type="file">'"$TMPDIR"'/inputfile</input>
 					<output file>'"$TMPDIR"'/outputfile</output>
 					'"`funcclbCreate clb5 "Colour and alpha from input file directive." 0`"'
 			<hbox>

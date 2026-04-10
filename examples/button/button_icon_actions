@@ -7,127 +7,127 @@ MAIN_DIALOG='
 	<vbox>
 		<hbox>
 			<button>
-				<input file icon="xterm"></input>
+				<input type="icon">xterm</input>
 				<action>echo xterm</action>
 			</button>
 			<button>
-				<input file icon="xarchive"></input>
+				<input type="icon">xarchive</input>
 				<action>echo xarchive</action>
 			</button>
 			<button>
-				<input file icon="urxvt"></input>
+				<input type="icon">urxvt</input>
 				<action>echo urxvt</action>
 			</button>
 			<button>
-				<input file icon="sylpheed"></input>
+				<input type="icon">sylpheed</input>
 				<action>echo sylpheed</action>
 			</button>
 			<button>
-				<input file icon="so"></input>
+				<input type="icon">so</input>
 				<action>echo so</action>
 			</button>
 			<button>
-				<input file icon="scribus"></input>
+				<input type="icon">scribus</input>
 				<action>echo scribus</action>
 			</button>
 			<button>
-				<input file icon="rxvt"></input>
+				<input type="icon">rxvt</input>
 				<action>echo rxvt</action>
 			</button>
 			<button>
-				<input file icon="paste"></input>
+				<input type="icon">paste</input>
 				<action>echo paste</action>
 			</button>
 			<button>
-				<input file icon="package"></input>
+				<input type="icon">package</input>
 				<action>echo package</action>
 			</button>
 			<button>
-				<input file icon="outbox"></input>
+				<input type="icon">outbox</input>
 				<action>echo outbox</action>
 			</button>
 		</hbox>
 		<hbox>
 			<button>
-				<input file icon="network"></input>
+				<input type="icon">network</input>
 				<action>echo network</action>
 			</button>
 			<button>
-				<input file icon="inkscape"></input>
+				<input type="icon">inkscape</input>
 				<action>echo inkscape</action>
 			</button>
 			<button>
-				<input file icon="inbox"></input>
+				<input type="icon">inbox</input>
 				<action>echo inbox</action>
 			</button>
 			<button>
-				<input file icon="icewm-logo"></input>
+				<input type="icon">icewm-logo</input>
 				<action>echo icewm-logo</action>
 			</button>
 			<button>
-				<input file icon="icewin"></input>
+				<input type="icon">icewin</input>
 				<action>echo icewin</action>
 			</button>
 			<button>
-				<input file icon="html"></input>
+				<input type="icon">html</input>
 				<action>echo html</action>
 			</button>
 			<button>
-				<input file icon="gz"></input>
+				<input type="icon">gz</input>
 				<action>echo gz</action>
 			</button>
 			<button>
-				<input file icon="gtktheme"></input>
+				<input type="icon">gtktheme</input>
 				<action>echo gtktheme</action>
 			</button>
 			<button>
-				<input file icon="gtkhash"></input>
+				<input type="icon">gtkhash</input>
 				<action>echo gtkhash</action>
 			</button>
 			<button>
-				<input file icon="grubconfig"></input>
+				<input type="icon">grubconfig</input>
 				<action>echo grubconfig</action>
 			</button>
 		</hbox>
 		<hbox>
 			<button>
-				<input file icon="gparted"></input>
+				<input type="icon">gparted</input>
 				<action>echo gparted</action>
 			</button>
 			<button>
-				<input file icon="gnome-mplayer"></input>
+				<input type="icon">gnome-mplayer</input>
 				<action>echo gnome-mplayer</action>
 			</button>
 			<button>
-				<input file icon="top"></input>
+				<input type="icon">top</input>
 				<action>echo top</action>
 			</button>
 			<button>
-				<input file icon="midori"></input>
+				<input type="icon">midori</input>
 				<action>echo midori</action>
 			</button>
 			<button>
-				<input file icon="extension"></input>
+				<input type="icon">extension</input>
 				<action>echo extension</action>
 			</button>
 			<button>
-				<input file icon="news-feed"></input>
+				<input type="icon">news-feed</input>
 				<action>echo news-feed</action>
 			</button>
 			<button>
-				<input file icon="gexec"></input>
+				<input type="icon">gexec</input>
 				<action>echo gexec</action>
 			</button>
 			<button>
-				<input file icon="geany"></input>
+				<input type="icon">geany</input>
 				<action>echo geany</action>
 			</button>
 			<button>
-				<input file icon="adblock"></input>
+				<input type="icon">adblock</input>
 				<action>echo adblock</action>
 			</button>
 			<button>
-				<input file icon="abiword"></input>
+				<input type="icon">abiword</input>
 				<action>echo abiword</action>
 			</button>
 		</hbox>

@@ -63,7 +63,7 @@ page and two Linux news sites. You can also click links inside the web pages.</l
 			</hbox>
 			<webview space-expand="true" space-fill="true">
 				<variable>webPage</variable>
-				<input file>'"$TMPDIR"'/nav</input>
+				<input type="file">'"$TMPDIR"'/nav</input>
 			</webview>
 		</frame>
 		<buttonbox layout="end" space-expand="false" space-fill="false">

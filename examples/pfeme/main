@@ -122,7 +122,7 @@ funcTabGamesCreate() {
 				auto-sort="true" sort-column="1">
 				<variable>treGameList</variable>
 				<label>Path|Name|Type|x Played</label>
-				<input file>'$LOCAL_DATA_DIR'/GameList</input>
+				<input type="file">'$LOCAL_DATA_DIR'/GameList</input>
 				<action>activate:tgbGamePlay</action>
 				<action signal="cursor-changed">enable:tgbGamePlay</action>
 				<action signal="cursor-changed">enable:entProfileCommandLineArgs</action>
@@ -161,7 +161,7 @@ funcTabGamesCreate() {
 					<variable export="false">tgbGamePlay</variable>
 					<label>_Play</label>
 					<sensitive>false</sensitive>
-					<input file stock="gtk-execute"></input>
+					<input type="stock">gtk-execute</input>
 					<action>if true hide:winMain</action>
 					<action>if true activate:tgbGamePlay</action>
 					<action>if false . funcProfileSave; funcProfileSave 1; . funcxPlayedUpdate; funcxPlayedUpdate; . funcGamePlay; funcGamePlay; . funcImagesUpdate; funcImagesUpdate 1</action>
@@ -185,7 +185,7 @@ funcTabProfilesCreate() {
 		echo '<button>
 				<variable export="false">btnProfile'$f'</variable>
 				<width>48</width><height>48</height>
-				<input file>'$TEMP_DIR'/Profile'$f'</input>
+				<input type="file">'$TEMP_DIR'/Profile'$f'</input>
 				<action>. functmpSet; functmpSet ProfileTarget '$f'</action>
 				<action condition="sensitive_is_true(btnProfileApply)">launch:winProfileNotSavedOnChange</action>
 '`Comment ##
@@ -210,7 +210,7 @@ funcTabProfilesCreate() {
 					space-expand="true" space-fill="true"
 					width-request="314">
 					<variable>entProfile'$f'</variable>
-					<input file>'$TEMP_DIR'/Profile'$f'</input>
+					<input type="file">'$TEMP_DIR'/Profile'$f'</input>
 					<action signal="changed">enable:btnProfileApply</action>
 					<action signal="changed">disable:btnProfileSelect</action>
 				</entry>
@@ -228,7 +228,7 @@ funcTabProfilesCreate() {
 				</text>'
 		else
 			echo '<button space-expand="true" space-fill="false">
-					<input file stock="gtk-new"></input>
+					<input type="stock">gtk-new</input>
 					<action>fileselect:entProfile'$f'</action>
 				</button>'
 		fi
@@ -258,13 +258,13 @@ funcTabProfilesCreate() {
 					space-expand="true" space-fill="true"
 					width-request="220">
 					<variable>entProfile'$tab'Path'$((f % 3))'</variable>
-					<input file>'$TEMP_DIR'/Profile'$tab'Path'$((f % 3))'</input>
+					<input type="file">'$TEMP_DIR'/Profile'$tab'Path'$((f % 3))'</input>
 					<action signal="changed">enable:btnProfileApply</action>
 					<action signal="changed">disable:btnProfileSelect</action>
 				</entry>
 				<vbox>
 					<button space-expand="true" space-fill="false">
-						<input file stock="gtk-open"></input>
+						<input type="stock">gtk-open</input>
 						<action>fileselect:entProfile'$tab'Path'$((f % 3))'</action>
 					</button>
 				</vbox>
@@ -274,7 +274,7 @@ funcTabProfilesCreate() {
 				<entry space-expand="true" space-fill="true"
 					width-request="80">
 					<variable>entProfile'$tab'Pattern'$((f % 3))'</variable>
-					<input file>'$TEMP_DIR'/Profile'$tab'Pattern'$((f % 3))'</input>
+					<input type="file">'$TEMP_DIR'/Profile'$tab'Pattern'$((f % 3))'</input>
 					<action signal="changed">enable:btnProfileApply</action>
 					<action signal="changed">disable:btnProfileSelect</action>
 				</entry>
@@ -303,7 +303,7 @@ funcTabProfilesCreate() {
 					<variable export="false">btnProfileSelect</variable>
 					<label>_Select</label>
 					<sensitive>false</sensitive>
-					<input file stock="gtk-ok"></input>
+					<input type="stock">gtk-ok</input>
 					<action>. funcProfileSave; funcProfileSave 1; . funcProfileSelect; funcProfileSelect</action>
 					<action>refresh:entProfileCommandLineArgs</action>
 					<action>refresh:chkContentRefreshCheck</action>
@@ -320,7 +320,7 @@ funcTabReadmeCreate() {
 	echo '<vbox border-width="5">
 			<edit name="TabReadme" editable="false" cursor-visible="false">
 				<variable export="false">ediReadme</variable>
-				<input file>'$TEMP_DIR'/Readme</input>
+				<input type="file">'$TEMP_DIR'/Readme</input>
 			</edit>
 			<expander use-underline="true" space-expand="false" space-fill="true">
 				<hbox>
@@ -348,7 +348,7 @@ funcTabReadmeCreate() {
 				</hbox>
 				<variable>expReadmeOptions</variable>
 				<label>_Options</label>
-				<input file>'$TEMP_DIR'/ReadmeOptions</input>
+				<input type="file">'$TEMP_DIR'/ReadmeOptions</input>
 			</expander>
 		</vbox>'
 }
@@ -358,7 +358,7 @@ funcTabOutputCreate() {
 	echo '<vbox border-width="5">
 			<edit name="TabOutput" editable="false" cursor-visible="false">
 				<variable export="false">ediOutput</variable>
-				<input file>'$TEMP_DIR'/Output</input>
+				<input type="file">'$TEMP_DIR'/Output</input>
 			</edit>
 		</vbox>'
 }
@@ -371,7 +371,7 @@ funcTabsImagesCreate() {
 					<variable export="false">pmpImage'$f'</variable>
 					<width>'$ImageSize'</width>
 					<height>'$ImageSize'</height>
-					<input file>'$TEMP_DIR'/Image'$f'</input>
+					<input type="file">'$TEMP_DIR'/Image'$f'</input>
 				</pixmap>
 			</eventbox>'
 	done
@@ -546,14 +546,14 @@ while [ true ]; do
 						'"`funcTabReadmeCreate`"'
 						'"`funcTabOutputCreate`"'
 						<variable>nbkMain</variable>
-						<input file>'$TEMP_DIR'/NotebookMainPage</input>
+						<input type="file">'$TEMP_DIR'/NotebookMainPage</input>
 					</notebook>
 				</vbox>
 				<vbox>
 					<notebook tab-prefix="Image ">
 						'"`funcTabsImagesCreate`"'
 						<variable>nbkImages</variable>
-						<input file>'$TEMP_DIR'/NotebookImagesPage</input>
+						<input type="file">'$TEMP_DIR'/NotebookImagesPage</input>
 					</notebook>
 					<text height-request=""><label>"'$DebugSpacer'"</label></text>
 				</vbox>
@@ -566,7 +566,7 @@ while [ true ]; do
 					space-expand="true" space-fill="true">
 					<variable>entProfileCommandLineArgs</variable>
 					<sensitive>false</sensitive>
-					<input file>'$TEMP_DIR'/ProfileCommandLineArgs</input>
+					<input type="file">'$TEMP_DIR'/ProfileCommandLineArgs</input>
 					<action signal="activate">activate:tgbGamePlay</action>
 					<action signal="secondary-icon-release">clear:entProfileCommandLineArgs</action>
 				</entry>
@@ -578,14 +578,14 @@ while [ true ]; do
 		</vbox>
 		<statusbar space-expand="false" space-fill="false">
 			<variable export="false">stbGameCount</variable>
-			<input file>'$TEMP_DIR'/GameCount</input>
+			<input type="file">'$TEMP_DIR'/GameCount</input>
 		</statusbar>
 '`Comment ##
 ## This enables the conditional refreshing of the main content.
 ## `'
 		<checkbox visible="false">
 			<variable>chkContentRefreshCheck</variable>
-			<input file>'$TEMP_DIR'/ContentRefreshCheck</input>
+			<input type="file">'$TEMP_DIR'/ContentRefreshCheck</input>
 			<action>. funcReadmeUpdate; funcReadmeUpdate</action>
 			<action>refresh:ediReadme</action>
 			<action>activate:tgbGameListRefresh</action>
@@ -595,7 +595,7 @@ while [ true ]; do
 ## `'
 		<checkbox visible="false">
 			<variable>chkImagesRefreshCheck</variable>
-			<input file>'$TEMP_DIR'/ImagesRefreshCheck</input>
+			<input type="file">'$TEMP_DIR'/ImagesRefreshCheck</input>
 			<action>refresh:pmpImage0</action>
 			<action>refresh:pmpImage1</action>
 			<action>refresh:pmpImage2</action>

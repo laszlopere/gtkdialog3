@@ -14,7 +14,7 @@ MAIN_DIALOG='
 			</button>
 			<button sensitive="false">
 				<width>16</width>
-				<input file>'"$IMAGEFILE"'</input>
+				<input type="file">'"$IMAGEFILE"'</input>
 				<action>echo You pressed the button with the pixmap.</action>
 			</button>
 		</hbox>

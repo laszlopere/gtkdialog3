@@ -4,7 +4,7 @@ GTKDIALOG=gtkdialog3
 
 funcbtnCreate() {
 	echo '<button>
-			<input file stock="gtk-'$2'"></input>
+			<input type="stock">gtk-'$2'</input>
 			<action>fileselect:ent'$1'</action>
 		</button>'
 }

@@ -62,7 +62,7 @@ it to refresh the various widgets via the timer."</label>
 			</timer>
 			<checkbox sensitive="false">
 				<variable>chkCheck</variable>
-				<input file>'"$TMPDIR"'/chkCheck</input>
+				<input type="file">'"$TMPDIR"'/chkCheck</input>
 				<action>refresh:txt0</action>
 				<action>refresh:txt1</action>
 				<action>refresh:txt2</action>

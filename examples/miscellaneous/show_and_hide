@@ -93,7 +93,7 @@ MAIN_DIALOG='
 				<notebook tab-labels="pixmap|radiobutton">
 					<pixmap tooltip-text="(GtkImage)">
 						<variable>pmpExample</variable>
-						<input file>geany.png</input>
+						<input type="file">geany.png</input>
 					</pixmap>
 					<radiobutton label="(GtkRadioButton)">
 						<variable>rdoExample</variable>

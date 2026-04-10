@@ -10,37 +10,37 @@ MAIN_DIALOG='
 		<hbox>
 			<frame title="Pixmap from stock icon_size="1"">
 				<pixmap icon_size="1">
-					<input file stock="gtk-save"></input>
+					<input type="stock">gtk-save</input>
 				</pixmap>
 			</frame>
 			<frame title="Pixmap from stock icon_size="3"">
 				<pixmap icon_size="3">
-					<input file stock="gtk-save"></input>
+					<input type="stock">gtk-save</input>
 				</pixmap>
 			</frame>
 		</hbox>
 		<hbox>
 			<frame title="Pixmap from stock icon_size="5"">
 				<pixmap icon_size="5">
-					<input file stock="gtk-save"></input>
+					<input type="stock">gtk-save</input>
 				</pixmap>
 			</frame>
 			<frame title="Pixmap from stock icon_size="6"">
 				<pixmap icon_size="6">
-					<input file stock="gtk-save"></input>
+					<input type="stock">gtk-save</input>
 				</pixmap>
 			</frame>
 		</hbox>
 		<hbox>
 			<frame title="Pixmap from file">
 				<pixmap>
-					<input file>'"$IMAGEFILE"'</input>
+					<input type="file">'"$IMAGEFILE"'</input>
 				</pixmap>
 			</frame>
 			<frame title="Pixmap from file scaled">
 				<pixmap>
 					<width>128</width>
-					<input file>'"$IMAGEFILE"'</input>
+					<input type="file">'"$IMAGEFILE"'</input>
 				</pixmap>
 			</frame>
 		</hbox>

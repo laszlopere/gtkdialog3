@@ -60,7 +60,7 @@ MAIN_DIALOG='
 click around and
 watch events in
 the terminal."</label>
-					<input file stock="gtk-dialog-info"></input>
+					<input type="stock">gtk-dialog-info</input>
 					<action>echo "Button0 - click"</action>
 					'$(funcSignalsCreate Button0)'
 				</button>
@@ -73,7 +73,7 @@ the terminal."</label>
 causes all events
 to be received
 by the eventbox."</label>
-					<input file stock="gtk-dialog-authentication"></input>
+					<input type="stock">gtk-dialog-authentication</input>
 					<action>echo "Button1 - click"</action>
 					'$(funcSignalsCreate Button1)'
 				</button>

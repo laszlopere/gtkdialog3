@@ -33,12 +33,12 @@ MAIN_DIALOG='
 		<vbox border-width="20">
 			<pixmap tooltip-text="gnumeric - Size 256">
 				<width>256</width>
-				<input file icon="gnumeric"></input>
+				<input type="icon">gnumeric</input>
 			</pixmap>
 			<button image-position="2">
 				<label>extension - Size 48</label>
 				<width>48</width>
-				<input file icon="extension"></input>
+				<input type="icon">extension</input>
 				<action>""</action>
 			</button>
 		</vbox>

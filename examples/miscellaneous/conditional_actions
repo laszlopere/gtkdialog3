@@ -40,7 +40,7 @@ MAIN_DIALOG='
 		</hbox>
 		<entry editable="false" can-focus="false">
 			<variable>ent0</variable>
-			<input file>'"$TMPDIR"'/ent0</input>
+			<input type="file">'"$TMPDIR"'/ent0</input>
 		</entry>
 		<hseparator></hseparator>
 		<hscale update-policy="2" range-value="50">
@@ -72,7 +72,7 @@ MAIN_DIALOG='
 		</hbox>
 		<entry editable="false" can-focus="false">
 			<variable>ent1</variable>
-			<input file>'"$TMPDIR"'/ent1</input>
+			<input type="file">'"$TMPDIR"'/ent1</input>
 		</entry>
 		<hseparator></hseparator>
 		<hbox homogeneous="true" space-expand="false" space-fill="false">

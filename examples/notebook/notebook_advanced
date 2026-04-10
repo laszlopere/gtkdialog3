@@ -42,7 +42,7 @@ funcnbkCreate() {
 	done
 	echo '<variable>nbk'$1'</variable>'
 	if [ $1 -eq 0 -o $1 -eq 2 ]; then
-		echo '<input file>'"$TMPDIR"'/inputfile</input>'
+		echo '<input type="file">'"$TMPDIR"'/inputfile</input>'
 	elif [ $1 -eq 1 ]; then
 		echo '<input>bash -c "echo \$((\$RANDOM % 4))"</input>'
 	elif [ $1 -eq 3 ]; then
@@ -129,7 +129,7 @@ export MAIN_DIALOG='
 		<notebook show-tabs="false" show-border="false">
 			'"`funcnbkMainCreate`"'
 			<variable>nbkMain</variable>
-			<input file>'"$TMPDIR"'/inputfile</input>
+			<input type="file">'"$TMPDIR"'/inputfile</input>
 		</notebook>
     </vbox>
 </window>

@@ -16,7 +16,7 @@ funcbtnType0Create() {
 funcbtnType1Create() {
 	echo '<button image-position="'$1'">
 			<label>'$1'</label>
-			<input file stock="gtk-'$2'"></input>
+			<input type="stock">gtk-'$2'</input>
 			<action>""</action>
 		</button>'
 }
@@ -25,7 +25,7 @@ funcbtnType2Create() {
 	echo '<button image-position="'$1'">
 			<label>'$1'</label>
 			<variable>btn'$2$1'</variable>
-			<input file>'"$TMPDIR"'/image.svg</input>
+			<input type="file">'"$TMPDIR"'/image.svg</input>
 			<action>echo Refreshing btn'$2$1'</action>
 			<action>refresh:btn'$2$1'</action>
 		</button>'
@@ -35,7 +35,7 @@ funcbtnType3Create() {
 	echo '<button image-position="'$1'">
 			<label>'$1'</label>
 			<variable>btn'$2$1'</variable>
-			<input file>'"$TMPDIR"'/image.svg</input>
+			<input type="file">'"$TMPDIR"'/image.svg</input>
 			<width>64</width>
 			<action>echo Refreshing btn'$2$1'</action>
 			<action>refresh:btn'$2$1'</action>
@@ -98,7 +98,7 @@ export MAIN_DIALOG='
 			<button>
 				<label>Remove/Create Image</label>
 				<variable>btnimgControl</variable>
-				<input file>'"$TMPDIR"'/image.svg</input>
+				<input type="file">'"$TMPDIR"'/image.svg</input>
 				<width>16</width>
 				<action>if [ ! -f '"$TMPDIR"'/image.svg ]; then bash -c funcimgCreate; else rm '"$TMPDIR"'/image.svg; fi</action>
 				<action>refresh:btnimgControl</action>

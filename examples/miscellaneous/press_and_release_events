@@ -10,11 +10,11 @@ funcenvvarCreate() {
 				<text><label>'$1'</label></text>
 				<entry editable="false" can-focus="false">
 					<variable>entpress'$1'</variable>
-					<input file>'"$TMPDIR"'/press'$1'</input>
+					<input type="file">'"$TMPDIR"'/press'$1'</input>
 				</entry>
 				<entry editable="false" can-focus="false">
 					<variable>entrelease'$1'</variable>
-					<input file>'"$TMPDIR"'/release'$1'</input>
+					<input type="file">'"$TMPDIR"'/release'$1'</input>
 				</entry>
 			</hbox>'
 }

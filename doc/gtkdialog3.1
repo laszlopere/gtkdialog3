@@ -358,7 +358,7 @@ widget embeds a VTE terminal emulator.
 It supports
 .B <input>
 and
-.B <input file>
+.B <input type="file">
 to feed commands to the terminal shell,
 and tag attributes such as
 .BR argv0 ,
@@ -372,7 +372,7 @@ widget embeds a WebKitGTK web browser.
 Use
 .B <default>
 to set the initial URL, or
-.B <input file>
+.B <input type="file">
 to load content dynamically.
 The input file may contain a URL (starting with
 .B http://
@@ -402,7 +402,7 @@ tag attribute (e.g.\&
 .BR sh ,
 .BR python ).
 Use
-.B <input file>
+.B <input type="file">
 to load a source file; a companion
 .B .lang
 file (containing just the language ID) switches the highlighting
@@ -423,7 +423,7 @@ tab\-width	Tab width in characters (default 4)
 .EX
 <sourceview language="c" font\-name="Monospace 12">
   <variable>editor</variable>
-  <input file>/path/to/source.c</input>
+  <input type="file">/path/to/source.c</input>
 </sourceview>
 .EE
 .SS Attribute sub\-elements
@@ -437,7 +437,7 @@ _
 <default>	Initial/default value
 <variable>	Shell variable name for this widget
 <input>	Shell command whose output sets the value
-<input file="\fIpath\fR">	File whose contents set the value
+<input type="file">	File whose contents set the value
 <output file>	File to write the value to
 <action>	Shell command to run on widget events
 <item>	List/menu item entry
@@ -448,18 +448,19 @@ _
 .PP
 The
 .B <input>
-element supports tag attributes for icons and files:
+element accepts a
+.B type
+attribute to specify the input kind:
 .PP
-.EX
-<input stock="\fIicon\-name\fR">   stock icon by name
-<input icon="\fIicon\-name\fR">    theme icon by name
-<input file="\fIpath\fR">          read value from file
-.EE
-.PP
-The legacy syntax
-.B "<input file>"
-(with \fBfile\fR as a keyword rather than an attribute) is still
-accepted for backward compatibility.
+.TS
+l l.
+Form	Meaning
+_
+<input type="bash">cmd</input>	Shell command (same as plain <input>)
+<input type="file">path</input>	Read value from file
+<input type="stock">gtk\-open</input>	Load GTK stock icon by ID
+<input type="icon">name</input>	Load GTK theme icon by name
+.TE
 .SS Tag attributes
 Opening tags may carry inline attributes.
 Attribute values can be quoted with either double quotes or single quotes:

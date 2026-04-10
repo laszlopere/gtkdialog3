@@ -8,7 +8,7 @@ mkdir -p "$TMPDIR"
 funcbtnCreate() {
 	echo '<button image-position="'$1'">
 					<label>"'$2'"</label>
-					<input file stock="'$3'"></input>
+					<input type="stock">'$3'</input>
 					<action>echo "'$2' '$4'"</action>
 					<action function="'$2'">'$4'</action>
 				</button>'
@@ -68,7 +68,7 @@ MAIN_DIALOG='
 			</text>
 			<fontbutton>
 				<variable>ftb5</variable>
-				<input file>'"$TMPDIR"'/inputfile</input>
+				<input type="file">'"$TMPDIR"'/inputfile</input>
 				<output file>'"$TMPDIR"'/inputfile</output>
 				<action>echo ftb5 changed to $ftb5</action>
 			</fontbutton>

@@ -8,7 +8,7 @@ mkdir -p "$TMPDIR"
 funcbtnCreate() {
 	echo '<button image-position="'$2'">
 			<label>"'"$3"'"</label>
-			<input file stock="'$4'"></input>
+			<input type="stock">'$4'</input>
 			<action>echo "'"$5"' '$1'"</action>
 			<action function="'"$3"'">'$1'</action>
 		</button>'
@@ -39,7 +39,7 @@ MAIN_DIALOG='
 			<default>This message originates from the default directive</default>
 			<variable>stb0</variable>
 			<input>echo This message originates from an input command</input>
-			<input file>'"$TMPDIR"'/inputfile</input>
+			<input type="file">'"$TMPDIR"'/inputfile</input>
 			<sensitive>true</sensitive>
 			<output file>'"$TMPDIR"'/outputfile</output>
 		</statusbar>

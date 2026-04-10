@@ -22,7 +22,7 @@ MAIN_DIALOG='
 		<frame title="Description">
 			<hbox>
 				<pixmap>
-					<input file stock="gtk-info"></input>
+					<input type="stock">gtk-info</input>
 				</pixmap>
 				<text>
 					<label>"This is a label with a rather long text, so it must be wrapped as the user resizes the window. However, the default label width is 30 characters."
@@ -33,7 +33,7 @@ MAIN_DIALOG='
 		<frame title="Description">
 			<hbox fill="true" expand="true">
 				<pixmap>
-					<input file stock="gtk-info"></input>
+					<input type="stock">gtk-info</input>
 				</pixmap>
 				<text>
 					<label>"This is a label with a rather long text, so it must be wrapped as the user resizes the window. However, the default label width is 30 characters."

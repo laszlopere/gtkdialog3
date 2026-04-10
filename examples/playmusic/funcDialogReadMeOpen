@@ -15,7 +15,7 @@ funcDialogReadMeOpen() {
 	default-width="600" default-height="400" resizable="true">
 	<vbox>
 		<edit name="entReadMe" editable="false" can-focus="false">
-			<input file>'$PACKAGE_DATA_DIR'/README</input>
+			<input type="file">'$PACKAGE_DATA_DIR'/README</input>
 		</edit>
 		<hseparator></hseparator>
 		<hbox>

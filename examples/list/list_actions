@@ -22,7 +22,7 @@ MAIN_DIALOG='
 			<variable>LIST</variable>
 			<width>350</width>
 			<height>150</height>
-			<input file>'"$TMPDIR"'/inputfile</input>
+			<input type="file">'"$TMPDIR"'/inputfile</input>
 			<output file>'"$TMPDIR"'/outputfile</output>
 			<action>echo "The chosen item is \"$LIST\""</action>
 		</list>

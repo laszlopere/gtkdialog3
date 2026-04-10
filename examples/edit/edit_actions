@@ -22,7 +22,7 @@ The text is loaded from a file and can be saved back."</label>
 		</text>
 		<edit wrap-mode="1">
 			<variable>EDITOR</variable>
-			<input file>'"$TMPDIR"'/inputfile</input>
+			<input type="file">'"$TMPDIR"'/inputfile</input>
 			<output file>'"$TMPDIR"'/outputfile</output>
 			<height>200</height>
 			<width>400</width>

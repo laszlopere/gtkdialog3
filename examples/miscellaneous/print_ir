@@ -11,7 +11,7 @@ MAIN_DIALOG='
 				<action>echo You pressed the button with the label.</action>
 			</button>
 			<button>
-				<input file>fileopen.xpm</input>
+				<input type="file">fileopen.xpm</input>
 				<action>echo You pressed the button with the pixmap.</action>
 			</button>
 		</hbox>

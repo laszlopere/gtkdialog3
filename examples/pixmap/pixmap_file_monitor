@@ -19,7 +19,7 @@ funcpmpCreate() {
 				<variable export="false">'$1'</variable>
 				<width>32</width>
 				<height>32</height>
-				<input file>'"$TMPDIR"'/inputfile</input>
+				<input type="file">'"$TMPDIR"'/inputfile</input>
 				<action signal="file-changed">refresh:'$1'</action>
 			</pixmap>'
 }
@@ -49,14 +49,14 @@ MAIN_DIALOG='
 				<label>Change</label>
 				<width>32</width>
 				<height>32</height>
-				<input file>'"$IMAGEFILE1"'</input>
+				<input type="file">'"$IMAGEFILE1"'</input>
 				<action>cp '"$IMAGEFILE1"' '"$TMPDIR"'/inputfile</action>
 			</button>
 			<button>
 				<label>Change</label>
 				<width>32</width>
 				<height>32</height>
-				<input file>'"$IMAGEFILE0"'</input>
+				<input type="file">'"$IMAGEFILE0"'</input>
 				<action>cp '"$IMAGEFILE0"' '"$TMPDIR"'/inputfile</action>
 			</button>
 			<button use-stock="true" label="gtk-quit"></button>

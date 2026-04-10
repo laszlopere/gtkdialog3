@@ -27,7 +27,7 @@ export MAIN_DIALOG='
 		<hbox border-width="30" spacing="60">
 			<button>
 				<variable>TOGGLEME</variable>
-				<input file>'"$TMPDIR"'/toggle.svg</input>
+				<input type="file">'"$TMPDIR"'/toggle.svg</input>
 				<label>"Toggle Me!"</label>
 				<action>bash -c funcImageToggle</action>
 				<action function="refresh">TOGGLEME</action>
@@ -35,7 +35,7 @@ export MAIN_DIALOG='
 			</button>
 			<button tooltip-text="Toggle me too!">
 				<variable>TOGGLEMETOO</variable>
-				<input file>'"$TMPDIR"'/toggle.svg</input>
+				<input type="file">'"$TMPDIR"'/toggle.svg</input>
 				<action>bash -c funcImageToggle</action>
 				<action signal="clicked">refresh:TOGGLEMETOO</action>
 				<action signal="clicked">refresh:TOGGLEME</action>

@@ -72,7 +72,7 @@ funccboTextCreate() {
 			<default>This is the default directive text but the active index will override it if declared</default>'
 	fi
 	echo "<input>echo 'This came from a shell command'</input>
-			<input file>$TMPDIR/inputfile</input>
+			<input type="file">$TMPDIR/inputfile</input>
 			<output file>$TMPDIR/outputfile</output>
 			<action signal='changed'>echo 'cboComboBoxText$1 changed to \$cboComboBoxText$1'</action>
 			<action>echo 'cboComboBoxText$1 action for default signal triggered'</action>

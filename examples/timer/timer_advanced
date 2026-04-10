@@ -11,14 +11,14 @@ funcpixCreate() {
 	for f in 0 1 2 3; do
 		echo '<pixmap>
 				<variable export="false">pix'$1$f'</variable>
-				<input file>'"$TMPDIR"'/pix'$f'.svg</input>
+				<input type="file">'"$TMPDIR"'/pix'$f'.svg</input>
 			</pixmap>'
 	done
 }
 
 funcbtnCreate() {
 	echo '<button>
-			<input file stock="'$1'"></input>
+			<input type="stock">'$1'</input>
 			<action>'$2':tmr0</action>
 			<action>'$2':tmr1</action>
 			<action>'$2':tmr2</action>

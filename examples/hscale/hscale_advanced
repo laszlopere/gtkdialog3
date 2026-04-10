@@ -8,7 +8,7 @@ mkdir -p "$TMPDIR"
 funcbtnCreate() {
 	echo '<button image-position="'$3'">
 			<label>"'"$2"'"</label>
-			<input file stock="'$4'"></input>
+			<input type="stock">'$4'</input>
 			<action>echo "'"$5"' '$1'"</action>
 			<action function="'"$6"'">'$1'</action>
 		</button>'
@@ -63,7 +63,7 @@ funcscaType3Create() {
 			draw-value="false" show-fill-level="true" fill-level="56"
 			restrict-to-fill-level="true" update-policy="1">
 			<variable>'$1'</variable>
-			<input file>'"$TMPDIR"'/inputfile</input>
+			<input type="file">'"$TMPDIR"'/inputfile</input>
 			<action signal="value_changed">echo "'$1' changed to $'$1'"</action>
 			<output file>'"$TMPDIR"'/outputfile</output>
 		</'$2'scale>

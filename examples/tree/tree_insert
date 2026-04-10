@@ -22,11 +22,11 @@ MAIN_DIALOG='
 					<variable>ENTRY</variable>
 				</entry>
 				<button>
-					<input file stock="gtk-add"></input>
+					<input type="stock">gtk-add</input>
 					<action function="insert">ENTRY,TREE</action>
 				</button>
 				<button>
-					<input file stock="gtk-remove"></input>
+					<input type="stock">gtk-remove</input>
 					<action function="removeselected">TREE</action>
 				</button>
 			</hbox>    

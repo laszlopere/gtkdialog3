@@ -39,7 +39,7 @@ MAIN_DIALOG="
 			</vbox>
 			<label>e_xpander</label>
 			<variable>exp0</variable>
-			<input file>$TMPDIR/inoutfile</input>
+			<input type="file">$TMPDIR/inoutfile</input>
 			<output file>$TMPDIR/inoutfile</output>
 			<action>echo \"exp0=\\\"\$exp0\\\" - activate signal\"</action>
 			<action>if true echo \"exp0 is true\"</action>

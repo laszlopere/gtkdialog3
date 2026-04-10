@@ -7,7 +7,7 @@ mkdir -p "$TMPDIR"
 
 funcbtnCreate() {
 	echo '<button>
-			<input file stock="'$2'"></input>
+			<input type="stock">'$2'</input>
 			<action>echo "'"$4"' spb'$1'"</action>
 			<action function="'"$3"'">spb'$1'</action>
 		</button>'
@@ -50,7 +50,7 @@ MAIN_DIALOG='
 					<spinbutton block-function-signals="true" digits="4"
 						range-min="0" range-max="1" range-step="0.01"
 						tooltip-text="block-function-signals='"'true'"'">
-						<input file>'"$TMPDIR"'/inputfile</input>
+						<input type="file">'"$TMPDIR"'/inputfile</input>
 						'"`funcspbCreate 1`"'
 					<hbox>
 						'"`funcbtnCreate 1 gtk-no disable Disabling`"'

@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 funcbtnCreate() {
 	echo '<button>
 			<label>'"$2"'</label>
-			<input file stock="'$3'"></input>
+			<input type="stock">'$3'</input>
 			<action>echo "'"$4"' '$1'"</action>
 			<action function="'"$2"'">'$1'</action>
 		</button>'
@@ -22,7 +22,7 @@ MAIN_DIALOG='
 				<text wrap="false" xalign="0">
 					<variable export="false">txt0</variable>
 					<label>This is a static text.</label>
-					<input file>'$0'</input>
+					<input type="file">'$0'</input>
 				</text>
 			</vbox>
 			<hbox homogeneous="true">

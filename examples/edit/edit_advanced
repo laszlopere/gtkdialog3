@@ -10,7 +10,7 @@ ediWidth=150; ediHeight=75; gap=25
 funcbtnCreate() {
 	echo '<button image-position="'$2'">
 			<label>"'"$3"'"</label>
-			<input file stock="'$4'"></input>
+			<input type="stock">'$4'</input>
 			<action>echo "'"$5"' '$1'"</action>
 			<action function="'"$3"'">'$1'</action>
 		</button>'
@@ -21,7 +21,7 @@ funcediCreate() {
 			<width>'$2'</width>
 			<height>'$3'</height>'
 	if [ $4 = 1 ]; then
-		echo '<input file>'"$TMPDIR"'/inoutfile</input>
+		echo '<input type="file">'"$TMPDIR"'/inoutfile</input>
 			<action signal="show">refresh:'$1'</action>'
 	fi
 	echo '</edit>'

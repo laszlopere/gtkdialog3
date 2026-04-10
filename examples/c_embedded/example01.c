@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 			"<variable>ENTRY</variable>"
 		"</entry>"
 		"<edit>"
-			"<input file>inputfile</input>"
+			"<input type="file">inputfile</input>"
 			"<variable>EDITOR</variable>"
 		"</edit>"
 	"</frame>"

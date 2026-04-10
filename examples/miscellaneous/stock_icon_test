@@ -27,7 +27,7 @@ pixCreate() {
 		for ((y = 0; y < 15; y++)); do
 			i=$((x*15*2+y*2+1))
 			echo '<pixmap>
-					<input file '$type'="'${icon_names[$i]}'"></input>
+					<input type="'$type'">'${icon_names[$i]}'</input>
 				</pixmap>'
 		done
 		echo '</vbox>'
@@ -40,7 +40,7 @@ btnCreate() {
 		for ((y = 0; y < 15; y++)); do
 			i=$((x*15*2+y*2+1))
 			echo '<button>
-					<input file '$type'="'${icon_names[$i]}'"></input>
+					<input type="'$type'">'${icon_names[$i]}'</input>
 				</button>'
 		done
 		echo '</vbox>'

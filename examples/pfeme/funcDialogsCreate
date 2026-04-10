@@ -14,7 +14,7 @@ funcDialogsCreate() {
 		<hbox>
 			<vbox>
 				<pixmap stock-icon-size="6">
-					<input file stock="gtk-dialog-question"></input>
+					<input type="stock">gtk-dialog-question</input>
 				</pixmap>
 				<text><label>"'$DebugSpacer'"</label></text>
 			</vbox>
@@ -31,13 +31,13 @@ Do you want to save it now?
 			</button>
 			<button use-underline="true">
 				<label>_Don'"'"'t save</label>
-				<input file stock="gtk-clear"></input>
+				<input type="stock">gtk-clear</input>
 				<action>activate:muiProfileChange</action>
 				<action>closewindow:winProfileNotSavedOnChange</action>
 			</button>
 			<button use-underline="true">
 				<label>_Save</label>
-				<input file stock="gtk-save"></input>
+				<input type="stock">gtk-save</input>
 				<action>. funcProfileSave; funcProfileSave</action>
 				<action>if [ `. funcrcGet; funcrcGet ProfileSelected` -eq `. functmpGet; functmpGet ProfileVisible` ]; then . funcWidgetSchedule; funcWidgetSchedule chkContentRefreshCheck ContentRefreshCheck; fi</action>
 				<action>refresh:chkContentRefreshCheck</action>
@@ -57,7 +57,7 @@ Do you want to save it now?
 		<hbox>
 			<vbox>
 				<pixmap stock-icon-size="6">
-					<input file stock="gtk-dialog-question"></input>
+					<input type="stock">gtk-dialog-question</input>
 				</pixmap>
 				<text><label>"'$DebugSpacer'"</label></text>
 			</vbox>
@@ -74,12 +74,12 @@ Do you want to save it now?
 			</button>
 			<button use-underline="true">
 				<label>_Don'"'"'t save</label>
-				<input file stock="gtk-clear"></input>
+				<input type="stock">gtk-clear</input>
 				<action>activate:muiExit</action>
 			</button>
 			<button use-underline="true">
 				<label>_Save</label>
-				<input file stock="gtk-save"></input>
+				<input type="stock">gtk-save</input>
 				<action>. funcProfileSave; funcProfileSave</action>
 				<action>activate:muiExit</action>
 			</button>
@@ -96,7 +96,7 @@ Do you want to save it now?
 		<hbox>
 			<vbox>
 				<pixmap stock-icon-size="6">
-					<input file stock="gtk-dialog-question"></input>
+					<input type="stock">gtk-dialog-question</input>
 				</pixmap>
 				<text><label>"'$DebugSpacer'"</label></text>
 			</vbox>
@@ -115,7 +115,7 @@ Do you want to restart now?
 			</button>
 			<button use-underline="true">
 				<label>_Restart now</label>
-				<input file stock="gtk-refresh"></input>
+				<input type="stock">gtk-refresh</input>
 				<action>. functmpSet; functmpSet ApplicationRestart true</action>
 				<action>activate:muiQuit</action>
 			</button>
@@ -138,7 +138,7 @@ Do you want to restart now?
 				<pixmap space-expand="false" space-fill="false">
 					<width>48</width>
 					<height>48</height>
-					<input file icon="'$TARGET'"></input>
+					<input type="icon">'$TARGET'</input>
 				</pixmap>
 				<text use-markup="true" space-expand="false" space-fill="false">
 					<label>"<span fgcolor='"'"'white'"'"'><big><b>'$TITLE' '$VERSION'</b></big></span>"</label>
@@ -191,7 +191,7 @@ GNU LESSER GENERAL PUBLIC LICENSE"</label>
 	default-width="600" default-height="400" resizable="true">
 	<vbox>
 		<edit name="HelpText" editable="false">
-			<input file>'$PACKAGE_DATA_DIR'/README</input>
+			<input type="file">'$PACKAGE_DATA_DIR'/README</input>
 		</edit>
 		<hseparator space-expand="false" space-fill="false"></hseparator>
 		<hbox space-expand="false" space-fill="false">

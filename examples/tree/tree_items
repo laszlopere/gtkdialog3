@@ -41,8 +41,8 @@ MAIN_DIALOG='
 			<item icon-name="gimp">CD_ROM Drive     | /cdrom/   | ak.png</item>
 			<item icon-name="gnumeric">Floppy Disk  | /floppy/  | ak.ods</item>
 			<item icon-name="">Trash                | /trash/   | ak.old</item>
-			<input file stock-column="0">'"$TMPDIR"'/inputfile0</input>
-			<input file icon-column="0">'"$TMPDIR"'/inputfile1</input>
+			<input type="file" stock-column="0">'"$TMPDIR"'/inputfile0</input>
+			<input type="file" icon-column="0">'"$TMPDIR"'/inputfile1</input>
 		</tree>
 		<hseparator></hseparator>
 		<hbox homogeneous="true">

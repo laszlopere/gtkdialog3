@@ -45,7 +45,7 @@ as well.</label>
 				</hbox>
 				<terminal argv0='/bin/bash' has-focus='true'>
 					<variable>term</variable>
-					<input file>$TMPDIR/cmd</input>
+					<input type="file">$TMPDIR/cmd</input>
 				</terminal>
 			</vbox>
 		</frame>

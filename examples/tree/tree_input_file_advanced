@@ -11,7 +11,7 @@ treWidth=320; treHeight=200
 
 funcbtnCreate() {
 	echo '<button>
-			<input file stock="'$3'"></input>
+			<input type="stock">'$3'</input>
 			<action>echo "'"$4"' '$1'"</action>
 			<action function="'"$2"'">'$1'</action>
 		</button>'
@@ -63,25 +63,25 @@ export MAIN_DIALOG='
 		<hbox>
 			<vbox>
 				<text justify="2">
-					<label>"'"<input file> (text only)
+					<label>"'"<input type="file"> (text only)
 selection-mode='0' (none)
 
 exported-column='0' (default)"'"</label>
 				</text>
 				<tree selection-mode="0">
-					<input file>'"$TMPDIR"'/inputfile0</input>
+					<input type="file">'"$TMPDIR"'/inputfile0</input>
 					'"`functreCreate tre0`"'
 			</vbox>
 			<vseparator></vseparator>
 			<vbox>
 				<text justify="2">
-					<label>"'"<input file stock-column='0'> (text and stock icons)
+					<label>"'"<input type="file" stock-column='0'> (text and stock icons)
 selection-mode='1' (single - default)
 headers-visible='false'
 exported-column='1'"'"</label>
 				</text>
 				<tree exported-column="1" headers-visible="false">
-					<input file stock-column="0">'"$TMPDIR"'/inputfile1</input>
+					<input type="file" stock-column="0">'"$TMPDIR"'/inputfile1</input>
 					'"`functreCreate tre1`"'
 			</vbox>
 		</hbox>
@@ -89,25 +89,25 @@ exported-column='1'"'"</label>
 		<hbox>
 			<vbox>
 				<text justify="2">
-					<label>"'"<input file icon-column='0'> (text and theme icons)
+					<label>"'"<input type="file" icon-column='0'> (text and theme icons)
 selection-mode='2' (browse)
 headers-clickable='false'
 exported-column='2'"'"</label>
 				</text>
 				<tree selection-mode="2" exported-column="2" headers-clickable="false">
-					<input file icon-column="0">'"$TMPDIR"'/inputfile2</input>
+					<input type="file" icon-column="0">'"$TMPDIR"'/inputfile2</input>
 					'"`functreCreate tre2`"'
 			</vbox>
 			<vseparator></vseparator>
 			<vbox>
 				<text justify="2">
-					<label>"'"<input file> (default stock icon)
+					<label>"'"<input type="file"> (default stock icon)
 selection-mode='3' (multiple)
 rules-hint='true'
 exported-column='3'"'"</label>
 				</text>
 				<tree stock-id="gtk-justify-center" selection-mode="3" exported-column="3" rules-hint="true">
-					<input file>'"$TMPDIR"'/inputfile0</input>
+					<input type="file">'"$TMPDIR"'/inputfile0</input>
 					'"`functreCreate tre3`"'
 			</vbox>
 		</hbox>

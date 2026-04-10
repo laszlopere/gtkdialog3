@@ -318,7 +318,7 @@ echo '
 				<vbox scrollable="true" hscrollbar-policy="2">
 					<eventbox name="WhiteBg">
 						<text name="BlackFg" use-markup="true" wrap="false">
-							<input file>'$TEMP_DIR'/Pangrams</input>
+							<input type="file">'$TEMP_DIR'/Pangrams</input>
 						</text>
 					</eventbox>
 				</vbox>
@@ -336,13 +336,13 @@ echo '
 					visible="'`funcTorF $(($FontButtonState >> 1 & 1))`'"
 					sensitive="'`funcTorF $(($FontButtonState >> 1 & 1))`'">
 					<variable>ftbSmall</variable>
-					<input file stock="gtk-select-font"></input>
+					<input type="stock">gtk-select-font</input>
 					<action>activate:ftbBig</action>
 				</button>
 				<entry name="Preview" secondary-icon-stock="gtk-clear"
 					space-expand="true" space-fill="true">
 					<variable>entPreview</variable>
-					<input file>'$TEMP_DIR'/PreviewText</input>
+					<input type="file">'$TEMP_DIR'/PreviewText</input>
 					<action signal="secondary-icon-release">clear:entPreview</action>
 				</entry>
 				<button use-stock="true" label="gtk-quit" has-focus="true"

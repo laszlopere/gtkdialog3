@@ -28,7 +28,7 @@ MAIN_DIALOG='
 					<default>true</default>
 					<label>Toggle</label>
 					<variable>tgb0</variable>
-					<input file>'"$TMPDIR"'/tgb0.svg</input>
+					<input type="file">'"$TMPDIR"'/tgb0.svg</input>
 					<action>ln -sf '"$TMPDIR"'/$tgb0.svg '"$TMPDIR"'/tgb0.svg</action>
 					<action>refresh:tgb0</action>
 					<action>save:tgb0</action>
@@ -47,7 +47,7 @@ MAIN_DIALOG='
 					<variable>tgb1</variable>
 					<height>128</height>
 					<width>128</width>
-					<input file>'"$TMPDIR"'/tgb1.svg</input>
+					<input type="file">'"$TMPDIR"'/tgb1.svg</input>
 					<action>ln -sf '"$TMPDIR"'/$tgb1.svg '"$TMPDIR"'/tgb1.svg</action>
 					<action>refresh:tgb1</action>
 					<action>if true enable:mnuFile</action>
