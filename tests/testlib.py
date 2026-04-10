@@ -157,13 +157,17 @@ class TestRunner:
     def _print_summary(self):
         passed = self._total_checks - self._total_failures
         total_time = sum(s[3] for s in self._steps)
-        if self._total_failures == 0:
+        if self._aborted:
+            status = "FAILURE"
+        elif self._total_failures == 0:
             status = "SUCCESS"
         else:
             status = "FAILURE"
         if self.verbose:
             print(f"\n{'=' * 40}")
-            if self._total_failures == 0:
+            if self._aborted:
+                print(f"ABORTED ({self._total_checks} checks completed)")
+            elif self._total_failures == 0:
                 print(f"All tests PASSED ({self._total_checks} checks)")
             else:
                 print(f"{self._total_failures} of {self._total_checks} "
