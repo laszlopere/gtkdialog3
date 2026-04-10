@@ -316,7 +316,7 @@ combobox, comboboxtext, comboboxentry, list, table
 .PP
 .I Display
 .RS
-pixmap, progressbar, statusbar, terminal
+pixmap, progressbar, statusbar, terminal, webview
 .RE
 .PP
 .I Separators and scales
@@ -334,6 +334,59 @@ Menus have their own nesting hierarchy:
     <menuitem> ... </menuitem>
   </menu>
 </menubar>
+.EE
+.SS Optional widgets
+Some widgets require external libraries and are only available when
+.B gtkdialog3
+is built with the corresponding library installed.
+Use
+.B gtkdialog3 \-\-version
+to see which optional libraries are enabled.
+.PP
+.TS
+l l l.
+Widget	Library	Purpose
+_
+<terminal>	libvte (VTE 2.91)	Embedded terminal emulator
+<webview>	libwebkit2gtk (WebKitGTK)	Embedded HTML/web browser
+.TE
+.PP
+The
+.B <terminal>
+widget embeds a VTE terminal emulator.
+It supports
+.B <input>
+and
+.B <input file>
+to feed commands to the terminal shell,
+and tag attributes such as
+.BR argv0 ,
+.BR text\-foreground\-color ,
+and
+.BR text\-background\-color .
+.PP
+The
+.B <webview>
+widget embeds a WebKitGTK web browser.
+Use
+.B <default>
+to set the initial URL, or
+.B <input file>
+to load content dynamically.
+The input file may contain a URL (starting with
+.B http://
+or
+.BR https:// ),
+a local file path (starting with
+.BR / ),
+or raw HTML.
+The widget exports its current URI as the variable value.
+.PP
+.EX
+<webview space\-expand="true" space\-fill="true">
+  <variable>myWeb</variable>
+  <default>https://example.com</default>
+</webview>
 .EE
 .SS Attribute sub\-elements
 Attribute elements appear as children of any widget or container:
