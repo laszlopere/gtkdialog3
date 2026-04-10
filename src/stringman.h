@@ -60,7 +60,8 @@ typedef enum {
 	CommandCut               = 19,
 	CommandCopy              = 20,
 	CommandPaste             = 21,
-	CommandSelectAll         = 22
+	CommandSelectAll         = 22,
+	CommandSet               = 23
 } CommandType;
 
 #ifdef G_OS_WIN32

@@ -1849,6 +1849,7 @@ Both forms are case-insensitive in the action type.
 * insert::		Inserting data from one widget into another
 * append::		Appending data from one widget to another
 * Clipboard actions::	Cut, copy, paste, select all
+* set::			Setting a widget property at runtime
 
 
 File: gtkdialog.info,  Node: Shell commands,  Next: exit,  Up: action
@@ -2204,7 +2205,7 @@ it to TARGET.  Both ‘insert:’ and ‘append:’ add new rows to list and
 tree widgets and set text in entry and edit widgets.
 
 
-File: gtkdialog.info,  Node: Clipboard actions,  Prev: append,  Up: action
+File: gtkdialog.info,  Node: Clipboard actions,  Next: set,  Prev: append,  Up: action
 
 7.9.20 Clipboard actions
 ------------------------
@@ -2251,6 +2252,39 @@ From ‘examples/edit/edit_actions’:
          <label>Paste</label>
          <action function="paste">EDITOR</action>
      </button>
+
+
+File: gtkdialog.info,  Node: set,  Prev: Clipboard actions,  Up: action
+
+7.9.21 ‘set:WIDGET.PROPERTY=VALUE’
+----------------------------------
+
+Sets a GTK property on the named widget at runtime.  The argument is
+parsed as WIDGET‘.’PROPERTY‘=’VALUE, where WIDGET is the variable name,
+PROPERTY is any GTK property that the widget supports, and VALUE is the
+new value.  The same properties that work as tag attributes at widget
+creation time (e.g. ‘title’, ‘sensitive’, ‘label’) can be set with this
+action.
+
+     Set the window title:
+     <action>set:myWindow.title=Processing...</action>
+
+     Disable a widget:
+     <action>set:myButton.sensitive=false</action>
+
+     Using attribute syntax:
+     <action type='set'>myButton.sensitive=false</action>
+
+   This action can replace the common pattern of writing to a temporary
+file and then refreshing a widget.  For example, loading a URL in a
+webview:
+
+     Before (two actions + temp file):
+     <action>echo https://lwn.net > /tmp/nav</action>
+     <action>refresh:webPage</action>
+
+     After (one action, no temp file):
+     <action>set:webPage.uri=https://lwn.net</action>
 
 
 
@@ -2322,26 +2356,27 @@ Node: item58583
 Node: sensitive59526
 Node: width and height60451
 Node: action61146
-Node: Shell commands62911
-Node: exit63886
-Node: launch64470
-Node: closewindow65087
-Node: presentwindow65666
-Node: enable66270
-Node: disable66770
-Node: show67267
-Node: hide67878
-Node: activate68412
-Node: grabfocus69118
-Node: refresh69602
-Node: save70345
-Node: fileselect70843
-Node: clear71907
-Node: removeselected72381
-Node: break72915
-Node: insert73587
-Node: append74192
-Node: Clipboard actions74557
+Node: Shell commands62958
+Node: exit63933
+Node: launch64517
+Node: closewindow65134
+Node: presentwindow65713
+Node: enable66317
+Node: disable66817
+Node: show67314
+Node: hide67925
+Node: activate68459
+Node: grabfocus69165
+Node: refresh69649
+Node: save70392
+Node: fileselect70890
+Node: clear71954
+Node: removeselected72428
+Node: break72962
+Node: insert73634
+Node: append74239
+Node: Clipboard actions74604
+Node: set75792
 
 End Tag Table
 

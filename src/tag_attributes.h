@@ -37,6 +37,7 @@ typedef struct tag_attribute {
 
 
 GList *tag_attributeset_append(GList *list, gchar *name, gchar *value);
+gboolean try_set_property(GtkWidget *widget, namevalue *nameval);
 gint widget_set_tag_attributes(GtkWidget *widget, tag_attr *attr);
 char *get_tag_attribute(tag_attr *attr, const char *name);
 tag_attr *add_tag_attribute(tag_attr *attr, char *name, char *value);

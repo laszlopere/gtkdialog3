@@ -38,6 +38,9 @@
 #include "attributes.h"
 #include "variables.h"
 #include "tag_attributes.h"
+#if HAVE_WEBKIT
+#include <webkit2/webkit2.h>
+#endif
 
 extern gchar *option_include_file;
 
@@ -85,6 +88,7 @@ void action_hide(GtkWidget *widget, char *string);
 void action_activate(GtkWidget *widget, char *string);
 void action_grabfocus(GtkWidget *widget, char *string);
 void action_presentwindow(GtkWidget *widget, char *string);
+void action_set(GtkWidget *widget, char *string);
 void action_shellcommand(GtkWidget *widget, char *string);
 
 /***********************************************************************
@@ -663,6 +667,70 @@ void action_shellcommand(GtkWidget *widget, char *string)
 }
 
 /***********************************************************************
+ * Action set                                                          *
+ ***********************************************************************/
+/* Parses "widget.property=value" and sets the property on the widget
+ * looked up by variable name.  Custom (non-GTK) properties are handled
+ * first for specific widget types; everything else falls through to
+ * try_set_property which uses GObject's property system. */
+
+void action_set(GtkWidget *widget, char *string)
+{
+	variable         *var;
+	namevalue         nv;
+	char             *dot;
+	char             *eq;
+	char             *widget_name;
+
+	/* Find the first dot (widget.property separator) */
+	dot = strchr(string, '.');
+	if (dot == NULL) {
+		fprintf(stderr, "%s(): Missing '.' in set argument: %s\n",
+			__func__, string);
+		return;
+	}
+
+	/* Find the first '=' after the dot (property=value separator) */
+	eq = strchr(dot + 1, '=');
+	if (eq == NULL) {
+		fprintf(stderr, "%s(): Missing '=' in set argument: %s\n",
+			__func__, string);
+		return;
+	}
+
+	/* Extract widget name, property name, and value */
+	widget_name = g_strndup(string, dot - string);
+	nv.name = g_strndup(dot + 1, eq - dot - 1);
+	nv.value = eq + 1;
+
+	var = variables_get_by_name(widget_name);
+	if (var == NULL || var->Widget == NULL) {
+		fprintf(stderr, "%s(): Widget '%s' not found.\n",
+			__func__, widget_name);
+		g_free(widget_name);
+		g_free(nv.name);
+		return;
+	}
+
+	/* Handle custom properties for specific widget types */
+#if HAVE_WEBKIT
+	if (WEBKIT_IS_WEB_VIEW(var->Widget) &&
+	    strcasecmp(nv.name, "uri") == 0) {
+		webkit_web_view_load_uri(WEBKIT_WEB_VIEW(var->Widget), nv.value);
+		g_free(widget_name);
+		g_free(nv.name);
+		return;
+	}
+#endif
+
+	/* Fall through to GObject property system */
+	try_set_property(var->Widget, &nv);
+
+	g_free(widget_name);
+	g_free(nv.name);
+}
+
+/***********************************************************************
  * Execute Action                                                      *
  ***********************************************************************/
 /* On exit: returns 0 if action function is unknown
@@ -790,6 +858,10 @@ int execute_action(GtkWidget *widget, const char *command, const char *type)
 
 			case CommandSelectAll:
 				action_selectall(widget, command_string);
+				break;
+
+			case CommandSet:
+				action_set(widget, command_string);
 				break;
 
 			default:

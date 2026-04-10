@@ -39,7 +39,7 @@ extern gboolean option_no_warning;
  *                                                                     *
  ***********************************************************************/
 
-static gboolean try_set_property(GtkWidget *widget, namevalue  *nameval)
+gboolean try_set_property(GtkWidget *widget, namevalue  *nameval)
 {
 	GParamSpec       *paramspec;
 

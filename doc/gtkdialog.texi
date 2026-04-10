@@ -1890,6 +1890,7 @@ The available action types are listed in the following subsections.
 * insert::		Inserting data from one widget into another
 * append::		Appending data from one widget to another
 * Clipboard actions::	Cut, copy, paste, select all
+* set::			Setting a widget property at runtime
 @end menu
 
 @c -----------------------------------------------------------------
@@ -2292,6 +2293,42 @@ Selects all text in the named editor.
     <label>Paste</label>
     <action function="paste">EDITOR</action>
 </button>
+@end example
+
+@c -----------------------------------------------------------------
+@node set
+@subsection @code{set:@var{Widget}.@var{Property}=@var{Value}}
+
+Sets a GTK property on the named widget at runtime.  The argument is
+parsed as @var{Widget}@code{.}@var{Property}@code{=}@var{Value}, where
+@var{Widget} is the variable name, @var{Property} is any GTK property
+that the widget supports, and @var{Value} is the new value.  The same
+properties that work as tag attributes at widget creation time
+(e.g.@: @code{title}, @code{sensitive}, @code{label}) can be set
+with this action.
+
+@example
+@r{Set the window title:}
+<action>set:myWindow.title=Processing...</action>
+
+@r{Disable a widget:}
+<action>set:myButton.sensitive=false</action>
+
+@r{Using attribute syntax:}
+<action type='set'>myButton.sensitive=false</action>
+@end example
+
+This action can replace the common pattern of writing to a temporary
+file and then refreshing a widget.  For example, loading a URL in a
+webview:
+
+@example
+@r{Before (two actions + temp file):}
+<action>echo https://lwn.net > /tmp/nav</action>
+<action>refresh:webPage</action>
+
+@r{After (one action, no temp file):}
+<action>set:webPage.uri=https://lwn.net</action>
 @end example
 
 

@@ -325,6 +325,7 @@ static gchar *prefixes[] = {
 	"copy",
 	"paste",
 	"selectall",
+	"set",
 	NULL
 };
 
