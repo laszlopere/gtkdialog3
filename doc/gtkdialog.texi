@@ -844,6 +844,11 @@ is toggled.
 
 Exports @code{true} or @code{false} as the variable value.
 
+@float Figure,fig:switch
+@center @image{images/widget_switch,3in,,The switch widget example}
+@caption{The switch widget from @file{examples/switch/switch}.}
+@end float
+
 @noindent From @file{examples/switch/switch}:
 @example
 <hbox homogeneous="true">
