@@ -372,6 +372,27 @@ int widget_closecommand(FILE *fp)
 }
 
 /***********************************************************************
+ * Kill all child processes started by widget_opencommand.             *
+ * Called at program exit to prevent orphaned processes.                *
+ ***********************************************************************/
+
+void widget_kill_all_commands(void)
+{
+	GHashTableIter iter;
+	gpointer key, value;
+
+	if (command_pids == NULL)
+		return;
+
+	g_hash_table_iter_init(&iter, command_pids);
+	while (g_hash_table_iter_next(&iter, &key, &value)) {
+		pid_t pid = GPOINTER_TO_INT(value);
+		if (pid > 0)
+			kill(-pid, SIGTERM);
+	}
+}
+
+/***********************************************************************
  *                                                                     *
  ***********************************************************************/
 

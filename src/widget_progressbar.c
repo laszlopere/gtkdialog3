@@ -373,7 +373,10 @@ static gpointer widget_progressbar_thread_entry(progr_descr *descr)
 
 	}
 
-	widget_closecommand(descr->pipe);
+	if (descr->pipe != NULL) {
+		widget_closecommand(descr->pipe);
+		descr->pipe = NULL;
+	}
 	return NULL;
 }
 
@@ -388,6 +391,12 @@ void widget_progressbar_descriptor_destroy_notify(progr_descr *descr)
 	G_LOCK(any_progress_bar);
 	descr->widget = NULL;
 	G_UNLOCK(any_progress_bar);
+	/* Kill the child process and close the pipe now, rather than
+	 * relying on the reader thread which may not run before exit. */
+	if (descr->pipe != NULL) {
+		widget_closecommand(descr->pipe);
+		descr->pipe = NULL;
+	}
 }
 
 /***********************************************************************

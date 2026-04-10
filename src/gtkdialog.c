@@ -44,6 +44,7 @@
 #include "gtkdialog.h"
 #include "variables.h"
 #include "automaton.h"
+#include "widgets.h"
 #include "gtkdialog_parser.h"
 
 #undef DEBUG
@@ -634,6 +635,7 @@ gtkdialog_initialized:
 	gtkdialog_parse();
 	build_window(get_program_name());
 	gtk_main();
+	widget_kill_all_commands();
 	fflush(stdout);
 	return exit_status;
 }
