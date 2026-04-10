@@ -1364,13 +1364,34 @@ Tab width in characters (default 4).
 
 Exports the full buffer text as the variable value.
 
+The @code{set} action supports the following synthetic properties for
+sourceview widgets:
+
+@table @code
+@item file
+Load the contents of the named file into the editor buffer.
+@item language
+Switch the syntax highlighting language (e.g.@: @code{c}, @code{sh},
+@code{json}).
+@end table
+
 @noindent From @file{examples/standard/sourceview}:
 @example
-<sourceview language="c" font-name="Monospace 12">
+<sourceview language='c' font-name='Monospace 12'>
     <variable>srcEditor</variable>
-    <input type="file">/tmp/code.c</input>
+    <input type='file'>/tmp/hello.c</input>
 </sourceview>
+<button>
+    <label>Bash Script</label>
+    <action>set:srcEditor.file=/tmp/greet.sh</action>
+    <action>set:srcEditor.language=sh</action>
+</button>
 @end example
+
+@float Figure,fig:sourceview
+@center @image{images/widget_sourceview,5in,,The sourceview widget example}
+@caption{The sourceview widget from @file{examples/standard/sourceview}.}
+@end float
 
 @c -----------------------------------------------------------------
 @node webview
@@ -1386,12 +1407,24 @@ to load content dynamically.  The input file may contain a URL
 
 Exports the current URI as the variable value.
 
+The @code{set} action supports the following synthetic property for
+webview widgets:
+
+@table @code
+@item uri
+Navigate to the given URL or local @code{file://} path.
+@end table
+
 @noindent From @file{examples/standard/webview}:
 @example
-<webview space-expand="true" space-fill="true">
+<webview space-expand='true' space-fill='true'>
     <variable>webPage</variable>
-    <input type="file">/tmp/nav</input>
+    <default>file:///tmp/home.html</default>
 </webview>
+<button>
+    <label>LWN.net</label>
+    <action>set:webPage.uri=https://lwn.net</action>
+</button>
 @end example
 
 @c -----------------------------------------------------------------

@@ -1343,11 +1343,28 @@ language automatically on refresh.
 
    Exports the full buffer text as the variable value.
 
+   The ‘set’ action supports the following synthetic properties for
+sourceview widgets:
+
+‘file’
+     Load the contents of the named file into the editor buffer.
+‘language’
+     Switch the syntax highlighting language (e.g. ‘c’, ‘sh’, ‘json’).
+
 From ‘examples/standard/sourceview’:
-     <sourceview language="c" font-name="Monospace 12">
+     <sourceview language='c' font-name='Monospace 12'>
          <variable>srcEditor</variable>
-         <input type="file">/tmp/code.c</input>
+         <input type='file'>/tmp/hello.c</input>
      </sourceview>
+     <button>
+         <label>Bash Script</label>
+         <action>set:srcEditor.file=/tmp/greet.sh</action>
+         <action>set:srcEditor.language=sh</action>
+     </button>
+
+ [image src="images/widget_sourceview.png" alt="The sourceview widget example" ]
+
+Figure 5.2: The sourceview widget from ‘examples/standard/sourceview’.
 
 
 File: gtkdialog.info,  Node: webview,  Prev: sourceview,  Up: Widgets
@@ -1365,11 +1382,21 @@ raw HTML.
 
    Exports the current URI as the variable value.
 
+   The ‘set’ action supports the following synthetic property for
+webview widgets:
+
+‘uri’
+     Navigate to the given URL or local ‘file://’ path.
+
 From ‘examples/standard/webview’:
-     <webview space-expand="true" space-fill="true">
+     <webview space-expand='true' space-fill='true'>
          <variable>webPage</variable>
-         <input type="file">/tmp/nav</input>
+         <default>file:///tmp/home.html</default>
      </webview>
+     <button>
+         <label>LWN.net</label>
+         <action>set:webPage.uri=https://lwn.net</action>
+     </button>
 
 
 File: gtkdialog.info,  Node: Containers,  Next: Widget Sub-elements,  Prev: Widgets,  Up: Top
@@ -2337,46 +2364,47 @@ Node: hseparator and vseparator42574
 Node: menubar43022
 Node: terminal44047
 Node: sourceview45051
-Node: webview46265
-Node: Containers46996
-Node: vbox and hbox47592
-Node: frame48556
-Node: notebook49070
-Node: eventbox49941
-Node: expander50653
-Node: buttonbox51434
-Node: window52120
-Node: Widget Sub-elements52875
-Node: variable53826
-Node: label54619
-Node: default55421
-Node: input56389
-Node: output57966
-Node: item58583
-Node: sensitive59526
-Node: width and height60451
-Node: action61146
-Node: Shell commands62958
-Node: exit63933
-Node: launch64517
-Node: closewindow65134
-Node: presentwindow65713
-Node: enable66317
-Node: disable66817
-Node: show67314
-Node: hide67925
-Node: activate68459
-Node: grabfocus69165
-Node: refresh69649
-Node: save70392
-Node: fileselect70890
-Node: clear71954
-Node: removeselected72428
-Node: break72962
-Node: insert73634
-Node: append74239
-Node: Clipboard actions74604
-Node: set75792
+Ref: fig:sourceview46710
+Node: webview46870
+Node: Containers47884
+Node: vbox and hbox48480
+Node: frame49444
+Node: notebook49958
+Node: eventbox50829
+Node: expander51541
+Node: buttonbox52322
+Node: window53008
+Node: Widget Sub-elements53763
+Node: variable54714
+Node: label55507
+Node: default56309
+Node: input57277
+Node: output58854
+Node: item59471
+Node: sensitive60414
+Node: width and height61339
+Node: action62034
+Node: Shell commands63846
+Node: exit64821
+Node: launch65405
+Node: closewindow66022
+Node: presentwindow66601
+Node: enable67205
+Node: disable67705
+Node: show68202
+Node: hide68813
+Node: activate69347
+Node: grabfocus70053
+Node: refresh70537
+Node: save71280
+Node: fileselect71778
+Node: clear72842
+Node: removeselected73316
+Node: break73850
+Node: insert74522
+Node: append75127
+Node: Clipboard actions75492
+Node: set76680
 
 End Tag Table
 
