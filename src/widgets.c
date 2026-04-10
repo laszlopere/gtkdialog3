@@ -33,6 +33,7 @@
 
 #include <gtk/gtk.h>
 #include <math.h>
+#include <signal.h>
 #include <sys/wait.h>
 #include "gtkdialog.h"
 #include "widgets.h"
@@ -314,6 +315,7 @@ FILE *widget_opencommand(const char *command)
 
 	if (pid == 0) {
 		/* Child: redirect stdout to pipe, exec the user's shell */
+		setpgid(0, 0);  /* Own process group so we can kill the whole tree */
 		close(pipefd[0]);
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
@@ -356,6 +358,8 @@ int widget_closecommand(FILE *fp)
 	pid = GPOINTER_TO_INT(
 		g_hash_table_lookup(command_pids, fp));
 	g_hash_table_remove(command_pids, fp);
+	if (pid > 0)
+		kill(-pid, SIGTERM);  /* Terminate the child's process group */
 	fclose(fp);
 
 	if (pid <= 0)
