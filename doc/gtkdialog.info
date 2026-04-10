@@ -1309,11 +1309,25 @@ the ‘child-exited’ signal when the shell exits.
 
    Exports the child process PID as the variable value.
 
-From ‘examples/terminal/terminal’:
-     <terminal has-focus="true">
-         <variable>vte0</variable>
-         <action signal="child-exited">clear:vte0</action>
+   The ‘set’ action supports the following synthetic property for
+terminal widgets:
+
+‘command’
+     Feed a command string to the terminal shell.  A newline is appended
+     automatically so the command executes immediately.
+
+From ‘examples/standard/terminal’:
+     <terminal argv0='/bin/bash' has-focus='true'>
+         <variable>term</variable>
      </terminal>
+     <button>
+         <label>pwd</label>
+         <action>set:term.command=pwd</action>
+     </button>
+
+ [image src="images/widget_terminal.png" alt="The terminal widget example" ]
+
+Figure 5.2: The terminal widget from ‘examples/standard/terminal’.
 
 
 File: gtkdialog.info,  Node: sourceview,  Next: webview,  Prev: terminal,  Up: Widgets
@@ -1364,7 +1378,7 @@ From ‘examples/standard/sourceview’:
 
  [image src="images/widget_sourceview.png" alt="The sourceview widget example" ]
 
-Figure 5.2: The sourceview widget from ‘examples/standard/sourceview’.
+Figure 5.3: The sourceview widget from ‘examples/standard/sourceview’.
 
 
 File: gtkdialog.info,  Node: webview,  Prev: sourceview,  Up: Widgets
@@ -2363,48 +2377,49 @@ Node: timer41585
 Node: hseparator and vseparator42574
 Node: menubar43022
 Node: terminal44047
-Node: sourceview45051
-Ref: fig:sourceview46710
-Node: webview46870
-Node: Containers47884
-Node: vbox and hbox48480
-Node: frame49444
-Node: notebook49958
-Node: eventbox50829
-Node: expander51541
-Node: buttonbox52322
-Node: window53008
-Node: Widget Sub-elements53763
-Node: variable54714
-Node: label55507
-Node: default56309
-Node: input57277
-Node: output58854
-Node: item59471
-Node: sensitive60414
-Node: width and height61339
-Node: action62034
-Node: Shell commands63846
-Node: exit64821
-Node: launch65405
-Node: closewindow66022
-Node: presentwindow66601
-Node: enable67205
-Node: disable67705
-Node: show68202
-Node: hide68813
-Node: activate69347
-Node: grabfocus70053
-Node: refresh70537
-Node: save71280
-Node: fileselect71778
-Node: clear72842
-Node: removeselected73316
-Node: break73850
-Node: insert74522
-Node: append75127
-Node: Clipboard actions75492
-Node: set76680
+Ref: fig:terminal45347
+Node: sourceview45499
+Ref: fig:sourceview47158
+Node: webview47318
+Node: Containers48332
+Node: vbox and hbox48928
+Node: frame49892
+Node: notebook50406
+Node: eventbox51277
+Node: expander51989
+Node: buttonbox52770
+Node: window53456
+Node: Widget Sub-elements54211
+Node: variable55162
+Node: label55955
+Node: default56757
+Node: input57725
+Node: output59302
+Node: item59919
+Node: sensitive60862
+Node: width and height61787
+Node: action62482
+Node: Shell commands64294
+Node: exit65269
+Node: launch65853
+Node: closewindow66470
+Node: presentwindow67049
+Node: enable67653
+Node: disable68153
+Node: show68650
+Node: hide69261
+Node: activate69795
+Node: grabfocus70501
+Node: refresh70985
+Node: save71728
+Node: fileselect72226
+Node: clear73290
+Node: removeselected73764
+Node: break74298
+Node: insert74970
+Node: append75575
+Node: Clipboard actions75940
+Node: set77128
 
 End Tag Table
 

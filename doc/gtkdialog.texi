@@ -1326,13 +1326,30 @@ Terminal font (Pango syntax).
 
 Exports the child process PID as the variable value.
 
-@noindent From @file{examples/terminal/terminal}:
+The @code{set} action supports the following synthetic property for
+terminal widgets:
+
+@table @code
+@item command
+Feed a command string to the terminal shell.  A newline is appended
+automatically so the command executes immediately.
+@end table
+
+@noindent From @file{examples/standard/terminal}:
 @example
-<terminal has-focus="true">
-    <variable>vte0</variable>
-    <action signal="child-exited">clear:vte0</action>
+<terminal argv0='/bin/bash' has-focus='true'>
+    <variable>term</variable>
 </terminal>
+<button>
+    <label>pwd</label>
+    <action>set:term.command=pwd</action>
+</button>
 @end example
+
+@float Figure,fig:terminal
+@center @image{images/widget_terminal,5in,,The terminal widget example}
+@caption{The terminal widget from @file{examples/standard/terminal}.}
+@end float
 
 @c -----------------------------------------------------------------
 @node sourceview
