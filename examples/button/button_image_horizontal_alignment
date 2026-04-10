@@ -5,7 +5,7 @@ GTKDIALOG=gtkdialog3
 funcbtnCreate() {
 	echo "<button image-position='$1' homogeneous='$2'>
 					<label>$3</label>
-					<input type="stock">$3</input>
+					<input type=\"stock\">$3</input>
 					<action>echo $3</action>
 				</button>"
 }
