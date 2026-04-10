@@ -55,6 +55,12 @@ GtkWidget *widget_webview_create(
 #if HAVE_WEBKIT
 	widget = webkit_web_view_new();
 
+	/* WebKitWebView has no intrinsic size — set a minimum and
+	 * request expansion so it fills its parent container */
+	gtk_widget_set_size_request(widget, 200, 200);
+	gtk_widget_set_hexpand(widget, TRUE);
+	gtk_widget_set_vexpand(widget, TRUE);
+
 	/* Load default URL if specified */
 	if (attributeset_is_avail(Attr, ATTR_DEFAULT)) {
 		value = attributeset_get_first(&element, Attr, ATTR_DEFAULT);
@@ -103,14 +109,35 @@ void widget_webview_refresh(variable *var)
 				widget_closecommand(infile);
 			}
 		} else if (strncasecmp(act, "file:", 5) == 0) {
-			/* <input file>path</input> — load as file URI */
+			/* <input file>path</input> — read file content:
+			 * if it starts with http:// or https://, navigate to URL;
+			 * otherwise load content as HTML */
 			gchar *path = act + 5;
 			while (*path == ' ') path++;
-			gchar *uri = g_filename_to_uri(path, NULL, NULL);
-			if (uri) {
-				webkit_web_view_load_uri(
-					WEBKIT_WEB_VIEW(var->Widget), uri);
-				g_free(uri);
+			if ((infile = fopen(path, "r"))) {
+				GString *content = g_string_sized_new(4096);
+				while (fgets(line, 512, infile)) {
+					g_string_append(content, line);
+				}
+				fclose(infile);
+				g_strstrip(content->str);
+				if (strncasecmp(content->str, "http://", 7) == 0 ||
+				    strncasecmp(content->str, "https://", 8) == 0) {
+					webkit_web_view_load_uri(
+						WEBKIT_WEB_VIEW(var->Widget), content->str);
+				} else if (content->str[0] == '/') {
+					/* Absolute file path — convert to file:// URI */
+					gchar *uri = g_filename_to_uri(content->str, NULL, NULL);
+					if (uri) {
+						webkit_web_view_load_uri(
+							WEBKIT_WEB_VIEW(var->Widget), uri);
+						g_free(uri);
+					}
+				} else if (content->len > 0) {
+					webkit_web_view_load_html(
+						WEBKIT_WEB_VIEW(var->Widget), content->str, NULL);
+				}
+				g_string_free(content, TRUE);
 			}
 		}
 		act = attributeset_get_next(&element, var->Attributes, ATTR_INPUT);

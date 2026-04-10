@@ -4,9 +4,9 @@ Automated test for examples/standard/webview using AT-SPI.
 
 Verifies:
 1. Window appears with the expected title
-2. OK button is present
-3. Clicking OK produces valid JSON output
-4. JSON contains the webview URL under the correct window key
+2. Navigation buttons (Home, LWN.net, Phoronix) and OK button are present
+3. Clicking LWN.net navigates the webview
+4. Clicking OK produces valid JSON output with the URL
 """
 
 import json
@@ -85,7 +85,7 @@ def find_widgets(node, role=None):
 
 
 def find_button_by_label(window, label_text):
-    """Find a button by its label text."""
+    """Find a button by its label text (exact match)."""
     for btn in find_widgets(window, Atspi.Role.PUSH_BUTTON):
         if (btn.get_name() or '').lower() == label_text.lower():
             return btn
@@ -112,19 +112,29 @@ if our_pid is None:
 
 t.log(f"gtkdialog3 PID: {our_pid}")
 
-# --- Test 1: Window appears ---
+# --- Test 1: Window and buttons appear ---
 t.begin("testWindowAppears")
 window = wait_for_window(our_pid, 'Linux News')
 if not t.check(window is not None, "Linux News window found"):
     proc.kill()
     t.summary()
 
-# Find the OK button (exact match to avoid web page buttons)
+btn_home = find_button_by_label(window, 'Home')
+btn_lwn = find_button_by_label(window, 'LWN.net')
+btn_phoronix = find_button_by_label(window, 'Phoronix')
 btn_ok = find_button_by_label(window, 'OK')
-t.check(btn_ok is not None, "OK button found")
 
-# --- Test 2: Click OK and verify JSON output ---
-t.begin("testJsonOutput")
+t.check(btn_home is not None, "'Home' button found")
+t.check(btn_lwn is not None, "'LWN.net' button found")
+t.check(btn_phoronix is not None, "'Phoronix' button found")
+t.check(btn_ok is not None, "'OK' button found")
+
+# --- Test 2: Click LWN.net then OK, verify JSON output ---
+t.begin("testNavigateAndOutput")
+if btn_lwn:
+    btn_lwn.get_action_iface().do_action(0)
+    time.sleep(3)
+
 if btn_ok:
     btn_ok.get_action_iface().do_action(0)
     time.sleep(1)
