@@ -26,6 +26,7 @@ Examples: workstation, dev-server, laptop-home</label>
 			<button stock='ok'/>
 		</buttonbox>
 	</vbox>
+	<variable>entryDialog</variable>
 </window>
 "
 export MAIN_DIALOG

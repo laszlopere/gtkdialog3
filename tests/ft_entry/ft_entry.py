@@ -162,14 +162,16 @@ if ok_button:
         t.check(len(wc) == 1,
                 f"Exactly one window in widget_contents (got {len(wc)})")
 
+        # Check the window key name
+        t.check('entryDialog' in wc,
+                f"Window key is 'entryDialog' (keys: {list(wc.keys())})")
+
         # Check the entry value under the window key
-        if wc:
-            window_key = list(wc.keys())[0]
-            window_data = wc[window_key]
-            t.check('entHostname' in window_data,
-                    f"'entHostname' key in window data (keys: {list(window_data.keys())})")
-            t.check(window_data.get('entHostname') == 'my-server',
-                    f"entHostname is 'my-server' (got '{window_data.get('entHostname')}')")
+        window_data = wc.get('entryDialog', {})
+        t.check('entHostname' in window_data,
+                f"'entHostname' key in window data (keys: {list(window_data.keys())})")
+        t.check(window_data.get('entHostname') == 'my-server',
+                f"entHostname is 'my-server' (got '{window_data.get('entHostname')}')")
 else:
     t.check(False, "OK button not found")
     proc.kill()
