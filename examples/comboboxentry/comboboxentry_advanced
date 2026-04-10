@@ -65,7 +65,7 @@ funccboEntryCreate() {
 	fi
 	echo '<input>echo "This came from a shell command"</input>
 			<input type="file">'"$TMPDIR"'/inputfile</input>
-			<output file>'"$TMPDIR"'/outputfile</output>
+			<output type="file">'"$TMPDIR"'/outputfile</output>
 			<action signal="changed">echo "cboComboBoxEntry'$1' changed to $cboComboBoxEntry'$1'"</action>
 			<action>echo "cboComboBoxEntry'$1' action for default signal triggered"</action>
 			<action function="command">echo "cboComboBoxEntry'$1' action function for default signal triggered"</action>
@@ -118,7 +118,7 @@ MAIN_DIALOG='
 						<variable>cboComboBoxEntry3</variable>
 						<default>Type something here...</default>
 						<input type="file">'"$TMPDIR"'/inoutfile</input>
-						<output file>'"$TMPDIR"'/inoutfile</output>
+						<output type="file">'"$TMPDIR"'/inoutfile</output>
 						<action signal="activate">save:cboComboBoxEntry3</action>
 						<action signal="activate">refresh:cboComboBoxEntry3</action>
 					</comboboxentry>

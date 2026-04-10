@@ -46,7 +46,7 @@ funcscaType2Create() {
 			<item>"64 |'$5'|<span fgcolor='"'white'"' bgcolor='"'darkred'"'> 64 </span>"</item>
 			<item>"128|'$6'|<span fgcolor='"'white'"' bgcolor='"'darkgreen'"'> 128 </span>"</item>
 			<item>"192|'$7'|<span fgcolor='"'white'"' bgcolor='"'darkblue'"'> 192 </span>"</item>
-			<output file>'"$TMPDIR"'/outputfile</output>
+			<output type="file">'"$TMPDIR"'/outputfile</output>
 		</'$2'scale>
 		<'$2'box homogeneous="true">
 			'"`funcbtnCreate $1 Disable $8 gtk-no Disabling disable`"'
@@ -65,7 +65,7 @@ funcscaType3Create() {
 			<variable>'$1'</variable>
 			<input type="file">'"$TMPDIR"'/inputfile</input>
 			<action signal="value_changed">echo "'$1' changed to $'$1'"</action>
-			<output file>'"$TMPDIR"'/outputfile</output>
+			<output type="file">'"$TMPDIR"'/outputfile</output>
 		</'$2'scale>
 		<'$2'box homogeneous="true">
 			'"`funcbtnCreate $1 Disable $5 gtk-no Disabling disable`"'

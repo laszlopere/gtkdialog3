@@ -16,7 +16,7 @@ funcbtnCreate() {
 funcspbCreate() {
 	echo '<variable>spb'$1'</variable>
 			<sensitive>true</sensitive>
-			<output file>'"$TMPDIR"'/outputfile</output>
+			<output type="file">'"$TMPDIR"'/outputfile</output>
 			<action>echo "spb'$1' action for default signal triggered"</action>
 			<action signal="value-changed">echo "spb'$1' changed to $spb'$1'"</action>
 			<action signal="changed">echo "spb'$1' typing within the entry detected"</action>

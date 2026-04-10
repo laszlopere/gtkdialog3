@@ -77,7 +77,7 @@ funcnbkMainCreate() {
 						<variable>hsc0</variable>
 						<action>save:hsc0</action>
 						<action>refresh:nbk'$f'</action>
-						<output file>'"$TMPDIR"'/inputfile</output>
+						<output type="file">'"$TMPDIR"'/inputfile</output>
 					</hscale>
 					<notebook show-tabs="false">
 						'"`funcnbkCreate $f`"'

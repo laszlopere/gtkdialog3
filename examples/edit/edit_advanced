@@ -107,7 +107,7 @@ MAIN_DIALOG='
 		<hbox spacing="10">
 			<edit>
 				<action signal="show">echo "Type something here and press some buttons." > '"$TMPDIR"'/inoutfile</action>
-				<output file>'"$TMPDIR"'/inoutfile</output>
+				<output type="file">'"$TMPDIR"'/inoutfile</output>
 				'"`funcediCreate edi15 $ediWidth $ediHeight 1 0`"'
 		</hbox>
 		<hbox spacing="32">

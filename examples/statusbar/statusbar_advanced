@@ -41,7 +41,7 @@ MAIN_DIALOG='
 			<input>echo This message originates from an input command</input>
 			<input type="file">'"$TMPDIR"'/inputfile</input>
 			<sensitive>true</sensitive>
-			<output file>'"$TMPDIR"'/outputfile</output>
+			<output type="file">'"$TMPDIR"'/outputfile</output>
 		</statusbar>
 	</vbox>
 </window>

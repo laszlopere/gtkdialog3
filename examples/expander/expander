@@ -40,7 +40,7 @@ MAIN_DIALOG="
 			<label>e_xpander</label>
 			<variable>exp0</variable>
 			<input type="file">$TMPDIR/inoutfile</input>
-			<output file>$TMPDIR/inoutfile</output>
+			<output type="file">$TMPDIR/inoutfile</output>
 			<action>echo \"exp0=\\\"\$exp0\\\" - activate signal\"</action>
 			<action>if true echo \"exp0 is true\"</action>
 			<action>if false echo \"exp0 is false\"</action>

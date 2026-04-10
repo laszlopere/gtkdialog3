@@ -154,9 +154,8 @@ In standard XML, this would be written as:
 
 XML tag names cannot contain spaces.  Earlier versions of gtkdialog3
 used @code{<input file>} and @code{<output file>} as tag names with
-an embedded space.  The @code{<input file>} form has been removed;
-use the @code{type} attribute instead.  @code{<output file>} is still
-accepted.
+an embedded space.  Both forms have been removed; use the @code{type}
+attribute instead.
 
 The @code{<input>} sub-element accepts a @code{type} attribute with
 the following values:
@@ -860,7 +859,7 @@ Exports @code{true} or @code{false} as the variable value.
     <label>Toggle</label>
     <variable>tgb0</variable>
     <action>save:tgb0</action>
-    <output file>/tmp/outputfile</output>
+    <output type="file">/tmp/outputfile</output>
 </togglebutton>
 @end example
 
@@ -953,7 +952,7 @@ Exports the current text as the variable value.
     <variable>cboComboBoxEntry3</variable>
     <default>Type something here...</default>
     <input type="file">/tmp/inoutfile</input>
-    <output file>/tmp/inoutfile</output>
+    <output type="file">/tmp/inoutfile</output>
     <action signal="activate">save:cboComboBoxEntry3</action>
     <action signal="activate">refresh:cboComboBoxEntry3</action>
 </comboboxentry>
@@ -1053,7 +1052,7 @@ Exports the selected row as the variable value.
 A multi-line text editing area with scrollbars.  Use @code{<default>}
 to set initial text, or @code{<input type="file">} to load the contents of
 a file.  The @code{save:} action writes the buffer to the file
-specified by @code{<output file>}.
+specified by @code{<output type="file">}.
 
 Supports clipboard actions: @code{cut:}, @code{copy:}, @code{paste:},
 and @code{selectall:} (@pxref{Clipboard actions}).
@@ -1223,7 +1222,7 @@ Exports the current message text as the variable value.
     <default>Ready</default>
     <variable>stb0</variable>
     <input>echo Status from a command</input>
-    <output file>/tmp/outputfile</output>
+    <output type="file">/tmp/outputfile</output>
 </statusbar>
 @end example
 
@@ -1601,7 +1600,7 @@ every sub-element --- see the individual widget descriptions
 * label::		Setting the display text
 * default::		Setting the initial value
 * input::		Loading data from a command or file
-* output file::		Saving data to a file
+* output::		Saving data to a file
 * item::		Adding list and menu entries
 * sensitive::		Controlling the interactive state
 * width and height::	Setting the widget size
@@ -1742,8 +1741,8 @@ When the @code{refresh:} action is used on a widget, its
 new data.
 
 @c -----------------------------------------------------------------
-@node output file
-@section @code{<output file>}
+@node output
+@section @code{<output>}
 
 Specifies a file where the widget's value will be written when the
 @code{save:} action is triggered.
@@ -1752,7 +1751,7 @@ Specifies a file where the widget's value will be written when the
 <edit>
     <variable>EDITOR</variable>
     <input type="file">/tmp/myfile.txt</input>
-    <output file>/tmp/myfile.txt</output>
+    <output type="file">/tmp/myfile.txt</output>
 </edit>
 <button>
     <label>Save</label>
@@ -2126,7 +2125,7 @@ access the current state of the dialog.
 @subsection @code{save:@var{Name}}
 
 Writes the current value of the named widget to the file specified by
-its @code{<output file>} attribute.  Works on most widget types
+its @code{<output type="file">} attribute.  Works on most widget types
 including entries, text editors, checkboxes, comboboxes, scales, and
 spinbuttons.
 

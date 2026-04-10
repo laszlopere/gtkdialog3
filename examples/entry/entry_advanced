@@ -109,7 +109,7 @@ MAIN_DIALOG="
 				<hseparator></hseparator>
 				<entry fs-action='file' block-function-signals='true'>
 					<input>echo \"This came from a shell command, and function signals are blocked\"</input>
-					<output file>$TMPDIR/outputfile</output>
+					<output type="file">$TMPDIR/outputfile</output>
 					$(funcentCreate 19 0 0)
 				<hbox homogeneous='true'>
 					$(funcbtnCreate 19 Disable Disabling disable)
@@ -123,7 +123,7 @@ MAIN_DIALOG="
 				<hseparator></hseparator>
 				<entry fs-action='folder'>
 					<input type="file">$TMPDIR/inputfile</input>
-					<output file>$TMPDIR/outputfile</output>
+					<output type="file">$TMPDIR/outputfile</output>
 					$(funcentCreate 20 0 0)
 				<hbox homogeneous='true'>
 					$(funcbtnCreate 20 Disable Disabling disable)

@@ -73,7 +73,7 @@ funccboTextCreate() {
 	fi
 	echo "<input>echo 'This came from a shell command'</input>
 			<input type="file">$TMPDIR/inputfile</input>
-			<output file>$TMPDIR/outputfile</output>
+			<output type="file">$TMPDIR/outputfile</output>
 			<action signal='changed'>echo 'cboComboBoxText$1 changed to \$cboComboBoxText$1'</action>
 			<action>echo 'cboComboBoxText$1 action for default signal triggered'</action>
 			<action function='command'>echo 'cboComboBoxText$1 action function for default signal triggered'</action>

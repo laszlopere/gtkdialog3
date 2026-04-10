@@ -33,7 +33,7 @@ MAIN_DIALOG='
 					<action>refresh:tgb0</action>
 					<action>save:tgb0</action>
 					<action>refresh:ent0</action>
-					<output file>'"$TMPDIR"'/outputfile</output>
+					<output type="file">'"$TMPDIR"'/outputfile</output>
 				</togglebutton>
 				<entry>
 					<default>true</default>

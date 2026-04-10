@@ -51,7 +51,7 @@ MAIN_DIALOG='
 					'"`funcclbCreate clb4 "Colour from input directive." 1`"'
 				<colorbutton use-alpha="true">
 					<input type="file">'"$TMPDIR"'/inputfile</input>
-					<output file>'"$TMPDIR"'/outputfile</output>
+					<output type="file">'"$TMPDIR"'/outputfile</output>
 					'"`funcclbCreate clb5 "Colour and alpha from input file directive." 0`"'
 			<hbox>
 				'"`funcbtnCreate clb5 Disable gtk-no Disabling`"'

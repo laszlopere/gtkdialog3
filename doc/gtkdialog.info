@@ -154,8 +154,7 @@ File: gtkdialog.info,  Node: Space in tag names,  Next: Imperative constructs,  
 
 XML tag names cannot contain spaces.  Earlier versions of gtkdialog3
 used ‘<input file>’ and ‘<output file>’ as tag names with an embedded
-space.  The ‘<input file>’ form has been removed; use the ‘type’
-attribute instead.  ‘<output file>’ is still accepted.
+space.  Both forms have been removed; use the ‘type’ attribute instead.
 
    The ‘<input>’ sub-element accepts a ‘type’ attribute with the
 following values:
@@ -858,7 +857,7 @@ From ‘examples/togglebutton/togglebutton_advanced’:
          <label>Toggle</label>
          <variable>tgb0</variable>
          <action>save:tgb0</action>
-         <output file>/tmp/outputfile</output>
+         <output type="file">/tmp/outputfile</output>
      </togglebutton>
 
 
@@ -948,7 +947,7 @@ From ‘examples/comboboxentry/comboboxentry_advanced’:
          <variable>cboComboBoxEntry3</variable>
          <default>Type something here...</default>
          <input type="file">/tmp/inoutfile</input>
-         <output file>/tmp/inoutfile</output>
+         <output type="file">/tmp/inoutfile</output>
          <action signal="activate">save:cboComboBoxEntry3</action>
          <action signal="activate">refresh:cboComboBoxEntry3</action>
      </comboboxentry>
@@ -1046,7 +1045,7 @@ File: gtkdialog.info,  Node: edit,  Next: pixmap,  Prev: tree,  Up: Widgets
 A multi-line text editing area with scrollbars.  Use ‘<default>’ to set
 initial text, or ‘<input type="file">’ to load the contents of a file.
 The ‘save:’ action writes the buffer to the file specified by ‘<output
-file>’.
+type="file">’.
 
    Supports clipboard actions: ‘cut:’, ‘copy:’, ‘paste:’, and
 ‘selectall:’ (*note Clipboard actions::).
@@ -1210,7 +1209,7 @@ From ‘examples/statusbar/statusbar_advanced’:
          <default>Ready</default>
          <variable>stb0</variable>
          <input>echo Status from a command</input>
-         <output file>/tmp/outputfile</output>
+         <output type="file">/tmp/outputfile</output>
      </statusbar>
 
 
@@ -1578,7 +1577,7 @@ Widgets::) for which ones apply to each widget type.
 * label::		Setting the display text
 * default::		Setting the initial value
 * input::		Loading data from a command or file
-* output file::		Saving data to a file
+* output::		Saving data to a file
 * item::		Adding list and menu entries
 * sensitive::		Controlling the interactive state
 * width and height::	Setting the widget size
@@ -1656,7 +1655,7 @@ meaning depends on the widget type:
      </entry>
 
 
-File: gtkdialog.info,  Node: input,  Next: output file,  Prev: default,  Up: Widget Sub-elements
+File: gtkdialog.info,  Node: input,  Next: output,  Prev: default,  Up: Widget Sub-elements
 
 7.4 ‘<input>’
 =============
@@ -1707,10 +1706,10 @@ These forms are used primarily with button and pixmap widgets.
 re-evaluated and the widget is updated with the new data.
 
 
-File: gtkdialog.info,  Node: output file,  Next: item,  Prev: input,  Up: Widget Sub-elements
+File: gtkdialog.info,  Node: output,  Next: item,  Prev: input,  Up: Widget Sub-elements
 
-7.5 ‘<output file>’
-===================
+7.5 ‘<output>’
+==============
 
 Specifies a file where the widget's value will be written when the
 ‘save:’ action is triggered.
@@ -1718,7 +1717,7 @@ Specifies a file where the widget's value will be written when the
      <edit>
          <variable>EDITOR</variable>
          <input type="file">/tmp/myfile.txt</input>
-         <output file>/tmp/myfile.txt</output>
+         <output type="file">/tmp/myfile.txt</output>
      </edit>
      <button>
          <label>Save</label>
@@ -1729,7 +1728,7 @@ Specifies a file where the widget's value will be written when the
 checkboxes, comboboxes, scales, and spinbuttons.
 
 
-File: gtkdialog.info,  Node: item,  Next: sensitive,  Prev: output file,  Up: Widget Sub-elements
+File: gtkdialog.info,  Node: item,  Next: sensitive,  Prev: output,  Up: Widget Sub-elements
 
 7.6 ‘<item>’
 ============
@@ -2081,8 +2080,9 @@ File: gtkdialog.info,  Node: save,  Next: fileselect,  Prev: refresh,  Up: actio
 ------------------
 
 Writes the current value of the named widget to the file specified by
-its ‘<output file>’ attribute.  Works on most widget types including
-entries, text editors, checkboxes, comboboxes, scales, and spinbuttons.
+its ‘<output type="file">’ attribute.  Works on most widget types
+including entries, text editors, checkboxes, comboboxes, scales, and
+spinbuttons.
 
 From ‘examples/edit/edit_actions’:
      <button>
@@ -2261,87 +2261,87 @@ Node: Introduction3054
 Node: The Description Language3567
 Node: Backslash escaping4650
 Node: Space in tag names5422
-Node: Imperative constructs6522
-Node: Implicit window element7725
-Node: Unsupported XML features8523
-Node: Invoking the Program9214
-Node: Command-line options10189
-Node: Environment variable12256
-Node: Capturing output13248
-Node: Output formats14048
-Node: Reading from a file15277
-Node: Standard input16199
-Node: Including function libraries16643
-Node: Multiple windows17329
-Node: Layout options18660
-Node: Window placement19424
-Node: Widgets19924
-Node: text23841
-Node: button24386
-Node: entry25913
-Node: checkbox26582
-Node: radiobutton27416
-Node: togglebutton28392
-Node: switch29181
-Ref: fig:switch29619
-Node: combobox30084
-Node: comboboxtext30749
-Node: comboboxentry31596
-Node: list32551
-Node: table33299
-Node: tree34806
-Node: edit35605
-Node: pixmap36423
-Node: hscale and vscale37034
-Node: spinbutton37912
-Node: colorbutton38631
-Node: fontbutton39446
-Node: progressbar40150
-Node: statusbar40904
-Node: timer41613
-Node: hseparator and vseparator42602
-Node: menubar43050
-Node: terminal44075
-Node: sourceview45079
-Node: webview46293
-Node: Containers47024
-Node: vbox and hbox47620
-Node: frame48584
-Node: notebook49098
-Node: eventbox49969
-Node: expander50681
-Node: buttonbox51462
-Node: window52148
-Node: Widget Sub-elements52903
-Node: variable53859
-Node: label54652
-Node: default55454
-Node: input56422
-Node: output file58004
-Node: item58629
-Node: sensitive59577
-Node: width and height60502
-Node: action61197
-Node: Shell commands62962
-Node: exit63937
-Node: launch64521
-Node: closewindow65138
-Node: presentwindow65717
-Node: enable66321
-Node: disable66821
-Node: show67318
-Node: hide67929
-Node: activate68463
-Node: grabfocus69169
-Node: refresh69653
-Node: save70396
-Node: fileselect70887
-Node: clear71951
-Node: removeselected72425
-Node: break72959
-Node: insert73631
-Node: append74236
-Node: Clipboard actions74601
+Node: Imperative constructs6466
+Node: Implicit window element7669
+Node: Unsupported XML features8467
+Node: Invoking the Program9158
+Node: Command-line options10133
+Node: Environment variable12200
+Node: Capturing output13192
+Node: Output formats13992
+Node: Reading from a file15221
+Node: Standard input16143
+Node: Including function libraries16587
+Node: Multiple windows17273
+Node: Layout options18604
+Node: Window placement19368
+Node: Widgets19868
+Node: text23785
+Node: button24330
+Node: entry25857
+Node: checkbox26526
+Node: radiobutton27360
+Node: togglebutton28336
+Node: switch29132
+Ref: fig:switch29570
+Node: combobox30035
+Node: comboboxtext30700
+Node: comboboxentry31547
+Node: list32509
+Node: table33257
+Node: tree34764
+Node: edit35563
+Node: pixmap36388
+Node: hscale and vscale36999
+Node: spinbutton37877
+Node: colorbutton38596
+Node: fontbutton39411
+Node: progressbar40115
+Node: statusbar40869
+Node: timer41585
+Node: hseparator and vseparator42574
+Node: menubar43022
+Node: terminal44047
+Node: sourceview45051
+Node: webview46265
+Node: Containers46996
+Node: vbox and hbox47592
+Node: frame48556
+Node: notebook49070
+Node: eventbox49941
+Node: expander50653
+Node: buttonbox51434
+Node: window52120
+Node: Widget Sub-elements52875
+Node: variable53826
+Node: label54619
+Node: default55421
+Node: input56389
+Node: output57966
+Node: item58583
+Node: sensitive59526
+Node: width and height60451
+Node: action61146
+Node: Shell commands62911
+Node: exit63886
+Node: launch64470
+Node: closewindow65087
+Node: presentwindow65666
+Node: enable66270
+Node: disable66770
+Node: show67267
+Node: hide67878
+Node: activate68412
+Node: grabfocus69118
+Node: refresh69602
+Node: save70345
+Node: fileselect70843
+Node: clear71907
+Node: removeselected72381
+Node: break72915
+Node: insert73587
+Node: append74192
+Node: Clipboard actions74557
 
 End Tag Table
 
