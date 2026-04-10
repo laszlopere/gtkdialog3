@@ -276,6 +276,58 @@ void widget_sourceview_save(variable *var)
 }
 
 /***********************************************************************
+ * Load file (public, for action_set)                                  *
+ ***********************************************************************/
+
+void widget_sourceview_load_file(variable *var, const char *filename)
+{
+	GtkTextBuffer    *buffer;
+	gchar            *filebuffer;
+	gint              infile;
+	ssize_t           bytes_read;
+	struct stat       st;
+
+	if (stat(filename, &st) != 0) {
+		fprintf(stderr, "%s(): Couldn't stat '%s'.\n", __func__, filename);
+		return;
+	}
+	filebuffer = g_malloc(st.st_size);
+	infile = open(filename, O_RDONLY);
+	if (infile == -1) {
+		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n",
+			__func__, filename);
+		g_free(filebuffer);
+		return;
+	}
+	bytes_read = read(infile, filebuffer, st.st_size);
+	close(infile);
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget));
+	if (bytes_read > 0)
+		gtk_text_buffer_set_text(buffer, filebuffer, bytes_read);
+	else
+		gtk_text_buffer_set_text(buffer, "", 0);
+	g_free(filebuffer);
+}
+
+/***********************************************************************
+ * Set language (public, for action_set)                               *
+ ***********************************************************************/
+
+void widget_sourceview_set_language(variable *var, const char *lang_id)
+{
+#if HAVE_GTKSOURCEVIEW
+	GtkSourceLanguageManager *lm = gtk_source_language_manager_get_default();
+	GtkSourceLanguage *lang = gtk_source_language_manager_get_language(lm, lang_id);
+	GtkSourceBuffer *buf = GTK_SOURCE_BUFFER(
+		gtk_text_view_get_buffer(GTK_TEXT_VIEW(var->Widget)));
+	gtk_source_buffer_set_language(buf, lang);
+	gtk_source_buffer_set_highlight_syntax(buf, lang != NULL);
+#else
+	fprintf(stderr, "%s(): GtkSourceView support not compiled in.\n", __func__);
+#endif
+}
+
+/***********************************************************************
  * Input by File                                                       *
  ***********************************************************************/
 

@@ -38,6 +38,7 @@
 #include "attributes.h"
 #include "variables.h"
 #include "tag_attributes.h"
+#include "widget_sourceview.h"
 #if HAVE_WEBKIT
 #include <webkit2/webkit2.h>
 #endif
@@ -722,6 +723,20 @@ void action_set(GtkWidget *widget, char *string)
 		return;
 	}
 #endif
+	if (var->Type == WIDGET_SOURCEVIEW) {
+		if (strcasecmp(nv.name, "file") == 0) {
+			widget_sourceview_load_file(var, nv.value);
+			g_free(widget_name);
+			g_free(nv.name);
+			return;
+		}
+		if (strcasecmp(nv.name, "language") == 0) {
+			widget_sourceview_set_language(var, nv.value);
+			g_free(widget_name);
+			g_free(nv.name);
+			return;
+		}
+	}
 
 	/* Fall through to GObject property system */
 	try_set_property(var->Widget, &nv);

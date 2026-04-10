@@ -28,6 +28,8 @@ GtkWidget *widget_sourceview_create(
 gchar *widget_sourceview_envvar_construct(GtkWidget *widget);
 void widget_sourceview_fileselect(
     variable *var, const char *name, const char *value);
+void widget_sourceview_load_file(variable *var, const char *filename);
+void widget_sourceview_set_language(variable *var, const char *lang_id);
 void widget_sourceview_refresh(variable *var);
 void widget_sourceview_removeselected(variable *var);
 void widget_sourceview_save(variable *var);
