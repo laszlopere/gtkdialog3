@@ -156,6 +156,7 @@ start_up(void)
 %token         COLORBUTTON PART_COLORBUTTON ECOLORBUTTON
 %token         FONTBUTTON PART_FONTBUTTON EFONTBUTTON
 %token         TERMINAL PART_TERMINAL ETERMINAL
+%token         WEBVIEW PART_WEBVIEW EWEBVIEW
 %token         EVENTBOX PART_EVENTBOX EEVENTBOX
 %token         EXPANDER PART_EXPANDER EEXPANDER
 %token         SWITCH ESWITCH PART_SWITCH
@@ -320,6 +321,7 @@ widget
   | colorbutton
   | fontbutton
   | terminal
+  | webview
   | switch
   ;
 
@@ -687,6 +689,15 @@ terminal
 	}
   | PART_TERMINAL tagattr '>' attr ETERMINAL {
 		token_store_attr(PUSH | WIDGET_TERMINAL, $2);
+	}
+  ;
+
+webview
+  : WEBVIEW attr EWEBVIEW {
+		token_store(PUSH | WIDGET_WEBVIEW);
+	}
+  | PART_WEBVIEW tagattr '>' attr EWEBVIEW {
+		token_store_attr(PUSH | WIDGET_WEBVIEW, $2);
 	}
   ;
 

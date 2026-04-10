@@ -740,6 +740,14 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 					  return(PART_TERMINAL); }
 \<\/terminal\>				{ Token="</terminal>"; return(ETERMINAL); }
 
+\<webview\/\>				{ Token="<webview/>"; pending_close_token = EWEBVIEW; return(WEBVIEW); }
+\<webview\>				{ Token="<webview>"; return(WEBVIEW); }
+\<webview[ ]+				{ Token="<webview>";
+					  BEGIN(ST_TAG_ATTR);
+					  current_close_token = EWEBVIEW;
+					  return(PART_WEBVIEW); }
+\<\/webview\>				{ Token="</webview>"; return(EWEBVIEW); }
+
 \<eventbox\/\>				{ Token="<eventbox/>"; pending_close_token = EEVENTBOX; return(EVENTBOX); }
 \<eventbox\>				{ Token="<eventbox>"; return(EVENTBOX); }
 \<eventbox[ ]+				{ Token="<eventbox>";

@@ -411,6 +411,10 @@ print_version_exit(int exitcode)
 	if (extralibs) printf(", ");
 	printf("VTE"); extralibs++;
 #endif
+#if HAVE_WEBKIT
+	if (extralibs) printf(", ");
+	printf("WebKit"); extralibs++;
+#endif
 	if (!extralibs) printf("none");
 	printf(".\n");
 

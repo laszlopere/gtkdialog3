@@ -50,6 +50,7 @@
 #include "widget_statusbar.h"
 #include "widget_table.h"
 #include "widget_terminal.h"
+#include "widget_webview.h"
 #include "widget_text.h"
 #include "widget_timer.h"
 #include "widget_tree.h"
@@ -744,6 +745,9 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_refresh(var);
+			break;
+		case WIDGET_WEBVIEW:
+			widget_webview_refresh(var);
 			break;
 		case WIDGET_TEXT:
 			widget_text_refresh(var);

@@ -51,6 +51,7 @@ gtkdialog3_SOURCES = \
 	widget_switch.c widget_switch.h \
 	widget_table.c widget_table.h \
 	widget_terminal.c widget_terminal.h \
+	widget_webview.c widget_webview.h \
 	widget_text.c widget_text.h \
 	widget_timer.c widget_timer.h \
 	widget_tree.c widget_tree.h \
@@ -63,12 +64,14 @@ AM_CFLAGS = \
 	$(GTK_CFLAGS) \
 	$(GTHREAD_CFLAGS) \
 	$(GLADE_LIB_CFLAGS) -DHAVE_GLADE_LIB=$(HAVE_GLADE_LIB) \
-	$(VTE_CFLAGS) -DHAVE_VTE=$(HAVE_VTE)
+	$(VTE_CFLAGS) -DHAVE_VTE=$(HAVE_VTE) \
+	$(WEBKIT_CFLAGS) -DHAVE_WEBKIT=$(HAVE_WEBKIT)
 
 LIBS = \
 	$(GTK_LIBS) \
 	$(GTHREAD_LIBS) \
 	$(GLADE_LIB_LIBS) \
 	$(VTE_LIBS) \
+	$(WEBKIT_LIBS) \
 	@LIBS@
 
