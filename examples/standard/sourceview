@@ -139,14 +139,10 @@ JEOF
 }
 export -f generate_json
 
-# Load initial content (C program)
-cp "$TMPDIR"/hello.c "$TMPDIR"/code
-echo "c" > "$TMPDIR"/code.lang
-
-MAIN_DIALOG='
-<window title="Source Code Viewer" width-request="750" height-request="600">
-	<vbox spacing="6" border-width="8">
-		<frame title="Description" space-expand="false" space-fill="false">
+MAIN_DIALOG="
+<window title='Source Code Viewer' width-request='750' height-request='600'>
+	<vbox spacing='6' border-width='8'>
+		<frame title='Description' space-expand='false' space-fill='false'>
 			<text>
 				<label>This example demonstrates the sourceview widget with syntax highlighting.
 Use the buttons to switch between different source files and languages. The C
@@ -154,41 +150,39 @@ and Bash examples are loaded from static files, while the JSON example is
 generated dynamically by a shell function.</label>
 			</text>
 		</frame>
-		<frame title="Source Code" space-expand="true" space-fill="true">
+		<frame title='Source Code' space-expand='true' space-fill='true'>
 			<vbox>
-				<hbox spacing="6" space-expand="false" space-fill="false">
+				<hbox spacing='6' space-expand='false' space-fill='false'>
 					<button>
 						<label>C Program</label>
-						<action>cp '"$TMPDIR"'/hello.c '"$TMPDIR"'/code</action>
-						<action>echo c > '"$TMPDIR"'/code.lang</action>
-						<action>refresh:srcEditor</action>
+						<action>set:srcEditor.file=$TMPDIR/hello.c</action>
+						<action>set:srcEditor.language=c</action>
 					</button>
 					<button>
 						<label>JSON Data</label>
-						<action>generate_json > '"$TMPDIR"'/code</action>
-						<action>echo json > '"$TMPDIR"'/code.lang</action>
-						<action>refresh:srcEditor</action>
+						<action>generate_json > $TMPDIR/code.json</action>
+						<action>set:srcEditor.file=$TMPDIR/code.json</action>
+						<action>set:srcEditor.language=json</action>
 					</button>
 					<button>
 						<label>Bash Script</label>
-						<action>cp '"$TMPDIR"'/greet.sh '"$TMPDIR"'/code</action>
-						<action>echo sh > '"$TMPDIR"'/code.lang</action>
-						<action>refresh:srcEditor</action>
+						<action>set:srcEditor.file=$TMPDIR/greet.sh</action>
+						<action>set:srcEditor.language=sh</action>
 					</button>
 				</hbox>
-				<sourceview language="c" font-name="Monospace 12">
+				<sourceview language='c' font-name='Monospace 12'>
 					<variable>srcEditor</variable>
-					<input type="file">'"$TMPDIR"'/code</input>
+					<input type='file'>$TMPDIR/hello.c</input>
 				</sourceview>
 			</vbox>
 		</frame>
-		<buttonbox layout="end" space-expand="false" space-fill="false">
-			<button stock="ok"/>
+		<buttonbox layout='end' space-expand='false' space-fill='false'>
+			<button stock='ok'/>
 		</buttonbox>
 	</vbox>
 	<variable>sourceviewDialog</variable>
 </window>
-'
+"
 export MAIN_DIALOG
 
 case $1 in
