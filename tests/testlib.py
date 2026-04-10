@@ -143,7 +143,7 @@ class TestRunner:
                 stderr=subprocess.DEVNULL
             ).decode().strip().split('\n')[0]
             subprocess.run(
-                ['import', '-window', wid, out_path],
+                ['import', '-frame', '-window', wid, out_path],
                 check=True, stderr=subprocess.DEVNULL
             )
             if self.verbose:
