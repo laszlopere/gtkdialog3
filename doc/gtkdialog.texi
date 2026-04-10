@@ -54,7 +54,7 @@ and with no Back-Cover Texts.
 * Invoking the Program::   How to call the program from various languages.
 * Widgets::    		   The elements of dialog boxes.
 * Containers::		   Dialog elements grouping widgets together.
-* Actions::		   What happens when something happens.
+* Widget Sub-elements::	   Properties and actions inside widgets.
 @end menu
 
 
@@ -610,32 +610,9 @@ The dialog description language is a simple XML-like markup capable of
 describing complex dialog boxes containing widgets and containers.
 
 Widgets are GUI elements such as buttons, entry fields, lists, and
-labels.  Every widget can have attributes, states, and actions
-(@pxref{Actions}).  Widgets must be placed inside containers
-(@pxref{Containers}).
-
-Most widgets support the following common sub-elements:
-
-@table @code
-@item <variable>
-Names the shell variable that receives this widget's value on exit.
-@item <label>
-Sets the display text.
-@item <default>
-Sets the initial value.
-@item <input>
-A shell command whose output sets the widget's value.
-@item <input file>
-A file whose contents set the widget's value.
-@item <output file>
-A file to write the widget's value to (used with @code{save:}).
-@item <action>
-A command to run when the widget changes (@pxref{Actions}).
-@item <sensitive>
-Sets the initial interactive state (@code{enabled} or @code{disabled}).
-@item <width>, <height>
-Sets the widget's minimum size.
-@end table
+labels.  Widgets are configured by placing sub-elements between their
+opening and closing tags (@pxref{Widget Sub-elements}).  Widgets must
+be placed inside containers (@pxref{Containers}).
 
 @menu
 * text::                Static text labels
@@ -1553,15 +1530,277 @@ Multiple windows can be opened using the @code{launch:} action
 @end example
 
 @c -----------------------------------------------------------------
-@node Actions
-@chapter Actions
-When the user changes the state of a widget, gtkdialog3 checks whether
-actions are attached to it.  If the widget has one or more actions, the
-program executes them so the new situation can be handled.
+@node Widget Sub-elements
+@chapter Widget Sub-elements
 
-Every widget can have multiple actions.  Gtkdialog3 executes them in
-the order they appear in the dialog description, so you can write a
-sequence of instructions that runs as a small program.
+Widgets are configured by placing sub-elements between their opening
+and closing tags.  These sub-elements control the widget's label,
+initial value, data source, output destination, variable name, and
+behaviour when the user interacts with it.
+
+This chapter documents every sub-element.  Not every widget supports
+every sub-element --- see the individual widget descriptions
+(@pxref{Widgets}) for which ones apply to each widget type.
+
+@menu
+* variable::		Naming a widget for scripting
+* label::		Setting the display text
+* default::		Setting the initial value
+* input::		Loading data from a command or file
+* output file::		Saving data to a file
+* item::		Adding list and menu entries
+* sensitive::		Controlling the interactive state
+* width and height::	Setting the widget size
+* action::		Responding to user interaction
+@end menu
+
+@c -----------------------------------------------------------------
+@node variable
+@section @code{<variable>}
+
+Names the widget so its value can be read back by the calling script.
+When the dialog closes, all named variables are printed to standard
+output as shell assignments (@pxref{Capturing output}).
+
+@example
+<entry>
+    <variable>USERNAME</variable>
+</entry>
+@end example
+
+On exit this produces @code{USERNAME="whatever the user typed"}.
+
+If a widget has no @code{<variable>} element, gtkdialog3 assigns an
+internal name automatically, but auto-named variables are not exported.
+
+The optional tag attribute @code{export="false"} keeps the variable
+internal --- it can still be referenced by actions such as
+@code{refresh:} or @code{enable:}, but it will not appear in the
+output.
+
+@c -----------------------------------------------------------------
+@node label
+@section @code{<label>}
+
+Sets the display text of the widget.  The meaning depends on the
+widget type:
+
+@itemize @bullet
+@item @code{<text>} --- the label text shown on screen.
+@item @code{<button>} --- the button caption.
+@item @code{<checkbox>}, @code{<radiobutton>} --- the text beside the
+check mark.
+@item @code{<frame>} --- the frame title.
+@item @code{<window>} --- the window title bar text (alternatively use
+the @code{title} tag attribute).
+@item @code{<tree>}, @code{<table>} --- pipe-separated column headers.
+@item @code{<progressbar>} --- the text displayed inside the bar.
+@item @code{<statusbar>} --- the initial status message.
+@end itemize
+
+@example
+<text>
+    <label>Please enter your name:</label>
+</text>
+@end example
+
+@c -----------------------------------------------------------------
+@node default
+@section @code{<default>}
+
+Sets the initial value of the widget before any user interaction.
+The meaning depends on the widget type:
+
+@itemize @bullet
+@item @code{<entry>} --- pre-fills the text field.
+@item @code{<checkbox>}, @code{<radiobutton>}, @code{<togglebutton>},
+@code{<switch>} --- @code{true} or @code{false} sets the toggle state.
+@item @code{<comboboxtext>}, @code{<comboboxentry>} --- selects the
+matching item.
+@item @code{<hscale>}, @code{<vscale>}, @code{<spinbutton>} --- sets
+the initial numeric value.
+@item @code{<colorbutton>} --- sets the initial colour in
+@code{#rrggbb} format.
+@item @code{<fontbutton>} --- sets the initial font in Pango syntax.
+@item @code{<webview>} --- the initial URL to load.
+@item @code{<statusbar>} --- the initial status message.
+@end itemize
+
+@example
+<entry>
+    <default>localhost</default>
+    <variable>HOSTNAME</variable>
+</entry>
+@end example
+
+@c -----------------------------------------------------------------
+@node input
+@section @code{<input>}
+
+Loads data into the widget from an external source.  There are three
+forms:
+
+@subsection Shell command
+
+@code{<input>@var{command}</input>} runs the command in a subshell
+and uses its standard output to populate the widget.  For entry and
+text widgets, the output becomes the displayed text.  For list, tree,
+and table widgets, each line of output becomes a row.  For combobox
+widgets, each line becomes an item.
+
+@example
+<list>
+    <input>ls /usr/bin</input>
+    <variable>FILES</variable>
+</list>
+@end example
+
+@subsection File
+
+@code{<input file>@var{path}</input>} or
+@code{<input file="@var{path}">} reads the contents of the named
+file.  The file is also monitored for changes --- if it is modified
+on disk, a @code{file-changed} signal is emitted, which can trigger
+an action to refresh the widget automatically.
+
+@example
+<terminal argv0='/bin/bash' has-focus='true'>
+    <variable>term</variable>
+    <input file>$TMPDIR/cmd</input>
+</terminal>
+@end example
+
+@subsection Stock and theme icons
+
+@code{<input file stock="@var{icon-name}">} loads a stock icon by
+name.  @code{<input file icon="@var{icon-name}">} loads a theme icon.
+These forms are used primarily with button and pixmap widgets.
+
+@example
+<button>
+    <input file stock="gtk-open"></input>
+    <label>Open</label>
+</button>
+@end example
+
+When the @code{refresh:} action is used on a widget, its
+@code{<input>} or @code{<input file>} is re-evaluated and the widget
+is updated with the new data.
+
+@c -----------------------------------------------------------------
+@node output file
+@section @code{<output file>}
+
+Specifies a file where the widget's value will be written when the
+@code{save:} action is triggered.
+
+@example
+<edit>
+    <variable>EDITOR</variable>
+    <input file>/tmp/myfile.txt</input>
+    <output file>/tmp/myfile.txt</output>
+</edit>
+<button>
+    <label>Save</label>
+    <action function="save">EDITOR</action>
+</button>
+@end example
+
+Works on most widget types including entries, text editors, checkboxes,
+comboboxes, scales, and spinbuttons.
+
+@c -----------------------------------------------------------------
+@node item
+@section @code{<item>}
+
+Adds an entry to list-type and menu widgets.  Multiple @code{<item>}
+elements can appear in a single widget.  The meaning depends on the
+widget type:
+
+@itemize @bullet
+@item @code{<comboboxtext>}, @code{<comboboxentry>}, @code{<combobox>},
+@code{<list>} --- each item becomes a selectable option.
+@item @code{<tree>}, @code{<table>} --- each item becomes a row, with
+columns separated by the pipe character @code{|}.
+@item @code{<hscale>}, @code{<vscale>} --- each item defines a scale
+mark at a position.
+@end itemize
+
+Items in tree and table widgets can have icons via tag attributes:
+@code{<item stock="icon-name">} or @code{<item icon="icon-name">}.
+
+@example
+<comboboxtext>
+    <item>First choice</item>
+    <item>Second choice</item>
+    <item>Third choice</item>
+    <variable>CHOICE</variable>
+</comboboxtext>
+@end example
+
+@c -----------------------------------------------------------------
+@node sensitive
+@section @code{<sensitive>}
+
+Controls whether the widget is interactive.  A widget that is not
+sensitive is greyed out and does not respond to mouse or keyboard
+input.
+
+Accepted values: @code{true}, @code{false}, @code{enabled},
+@code{disabled}, @code{yes}, @code{no}, @code{0}.
+
+The special value @code{password} (entry widgets only) makes the
+widget sensitive but hides the text with dots, as is common for
+password fields.
+
+The legacy tag name @code{<visible>} is an alias for
+@code{<sensitive>} and works identically.
+
+@example
+<entry>
+    <default>secret</default>
+    <sensitive>password</sensitive>
+    <variable>PASSWORD</variable>
+</entry>
+@end example
+
+Widgets can also be enabled and disabled at runtime using the
+@code{enable:} and @code{disable:} actions (@pxref{enable},
+@pxref{disable}).
+
+@c -----------------------------------------------------------------
+@node width and height
+@section @code{<width>} and @code{<height>}
+
+Set the minimum size of the widget in pixels.  For terminal widgets,
+the values are in character columns and rows instead of pixels.
+
+@example
+<edit>
+    <width>400</width>
+    <height>300</height>
+    <variable>EDITOR</variable>
+</edit>
+@end example
+
+These can also be set using the @code{width-request} and
+@code{height-request} tag attributes on the opening tag, which is
+the standard GTK property approach:
+
+@example
+<edit width-request="400" height-request="300">
+    <variable>EDITOR</variable>
+</edit>
+@end example
+
+@c -----------------------------------------------------------------
+@node action
+@section @code{<action>}
+
+Defines what happens when the user interacts with the widget.  Every
+interactive widget can have one or more @code{<action>} elements.
+Gtkdialog3 executes them in the order they appear, so you can write
+a sequence of instructions that runs as a small program.
 
 Actions can be written in two equivalent syntaxes:
 
@@ -1571,8 +1810,11 @@ Actions can be written in two equivalent syntaxes:
 @end example
 
 The colon syntax is shorter; the attribute syntax allows additional
-attributes such as @code{signal}, @code{condition}, and @code{when}.
-Both forms are case-insensitive in the action type.
+tag attributes such as @code{signal} (which GTK signal triggers the
+action) and @code{condition} (a condition that must be true for the
+action to run).  Both forms are case-insensitive in the action type.
+
+The available action types are listed in the following subsections.
 
 @menu
 * Shell commands::	Running external programs
@@ -1599,7 +1841,7 @@ Both forms are case-insensitive in the action type.
 
 @c -----------------------------------------------------------------
 @node Shell commands
-@section Shell commands
+@subsection Shell commands
 
 If no action type is given, the action text is executed as a shell
 command.  Gtkdialog3 starts the user's @code{$SHELL} (falling back to
@@ -1631,7 +1873,7 @@ The command runs and gtkdialog3 waits for it to finish.  Append
 
 @c -----------------------------------------------------------------
 @node exit
-@section @code{exit:@var{Value}}
+@subsection @code{exit:@var{Value}}
 
 Closes the dialog immediately.  All widget variables are printed to
 standard output, followed by @code{EXIT="@var{Value}"}.  The calling
@@ -1649,7 +1891,7 @@ caused the dialog to close.
 
 @c -----------------------------------------------------------------
 @node launch
-@section @code{launch:@var{Name}}
+@subsection @code{launch:@var{Name}}
 
 Opens a new window whose definition is stored in the environment
 variable @var{Name}.  If a window with that variable name already
@@ -1667,7 +1909,7 @@ containing a @code{<window>} element.
 
 @c -----------------------------------------------------------------
 @node closewindow
-@section @code{closewindow:@var{Name}}
+@subsection @code{closewindow:@var{Name}}
 
 Closes the window identified by @var{Name}.  All variables belonging
 to that window are removed.  If other windows remain open, the program
@@ -1684,7 +1926,7 @@ and prints all remaining variables.
 
 @c -----------------------------------------------------------------
 @node presentwindow
-@section @code{presentwindow:@var{Name}}
+@subsection @code{presentwindow:@var{Name}}
 
 Brings the named window to the front and gives it keyboard focus.
 Unlike @code{launch:}, this does not create a new window --- it only
@@ -1701,7 +1943,7 @@ want to direct the user's attention to a specific one.
 
 @c -----------------------------------------------------------------
 @node enable
-@section @code{enable:@var{Name}}
+@subsection @code{enable:@var{Name}}
 
 Makes the named widget interactive again after it has been disabled.
 If the widget is already enabled, nothing happens.  Works on any
@@ -1718,7 +1960,7 @@ widget type.
 
 @c -----------------------------------------------------------------
 @node disable
-@section @code{disable:@var{Name}}
+@subsection @code{disable:@var{Name}}
 
 Greys out the named widget and prevents all user interaction with it.
 If the widget is already disabled, nothing happens.  Works on any
@@ -1735,7 +1977,7 @@ widget type.
 
 @c -----------------------------------------------------------------
 @node show
-@section @code{show:@var{Name}}
+@subsection @code{show:@var{Name}}
 
 Makes the named widget visible.  If the widget is inside a scrolled
 container, the container is also shown so the widget actually appears
@@ -1755,7 +1997,7 @@ toggle parts of the interface:
 
 @c -----------------------------------------------------------------
 @node hide
-@section @code{hide:@var{Name}}
+@subsection @code{hide:@var{Name}}
 
 Makes the named widget invisible.  The widget still exists and keeps
 its value, but it is removed from the visible layout.  If the widget
@@ -1771,7 +2013,7 @@ is inside a scrolled container, the container is also hidden.
 
 @c -----------------------------------------------------------------
 @node activate
-@section @code{activate:@var{Name}}
+@subsection @code{activate:@var{Name}}
 
 Simulates the default activation of the named widget --- clicking a
 button, toggling a checkbox, pressing Enter in an entry, and so on.
@@ -1791,7 +2033,7 @@ interacted with it directly.
 
 @c -----------------------------------------------------------------
 @node grabfocus
-@section @code{grabfocus:@var{Name}}
+@subsection @code{grabfocus:@var{Name}}
 
 Gives keyboard focus to the named widget.  After this action, keyboard
 input goes to the target widget.  Useful for directing the user to a
@@ -1807,7 +2049,7 @@ specific entry field or text editor after an event.
 
 @c -----------------------------------------------------------------
 @node refresh
-@section @code{refresh:@var{Name}}
+@subsection @code{refresh:@var{Name}}
 
 Reloads the content of the named widget from its data source.  If the
 widget has an @code{<input>} or @code{<input file>} directive, it is
@@ -1827,7 +2069,7 @@ access the current state of the dialog.
 
 @c -----------------------------------------------------------------
 @node save
-@section @code{save:@var{Name}}
+@subsection @code{save:@var{Name}}
 
 Writes the current value of the named widget to the file specified by
 its @code{<output file>} attribute.  Works on most widget types
@@ -1844,7 +2086,7 @@ spinbuttons.
 
 @c -----------------------------------------------------------------
 @node fileselect
-@section @code{fileselect:@var{Name}}
+@subsection @code{fileselect:@var{Name}}
 
 Opens a file chooser dialog and places the selected path into the
 named widget (typically an entry).  The file chooser's behaviour is
@@ -1879,7 +2121,7 @@ Pipe-separated MIME types, e.g.@: @code{text/plain|text/html}.
 
 @c -----------------------------------------------------------------
 @node clear
-@section @code{clear:@var{Name}}
+@subsection @code{clear:@var{Name}}
 
 Removes all content from the named widget.  For text editors and
 entries this clears the text; for lists, trees, and tables this removes
@@ -1895,7 +2137,7 @@ all rows; for comboboxes this removes all items.
 
 @c -----------------------------------------------------------------
 @node removeselected
-@section @code{removeselected:@var{Name}}
+@subsection @code{removeselected:@var{Name}}
 
 Removes the currently selected item from the named widget.  Most
 commonly used with list, tree, and table widgets to let the user
@@ -1912,7 +2154,7 @@ text range.
 
 @c -----------------------------------------------------------------
 @node break
-@section @code{break}
+@subsection @code{break}
 
 Stops executing the remaining actions in the current action chain.
 Actions listed before the @code{break} run normally; actions listed
@@ -1931,7 +2173,7 @@ to conditionally stop the chain.
 
 @c -----------------------------------------------------------------
 @node insert
-@section @code{insert:@var{Source},@var{Target}}
+@subsection @code{insert:@var{Source},@var{Target}}
 
 Takes the value from the @var{Source} widget and inserts it into the
 @var{Target} widget.  For list and tree widgets, a new row is added.
@@ -1951,7 +2193,7 @@ inserted at the cursor position.
 
 @c -----------------------------------------------------------------
 @node append
-@section @code{append:@var{Source},@var{Target}}
+@subsection @code{append:@var{Source},@var{Target}}
 
 Works the same way as @code{insert:} --- takes the value from
 @var{Source} and adds it to @var{Target}.  Both @code{insert:} and
@@ -1960,23 +2202,23 @@ entry and edit widgets.
 
 @c -----------------------------------------------------------------
 @node Clipboard actions
-@section Clipboard actions
+@subsection Clipboard actions
 
 The following four actions operate on text editor (@code{<edit>})
 widgets and use the system clipboard.
 
-@subsection @code{cut:@var{Name}}
+@subsubsection @code{cut:@var{Name}}
 Cuts the selected text from the named editor to the clipboard.
 
-@subsection @code{copy:@var{Name}}
+@subsubsection @code{copy:@var{Name}}
 Copies the selected text from the named editor to the clipboard
 without removing it.
 
-@subsection @code{paste:@var{Name}}
+@subsubsection @code{paste:@var{Name}}
 Pastes the clipboard contents into the named editor at the cursor
 position.
 
-@subsection @code{selectall:@var{Name}}
+@subsubsection @code{selectall:@var{Name}}
 Selects all text in the named editor.
 
 @noindent From @file{examples/edit/edit_actions}:

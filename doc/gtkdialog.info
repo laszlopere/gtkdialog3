@@ -43,7 +43,7 @@ beginners.
 * Invoking the Program::   How to call the program from various languages.
 * Widgets::    		   The elements of dialog boxes.
 * Containers::		   Dialog elements grouping widgets together.
-* Actions::		   What happens when something happens.
+* Widget Sub-elements::	   Properties and actions inside widgets.
 
 
 File: gtkdialog.info,  Node: Getting Gtkdialog,  Next: Introduction,  Prev: Top,  Up: Top
@@ -587,30 +587,9 @@ The dialog description language is a simple XML-like markup capable of
 describing complex dialog boxes containing widgets and containers.
 
    Widgets are GUI elements such as buttons, entry fields, lists, and
-labels.  Every widget can have attributes, states, and actions (*note
-Actions::).  Widgets must be placed inside containers (*note
-Containers::).
-
-   Most widgets support the following common sub-elements:
-
-‘<variable>’
-     Names the shell variable that receives this widget's value on exit.
-‘<label>’
-     Sets the display text.
-‘<default>’
-     Sets the initial value.
-‘<input>’
-     A shell command whose output sets the widget's value.
-‘<input file>’
-     A file whose contents set the widget's value.
-‘<output file>’
-     A file to write the widget's value to (used with ‘save:’).
-‘<action>’
-     A command to run when the widget changes (*note Actions::).
-‘<sensitive>’
-     Sets the initial interactive state (‘enabled’ or ‘disabled’).
-‘<width>, <height>’
-     Sets the widget's minimum size.
+labels.  Widgets are configured by placing sub-elements between their
+opening and closing tags (*note Widget Sub-elements::).  Widgets must be
+placed inside containers (*note Containers::).
 
 * Menu:
 
@@ -814,6 +793,10 @@ modern visual appearance.  Use ‘<default>’ with ‘true’ or ‘false’ to
 the initial state.  Actions fire when the switch is toggled.
 
    Exports ‘true’ or ‘false’ as the variable value.
+
+ [image src="images/widget_switch.png" alt="The switch widget example" ]
+
+Figure 5.1: The switch widget from ‘examples/switch/switch’.
 
 From ‘examples/switch/switch’:
      <hbox homogeneous="true">
@@ -1311,7 +1294,7 @@ From ‘examples/standard/webview’:
      </webview>
 
 
-File: gtkdialog.info,  Node: Containers,  Next: Actions,  Prev: Widgets,  Up: Top
+File: gtkdialog.info,  Node: Containers,  Next: Widget Sub-elements,  Prev: Widgets,  Up: Top
 
 6 Containers
 ************
@@ -1496,18 +1479,264 @@ From ‘examples/window/window_attributes’:
      </window>
 
 
-File: gtkdialog.info,  Node: Actions,  Prev: Containers,  Up: Top
+File: gtkdialog.info,  Node: Widget Sub-elements,  Prev: Containers,  Up: Top
 
-7 Actions
-*********
+7 Widget Sub-elements
+*********************
 
-When the user changes the state of a widget, gtkdialog3 checks whether
-actions are attached to it.  If the widget has one or more actions, the
-program executes them so the new situation can be handled.
+Widgets are configured by placing sub-elements between their opening and
+closing tags.  These sub-elements control the widget's label, initial
+value, data source, output destination, variable name, and behaviour
+when the user interacts with it.
 
-   Every widget can have multiple actions.  Gtkdialog3 executes them in
-the order they appear in the dialog description, so you can write a
-sequence of instructions that runs as a small program.
+   This chapter documents every sub-element.  Not every widget supports
+every sub-element -- see the individual widget descriptions (*note
+Widgets::) for which ones apply to each widget type.
+
+* Menu:
+
+* variable::		Naming a widget for scripting
+* label::		Setting the display text
+* default::		Setting the initial value
+* input::		Loading data from a command or file
+* output file::		Saving data to a file
+* item::		Adding list and menu entries
+* sensitive::		Controlling the interactive state
+* width and height::	Setting the widget size
+* action::		Responding to user interaction
+
+
+File: gtkdialog.info,  Node: variable,  Next: label,  Up: Widget Sub-elements
+
+7.1 ‘<variable>’
+================
+
+Names the widget so its value can be read back by the calling script.
+When the dialog closes, all named variables are printed to standard
+output as shell assignments (*note Capturing output::).
+
+     <entry>
+         <variable>USERNAME</variable>
+     </entry>
+
+   On exit this produces ‘USERNAME="whatever the user typed"’.
+
+   If a widget has no ‘<variable>’ element, gtkdialog3 assigns an
+internal name automatically, but auto-named variables are not exported.
+
+   The optional tag attribute ‘export="false"’ keeps the variable
+internal -- it can still be referenced by actions such as ‘refresh:’ or
+‘enable:’, but it will not appear in the output.
+
+
+File: gtkdialog.info,  Node: label,  Next: default,  Prev: variable,  Up: Widget Sub-elements
+
+7.2 ‘<label>’
+=============
+
+Sets the display text of the widget.  The meaning depends on the widget
+type:
+
+   • ‘<text>’ -- the label text shown on screen.
+   • ‘<button>’ -- the button caption.
+   • ‘<checkbox>’, ‘<radiobutton>’ -- the text beside the check mark.
+   • ‘<frame>’ -- the frame title.
+   • ‘<window>’ -- the window title bar text (alternatively use the
+     ‘title’ tag attribute).
+   • ‘<tree>’, ‘<table>’ -- pipe-separated column headers.
+   • ‘<progressbar>’ -- the text displayed inside the bar.
+   • ‘<statusbar>’ -- the initial status message.
+
+     <text>
+         <label>Please enter your name:</label>
+     </text>
+
+
+File: gtkdialog.info,  Node: default,  Next: input,  Prev: label,  Up: Widget Sub-elements
+
+7.3 ‘<default>’
+===============
+
+Sets the initial value of the widget before any user interaction.  The
+meaning depends on the widget type:
+
+   • ‘<entry>’ -- pre-fills the text field.
+   • ‘<checkbox>’, ‘<radiobutton>’, ‘<togglebutton>’, ‘<switch>’ --
+     ‘true’ or ‘false’ sets the toggle state.
+   • ‘<comboboxtext>’, ‘<comboboxentry>’ -- selects the matching item.
+   • ‘<hscale>’, ‘<vscale>’, ‘<spinbutton>’ -- sets the initial numeric
+     value.
+   • ‘<colorbutton>’ -- sets the initial colour in ‘#rrggbb’ format.
+   • ‘<fontbutton>’ -- sets the initial font in Pango syntax.
+   • ‘<webview>’ -- the initial URL to load.
+   • ‘<statusbar>’ -- the initial status message.
+
+     <entry>
+         <default>localhost</default>
+         <variable>HOSTNAME</variable>
+     </entry>
+
+
+File: gtkdialog.info,  Node: input,  Next: output file,  Prev: default,  Up: Widget Sub-elements
+
+7.4 ‘<input>’
+=============
+
+Loads data into the widget from an external source.  There are three
+forms:
+
+7.4.1 Shell command
+-------------------
+
+‘<input>COMMAND</input>’ runs the command in a subshell and uses its
+standard output to populate the widget.  For entry and text widgets, the
+output becomes the displayed text.  For list, tree, and table widgets,
+each line of output becomes a row.  For combobox widgets, each line
+becomes an item.
+
+     <list>
+         <input>ls /usr/bin</input>
+         <variable>FILES</variable>
+     </list>
+
+7.4.2 File
+----------
+
+‘<input file>PATH</input>’ or ‘<input file="PATH">’ reads the contents
+of the named file.  The file is also monitored for changes -- if it is
+modified on disk, a ‘file-changed’ signal is emitted, which can trigger
+an action to refresh the widget automatically.
+
+     <terminal argv0='/bin/bash' has-focus='true'>
+         <variable>term</variable>
+         <input file>$TMPDIR/cmd</input>
+     </terminal>
+
+7.4.3 Stock and theme icons
+---------------------------
+
+‘<input file stock="ICON-NAME">’ loads a stock icon by name.  ‘<input
+file icon="ICON-NAME">’ loads a theme icon.  These forms are used
+primarily with button and pixmap widgets.
+
+     <button>
+         <input file stock="gtk-open"></input>
+         <label>Open</label>
+     </button>
+
+   When the ‘refresh:’ action is used on a widget, its ‘<input>’ or
+‘<input file>’ is re-evaluated and the widget is updated with the new
+data.
+
+
+File: gtkdialog.info,  Node: output file,  Next: item,  Prev: input,  Up: Widget Sub-elements
+
+7.5 ‘<output file>’
+===================
+
+Specifies a file where the widget's value will be written when the
+‘save:’ action is triggered.
+
+     <edit>
+         <variable>EDITOR</variable>
+         <input file>/tmp/myfile.txt</input>
+         <output file>/tmp/myfile.txt</output>
+     </edit>
+     <button>
+         <label>Save</label>
+         <action function="save">EDITOR</action>
+     </button>
+
+   Works on most widget types including entries, text editors,
+checkboxes, comboboxes, scales, and spinbuttons.
+
+
+File: gtkdialog.info,  Node: item,  Next: sensitive,  Prev: output file,  Up: Widget Sub-elements
+
+7.6 ‘<item>’
+============
+
+Adds an entry to list-type and menu widgets.  Multiple ‘<item>’ elements
+can appear in a single widget.  The meaning depends on the widget type:
+
+   • ‘<comboboxtext>’, ‘<comboboxentry>’, ‘<combobox>’, ‘<list>’ -- each
+     item becomes a selectable option.
+   • ‘<tree>’, ‘<table>’ -- each item becomes a row, with columns
+     separated by the pipe character ‘|’.
+   • ‘<hscale>’, ‘<vscale>’ -- each item defines a scale mark at a
+     position.
+
+   Items in tree and table widgets can have icons via tag attributes:
+‘<item stock="icon-name">’ or ‘<item icon="icon-name">’.
+
+     <comboboxtext>
+         <item>First choice</item>
+         <item>Second choice</item>
+         <item>Third choice</item>
+         <variable>CHOICE</variable>
+     </comboboxtext>
+
+
+File: gtkdialog.info,  Node: sensitive,  Next: width and height,  Prev: item,  Up: Widget Sub-elements
+
+7.7 ‘<sensitive>’
+=================
+
+Controls whether the widget is interactive.  A widget that is not
+sensitive is greyed out and does not respond to mouse or keyboard input.
+
+   Accepted values: ‘true’, ‘false’, ‘enabled’, ‘disabled’, ‘yes’, ‘no’,
+‘0’.
+
+   The special value ‘password’ (entry widgets only) makes the widget
+sensitive but hides the text with dots, as is common for password
+fields.
+
+   The legacy tag name ‘<visible>’ is an alias for ‘<sensitive>’ and
+works identically.
+
+     <entry>
+         <default>secret</default>
+         <sensitive>password</sensitive>
+         <variable>PASSWORD</variable>
+     </entry>
+
+   Widgets can also be enabled and disabled at runtime using the
+‘enable:’ and ‘disable:’ actions (*note enable::, *note disable::).
+
+
+File: gtkdialog.info,  Node: width and height,  Next: action,  Prev: sensitive,  Up: Widget Sub-elements
+
+7.8 ‘<width>’ and ‘<height>’
+============================
+
+Set the minimum size of the widget in pixels.  For terminal widgets, the
+values are in character columns and rows instead of pixels.
+
+     <edit>
+         <width>400</width>
+         <height>300</height>
+         <variable>EDITOR</variable>
+     </edit>
+
+   These can also be set using the ‘width-request’ and ‘height-request’
+tag attributes on the opening tag, which is the standard GTK property
+approach:
+
+     <edit width-request="400" height-request="300">
+         <variable>EDITOR</variable>
+     </edit>
+
+
+File: gtkdialog.info,  Node: action,  Prev: width and height,  Up: Widget Sub-elements
+
+7.9 ‘<action>’
+==============
+
+Defines what happens when the user interacts with the widget.  Every
+interactive widget can have one or more ‘<action>’ elements.  Gtkdialog3
+executes them in the order they appear, so you can write a sequence of
+instructions that runs as a small program.
 
    Actions can be written in two equivalent syntaxes:
 
@@ -1515,8 +1744,11 @@ sequence of instructions that runs as a small program.
      Attribute syntax: <action function="TYPE">ARGUMENT</action>
 
    The colon syntax is shorter; the attribute syntax allows additional
-attributes such as ‘signal’, ‘condition’, and ‘when’.  Both forms are
-case-insensitive in the action type.
+tag attributes such as ‘signal’ (which GTK signal triggers the action)
+and ‘condition’ (a condition that must be true for the action to run).
+Both forms are case-insensitive in the action type.
+
+   The available action types are listed in the following subsections.
 
 * Menu:
 
@@ -1542,10 +1774,10 @@ case-insensitive in the action type.
 * Clipboard actions::	Cut, copy, paste, select all
 
 
-File: gtkdialog.info,  Node: Shell commands,  Next: exit,  Up: Actions
+File: gtkdialog.info,  Node: Shell commands,  Next: exit,  Up: action
 
-7.1 Shell commands
-==================
+7.9.1 Shell commands
+--------------------
 
 If no action type is given, the action text is executed as a shell
 command.  Gtkdialog3 starts the user's ‘$SHELL’ (falling back to
@@ -1569,10 +1801,10 @@ From ‘examples/button/button_action_functions’:
      </button>
 
 
-File: gtkdialog.info,  Node: exit,  Next: launch,  Prev: Shell commands,  Up: Actions
+File: gtkdialog.info,  Node: exit,  Next: launch,  Prev: Shell commands,  Up: action
 
-7.2 ‘exit:VALUE’
-================
+7.9.2 ‘exit:VALUE’
+------------------
 
 Closes the dialog immediately.  All widget variables are printed to
 standard output, followed by ‘EXIT="VALUE"’.  The calling script can
@@ -1587,10 +1819,10 @@ From ‘examples/button/button_action_functions’:
      </button>
 
 
-File: gtkdialog.info,  Node: launch,  Next: closewindow,  Prev: exit,  Up: Actions
+File: gtkdialog.info,  Node: launch,  Next: closewindow,  Prev: exit,  Up: action
 
-7.3 ‘launch:NAME’
-=================
+7.9.3 ‘launch:NAME’
+-------------------
 
 Opens a new window whose definition is stored in the environment
 variable NAME.  If a window with that variable name already exists, it
@@ -1605,10 +1837,10 @@ From ‘examples/languages/bash_script_multi_window’:
      </button>
 
 
-File: gtkdialog.info,  Node: closewindow,  Next: presentwindow,  Prev: launch,  Up: Actions
+File: gtkdialog.info,  Node: closewindow,  Next: presentwindow,  Prev: launch,  Up: action
 
-7.4 ‘closewindow:NAME’
-======================
+7.9.4 ‘closewindow:NAME’
+------------------------
 
 Closes the window identified by NAME.  All variables belonging to that
 window are removed.  If other windows remain open, the program continues
@@ -1622,10 +1854,10 @@ From ‘examples/languages/bash_script_multi_window’:
      </button>
 
 
-File: gtkdialog.info,  Node: presentwindow,  Next: enable,  Prev: closewindow,  Up: Actions
+File: gtkdialog.info,  Node: presentwindow,  Next: enable,  Prev: closewindow,  Up: action
 
-7.5 ‘presentwindow:NAME’
-========================
+7.9.5 ‘presentwindow:NAME’
+--------------------------
 
 Brings the named window to the front and gives it keyboard focus.
 Unlike ‘launch:’, this does not create a new window -- it only raises an
@@ -1639,10 +1871,10 @@ From ‘examples/miscellaneous/presentwindow’:
      </button>
 
 
-File: gtkdialog.info,  Node: enable,  Next: disable,  Prev: presentwindow,  Up: Actions
+File: gtkdialog.info,  Node: enable,  Next: disable,  Prev: presentwindow,  Up: action
 
-7.6 ‘enable:NAME’
-=================
+7.9.6 ‘enable:NAME’
+-------------------
 
 Makes the named widget interactive again after it has been disabled.  If
 the widget is already enabled, nothing happens.  Works on any widget
@@ -1656,10 +1888,10 @@ From ‘examples/button/button_action_functions’:
      </button>
 
 
-File: gtkdialog.info,  Node: disable,  Next: show,  Prev: enable,  Up: Actions
+File: gtkdialog.info,  Node: disable,  Next: show,  Prev: enable,  Up: action
 
-7.7 ‘disable:NAME’
-==================
+7.9.7 ‘disable:NAME’
+--------------------
 
 Greys out the named widget and prevents all user interaction with it.
 If the widget is already disabled, nothing happens.  Works on any widget
@@ -1673,10 +1905,10 @@ From ‘examples/button/button_action_functions’:
      </button>
 
 
-File: gtkdialog.info,  Node: show,  Next: hide,  Prev: disable,  Up: Actions
+File: gtkdialog.info,  Node: show,  Next: hide,  Prev: disable,  Up: action
 
-7.8 ‘show:NAME’
-===============
+7.9.8 ‘show:NAME’
+-----------------
 
 Makes the named widget visible.  If the widget is inside a scrolled
 container, the container is also shown so the widget actually appears on
@@ -1693,10 +1925,10 @@ From ‘examples/miscellaneous/show_and_hide’:
      </togglebutton>
 
 
-File: gtkdialog.info,  Node: hide,  Next: activate,  Prev: show,  Up: Actions
+File: gtkdialog.info,  Node: hide,  Next: activate,  Prev: show,  Up: action
 
-7.9 ‘hide:NAME’
-===============
+7.9.9 ‘hide:NAME’
+-----------------
 
 Makes the named widget invisible.  The widget still exists and keeps its
 value, but it is removed from the visible layout.  If the widget is
@@ -1709,10 +1941,10 @@ From ‘examples/miscellaneous/show_and_hide’:
      </menuitem>
 
 
-File: gtkdialog.info,  Node: activate,  Next: grabfocus,  Prev: hide,  Up: Actions
+File: gtkdialog.info,  Node: activate,  Next: grabfocus,  Prev: hide,  Up: action
 
-7.10 ‘activate:NAME’
-====================
+7.9.10 ‘activate:NAME’
+----------------------
 
 Simulates the default activation of the named widget -- clicking a
 button, toggling a checkbox, pressing Enter in an entry, and so on.
@@ -1729,10 +1961,10 @@ From ‘examples/miscellaneous/activate’:
      </button>
 
 
-File: gtkdialog.info,  Node: grabfocus,  Next: refresh,  Prev: activate,  Up: Actions
+File: gtkdialog.info,  Node: grabfocus,  Next: refresh,  Prev: activate,  Up: action
 
-7.11 ‘grabfocus:NAME’
-=====================
+7.9.11 ‘grabfocus:NAME’
+-----------------------
 
 Gives keyboard focus to the named widget.  After this action, keyboard
 input goes to the target widget.  Useful for directing the user to a
@@ -1745,10 +1977,10 @@ From ‘examples/miscellaneous/grabfocus’:
      </button>
 
 
-File: gtkdialog.info,  Node: refresh,  Next: save,  Prev: grabfocus,  Up: Actions
+File: gtkdialog.info,  Node: refresh,  Next: save,  Prev: grabfocus,  Up: action
 
-7.12 ‘refresh:NAME’
-===================
+7.9.12 ‘refresh:NAME’
+---------------------
 
 Reloads the content of the named widget from its data source.  If the
 widget has an ‘<input>’ or ‘<input file>’ directive, it is re-evaluated
@@ -1765,10 +1997,10 @@ From ‘examples/checkbox/checkbox_conditional_refreshing’:
      </checkbox>
 
 
-File: gtkdialog.info,  Node: save,  Next: fileselect,  Prev: refresh,  Up: Actions
+File: gtkdialog.info,  Node: save,  Next: fileselect,  Prev: refresh,  Up: action
 
-7.13 ‘save:NAME’
-================
+7.9.13 ‘save:NAME’
+------------------
 
 Writes the current value of the named widget to the file specified by
 its ‘<output file>’ attribute.  Works on most widget types including
@@ -1781,10 +2013,10 @@ From ‘examples/edit/edit_actions’:
      </button>
 
 
-File: gtkdialog.info,  Node: fileselect,  Next: clear,  Prev: save,  Up: Actions
+File: gtkdialog.info,  Node: fileselect,  Next: clear,  Prev: save,  Up: action
 
-7.14 ‘fileselect:NAME’
-======================
+7.9.14 ‘fileselect:NAME’
+------------------------
 
 Opens a file chooser dialog and places the selected path into the named
 widget (typically an entry).  The file chooser's behaviour is controlled
@@ -1813,10 +2045,10 @@ From ‘examples/miscellaneous/fileselect_advanced’:
      </button>
 
 
-File: gtkdialog.info,  Node: clear,  Next: removeselected,  Prev: fileselect,  Up: Actions
+File: gtkdialog.info,  Node: clear,  Next: removeselected,  Prev: fileselect,  Up: action
 
-7.15 ‘clear:NAME’
-=================
+7.9.15 ‘clear:NAME’
+-------------------
 
 Removes all content from the named widget.  For text editors and entries
 this clears the text; for lists, trees, and tables this removes all
@@ -1829,10 +2061,10 @@ From ‘examples/edit/edit_actions’:
      </button>
 
 
-File: gtkdialog.info,  Node: removeselected,  Next: break,  Prev: clear,  Up: Actions
+File: gtkdialog.info,  Node: removeselected,  Next: break,  Prev: clear,  Up: action
 
-7.16 ‘removeselected:NAME’
-==========================
+7.9.16 ‘removeselected:NAME’
+----------------------------
 
 Removes the currently selected item from the named widget.  Most
 commonly used with list, tree, and table widgets to let the user delete
@@ -1845,10 +2077,10 @@ From ‘examples/tree/tree_insert’:
      </button>
 
 
-File: gtkdialog.info,  Node: break,  Next: insert,  Prev: removeselected,  Up: Actions
+File: gtkdialog.info,  Node: break,  Next: insert,  Prev: removeselected,  Up: action
 
-7.17 ‘break’
-============
+7.9.17 ‘break’
+--------------
 
 Stops executing the remaining actions in the current action chain.
 Actions listed before the ‘break’ run normally; actions listed after it
@@ -1864,10 +2096,10 @@ From ‘examples/miscellaneous/break’:
      </button>
 
 
-File: gtkdialog.info,  Node: insert,  Next: append,  Prev: break,  Up: Actions
+File: gtkdialog.info,  Node: insert,  Next: append,  Prev: break,  Up: action
 
-7.18 ‘insert:SOURCE,TARGET’
-===========================
+7.9.18 ‘insert:SOURCE,TARGET’
+-----------------------------
 
 Takes the value from the SOURCE widget and inserts it into the TARGET
 widget.  For list and tree widgets, a new row is added.  For entry
@@ -1884,43 +2116,43 @@ From ‘examples/tree/tree_insert’:
      </button>
 
 
-File: gtkdialog.info,  Node: append,  Next: Clipboard actions,  Prev: insert,  Up: Actions
+File: gtkdialog.info,  Node: append,  Next: Clipboard actions,  Prev: insert,  Up: action
 
-7.19 ‘append:SOURCE,TARGET’
-===========================
+7.9.19 ‘append:SOURCE,TARGET’
+-----------------------------
 
 Works the same way as ‘insert:’ -- takes the value from SOURCE and adds
 it to TARGET.  Both ‘insert:’ and ‘append:’ add new rows to list and
 tree widgets and set text in entry and edit widgets.
 
 
-File: gtkdialog.info,  Node: Clipboard actions,  Prev: append,  Up: Actions
+File: gtkdialog.info,  Node: Clipboard actions,  Prev: append,  Up: action
 
-7.20 Clipboard actions
-======================
+7.9.20 Clipboard actions
+------------------------
 
 The following four actions operate on text editor (‘<edit>’) widgets and
 use the system clipboard.
 
-7.20.1 ‘cut:NAME’
------------------
+7.9.20.1 ‘cut:NAME’
+...................
 
 Cuts the selected text from the named editor to the clipboard.
 
-7.20.2 ‘copy:NAME’
-------------------
+7.9.20.2 ‘copy:NAME’
+....................
 
 Copies the selected text from the named editor to the clipboard without
 removing it.
 
-7.20.3 ‘paste:NAME’
--------------------
+7.9.20.3 ‘paste:NAME’
+.....................
 
 Pastes the clipboard contents into the named editor at the cursor
 position.
 
-7.20.4 ‘selectall:NAME’
------------------------
+7.9.20.4 ‘selectall:NAME’
+.........................
 
 Selects all text in the named editor.
 
@@ -1946,82 +2178,92 @@ From ‘examples/edit/edit_actions’:
 
 Tag Table:
 Node: Top638
-Node: Getting Gtkdialog1775
-Node: Introduction3041
-Node: The Description Language3554
-Node: Backslash escaping4637
-Node: Space in tag names5409
-Node: Imperative constructs6088
-Node: Implicit window element7291
-Node: Unsupported XML features8089
-Node: Invoking the Program8780
-Node: Command-line options9755
-Node: Environment variable11822
-Node: Capturing output12814
-Node: Output formats13614
-Node: Reading from a file14843
-Node: Standard input15765
-Node: Including function libraries16209
-Node: Multiple windows16895
-Node: Layout options18226
-Node: Window placement18990
-Node: Widgets19490
-Node: text21987
-Node: button22525
-Node: entry24045
-Node: checkbox24714
-Node: radiobutton25548
-Node: togglebutton26524
-Node: switch27313
-Node: combobox28074
-Node: comboboxtext28739
-Node: comboboxentry29577
-Node: list30525
-Node: table31267
-Node: tree32767
-Node: edit33566
-Node: pixmap34378
-Node: hscale and vscale34975
-Node: spinbutton35853
-Node: colorbutton36572
-Node: fontbutton37387
-Node: progressbar38091
-Node: statusbar38845
-Node: timer39546
-Node: hseparator and vseparator40535
-Node: menubar40983
-Node: terminal42008
-Node: sourceview43005
-Node: webview44205
-Node: Containers44922
-Node: vbox and hbox45506
-Node: frame46470
-Node: notebook46977
-Node: eventbox47848
-Node: expander48560
-Node: buttonbox49341
-Node: window50027
-Node: Actions50782
-Node: Shell commands52495
-Node: exit53467
-Node: launch54048
-Node: closewindow54662
-Node: presentwindow55238
-Node: enable55839
-Node: disable56336
-Node: show56830
-Node: hide57438
-Node: activate57969
-Node: grabfocus58672
-Node: refresh59153
-Node: save59879
-Node: fileselect60367
-Node: clear61429
-Node: removeselected61900
-Node: break62432
-Node: insert63101
-Node: append63704
-Node: Clipboard actions64066
+Node: Getting Gtkdialog1788
+Node: Introduction3054
+Node: The Description Language3567
+Node: Backslash escaping4650
+Node: Space in tag names5422
+Node: Imperative constructs6101
+Node: Implicit window element7304
+Node: Unsupported XML features8102
+Node: Invoking the Program8793
+Node: Command-line options9768
+Node: Environment variable11835
+Node: Capturing output12827
+Node: Output formats13627
+Node: Reading from a file14856
+Node: Standard input15778
+Node: Including function libraries16222
+Node: Multiple windows16908
+Node: Layout options18239
+Node: Window placement19003
+Node: Widgets19503
+Node: text21341
+Node: button21879
+Node: entry23399
+Node: checkbox24068
+Node: radiobutton24902
+Node: togglebutton25878
+Node: switch26667
+Ref: fig:switch27105
+Node: combobox27570
+Node: comboboxtext28235
+Node: comboboxentry29073
+Node: list30021
+Node: table30763
+Node: tree32263
+Node: edit33062
+Node: pixmap33874
+Node: hscale and vscale34471
+Node: spinbutton35349
+Node: colorbutton36068
+Node: fontbutton36883
+Node: progressbar37587
+Node: statusbar38341
+Node: timer39042
+Node: hseparator and vseparator40031
+Node: menubar40479
+Node: terminal41504
+Node: sourceview42501
+Node: webview43701
+Node: Containers44418
+Node: vbox and hbox45014
+Node: frame45978
+Node: notebook46485
+Node: eventbox47356
+Node: expander48068
+Node: buttonbox48849
+Node: window49535
+Node: Widget Sub-elements50290
+Node: variable51246
+Node: label52039
+Node: default52841
+Node: input53809
+Node: output file55410
+Node: item56028
+Node: sensitive56976
+Node: width and height57901
+Node: action58596
+Node: Shell commands60361
+Node: exit61336
+Node: launch61920
+Node: closewindow62537
+Node: presentwindow63116
+Node: enable63720
+Node: disable64220
+Node: show64717
+Node: hide65328
+Node: activate65862
+Node: grabfocus66568
+Node: refresh67052
+Node: save67781
+Node: fileselect68272
+Node: clear69337
+Node: removeselected69811
+Node: break70346
+Node: insert71018
+Node: append71624
+Node: Clipboard actions71989
 
 End Tag Table
 
