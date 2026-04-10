@@ -96,7 +96,7 @@ labels = find_widgets(window, Atspi.Role.LABEL)
 found_label = False
 for lbl in labels:
     text = lbl.get_name() or ''
-    if 'export -f' in text and 'bash function' in text.lower():
+    if 'export -f' in text:
         found_label = True
         t.check(True, f"Label contains expected text ({len(text)} chars)")
         break

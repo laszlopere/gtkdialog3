@@ -12,8 +12,8 @@ print_this() {
 export MAIN_DIALOG='
 <window title="Bash Event Driven">
 	<vbox>
-		<text wrap="true" width-chars="40">
-			<label>"This example demonstrates calling bash functions from GtkDialog3 actions. The print_this() function is defined in the bash script and exported with \"export -f\". When you click the button below, the action invokes the function directly. Output is printed to the terminal."</label>
+		<text>
+			<label>"Exported bash function demo (export -f)"</label>
 		</text>
 		<button>
 			<label>Call print_this()</label>
