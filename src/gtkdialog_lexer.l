@@ -79,7 +79,7 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 
 %x EMBEDDED
 %x ST_TAG_ATTR ST_QUOTED_TAGATTR ST_SQUOTED_TAGATTR
-%x ST_STRING ST_QUOTED_STRING
+%x ST_STRING ST_QUOTED_STRING ST_SQUOTED_STRING
 
 %%
 
@@ -877,7 +877,26 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 					  BEGIN(0);
 					  return STRING;
 					  							}
-												
+
+					/*
+					 * The single-quoted string. It can contain anything
+					 * except a single quote (no escape sequences).
+					 */
+\x27	  				{
+					  Token = "single quote";
+					  BEGIN(ST_SQUOTED_STRING);				}
+
+<ST_SQUOTED_STRING>[^\x27]+		{
+					  yymore();						}
+
+<ST_SQUOTED_STRING>\x27			{
+					  Token = yytext;
+					  gtkdialog_lval.cval = g_strdup(yytext);
+					  gtkdialog_lval.cval[strlen(gtkdialog_lval.cval) - 1] = '\0';
+					  BEGIN(0);
+					  return STRING;
+					  							}
+
 					/*
 					 * An unquoted string can contain anything except
 					 * unescaped '<'.
@@ -887,7 +906,7 @@ static gchar *strip_backslash_escapes(const gchar *s) {
 					  BEGIN(ST_STRING);
 					  yymore();
 												}
-[^ \n\t\>\<\"][^\n\<\\]*  		{
+[^ \n\t\>\<\"\x27][^\n\<\\]*  		{
 					  Token = "string";
 					  BEGIN(ST_STRING);
 					  yymore();
