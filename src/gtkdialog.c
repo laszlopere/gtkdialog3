@@ -235,7 +235,7 @@ gtkdialog_init(
 	{
 		"output-format", '\0',
 		0, G_OPTION_ARG_STRING, &option_output_format_str,
-		"Output format for variable export: bash or json.", "format"
+		"Output format for variable export: bash, json, or xml.", "format"
 	},
 	{
 		NULL
@@ -325,8 +325,10 @@ gtkdialog_init(
 			option_output_format = OUTPUT_FORMAT_BASH;
 		else if (g_ascii_strcasecmp(option_output_format_str, "json") == 0)
 			option_output_format = OUTPUT_FORMAT_JSON;
+		else if (g_ascii_strcasecmp(option_output_format_str, "xml") == 0)
+			option_output_format = OUTPUT_FORMAT_XML;
 		else
-			g_error("Invalid output format '%s'. Use 'bash' or 'json'.",
+			g_error("Invalid output format '%s'. Use 'bash', 'json', or 'xml'.",
 				option_output_format_str);
 	}
 }

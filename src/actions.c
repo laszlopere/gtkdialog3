@@ -143,8 +143,8 @@ void action_closewindow(GtkWidget *widget, char *string)
 		/* If we are closing the last window then we can exit gtkdialog */
 		if (variables_count_widgets() == 0) {
 
-			if (option_output_format == OUTPUT_FORMAT_JSON)
-				print_variables_json_with_exit("closewindow");
+			if (option_output_format != OUTPUT_FORMAT_BASH)
+				print_variables_with_exit("closewindow");
 			else
 				printf("EXIT=\"closewindow\"\n");
 
@@ -234,8 +234,8 @@ void action_exitprogram(GtkWidget *widget, char *string)
 	else
 		exit_value = string;
 
-	if (option_output_format == OUTPUT_FORMAT_JSON) {
-		print_variables_json_with_exit(exit_value);
+	if (option_output_format != OUTPUT_FORMAT_BASH) {
+		print_variables_with_exit(exit_value);
 	} else {
 		print_variables(NULL);
 		if (string[0] == '=')

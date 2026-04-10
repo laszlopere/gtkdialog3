@@ -70,7 +70,7 @@ Set the default "fill" packing state for all widgets.
 Set the output format for widget values when the dialog closes.
 .I FORMAT
 is case\-insensitive and must be one of:
-.BR bash " (default) or " json .
+.BR bash " (default), " json ", or " xml .
 With
 .BR bash ,
 output is a series of
@@ -80,6 +80,9 @@ lines suitable for
 With
 .BR json ,
 output is a single JSON object.
+With
+.BR xml ,
+output is an XML document.
 .SH USAGE
 .SS Environment variable (most common)
 Store the dialog description in an exported environment variable and pass
@@ -148,6 +151,30 @@ Example output:
   },
   "exit": "OK"
 }
+.EE
+.SS XML output
+With
+.BR \-\-output\-format=xml ,
+widget values are printed as an XML document with the same grouping
+by window name.
+.PP
+.EX
+gtkdialog3 \-\-program=MAIN_DIALOG \-\-output\-format=xml
+.EE
+.PP
+Example output:
+.PP
+.EX
+<?xml version="1.0" encoding="UTF\-8"?>
+<gtkdialog>
+  <widget_contents>
+    <window name="myWindow">
+      <variable name="entName">Alice</variable>
+      <variable name="chkAgreed">true</variable>
+    </window>
+  </widget_contents>
+  <exit>OK</exit>
+</gtkdialog>
 .EE
 .SS Standalone file
 A file containing only the dialog description can be executed directly

@@ -1769,12 +1769,99 @@ static void print_variables_json(const gchar *exit_value)
 	g_list_free(window_ids);
 }
 
+/* Print an XML-escaped string to stdout */
+static void xml_print_escaped(const gchar *s)
+{
+	const gchar *p;
+	for (p = s; *p; p++) {
+		switch (*p) {
+		case '&':  printf("&amp;");  break;
+		case '<':  printf("&lt;");   break;
+		case '>':  printf("&gt;");   break;
+		case '"':  printf("&quot;"); break;
+		case '\'': printf("&apos;"); break;
+		default:
+			if ((guchar)*p < 0x20 && *p != '\t' && *p != '\n' && *p != '\r')
+				printf("&#x%02x;", (guchar)*p);
+			else
+				putchar(*p);
+			break;
+		}
+	}
+}
+
+/* Print all variable values in XML format grouped by window */
+static void print_variables_xml(const gchar *exit_value)
+{
+	GList *vars = NULL;
+	GList *iter;
+	GList *window_ids = NULL;
+
+	collect_variables(root, &vars);
+
+	/* Collect unique window_ids in order */
+	for (iter = vars; iter; iter = iter->next) {
+		variable *v = iter->data;
+		if (!g_list_find(window_ids, GINT_TO_POINTER(v->window_id)))
+			window_ids = g_list_append(window_ids,
+				GINT_TO_POINTER(v->window_id));
+	}
+
+	printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+	printf("<gtkdialog>\n");
+	printf("  <widget_contents>\n");
+
+	for (GList *witer = window_ids; witer; witer = witer->next) {
+		gint wid = GPOINTER_TO_INT(witer->data);
+		const gchar *wname = find_window_name(root, wid);
+		if (wname == NULL)
+			wname = "unknown";
+
+		printf("    <window name=\"");
+		xml_print_escaped(wname);
+		printf("\">\n");
+
+		for (iter = vars; iter; iter = iter->next) {
+			variable *v = iter->data;
+			gchar *value;
+			if (v->window_id != wid)
+				continue;
+			if (v->Type == WIDGET_WINDOW)
+				continue;
+
+			value = widget_get_text_value(v->Widget, v->Type);
+			if (value == NULL)
+				value = "";
+
+			printf("      <variable name=\"");
+			xml_print_escaped(v->Name);
+			printf("\">");
+			xml_print_escaped(value);
+			printf("</variable>\n");
+		}
+		printf("    </window>\n");
+	}
+
+	printf("  </widget_contents>\n");
+
+	if (exit_value != NULL) {
+		printf("  <exit>");
+		xml_print_escaped(exit_value);
+		printf("</exit>\n");
+	}
+
+	printf("</gtkdialog>\n");
+
+	g_list_free(vars);
+	g_list_free(window_ids);
+}
+
 /* Public entry point: print variables in the configured output format */
 void print_variables(variable *actual)
 {
-	if (option_output_format == OUTPUT_FORMAT_JSON) {
-		/* JSON output is handled by print_variables_json() which is
-		 * called from the exit points with the EXIT value */
+	if (option_output_format != OUTPUT_FORMAT_BASH) {
+		/* Structured formats (JSON, XML) are handled by
+		 * print_variables_with_exit() at the exit points */
 		return;
 	}
 
@@ -1782,11 +1869,14 @@ void print_variables(variable *actual)
 	fflush(stdout);
 }
 
-/* Print variables and exit status in JSON format.
+/* Print variables and exit status in the configured structured format.
  * Called from exit points instead of separate print_variables + printf. */
-void print_variables_json_with_exit(const gchar *exit_value)
+void print_variables_with_exit(const gchar *exit_value)
 {
-	print_variables_json(exit_value);
+	if (option_output_format == OUTPUT_FORMAT_JSON)
+		print_variables_json(exit_value);
+	else if (option_output_format == OUTPUT_FORMAT_XML)
+		print_variables_xml(exit_value);
 	fflush(stdout);
 }
 

@@ -39,6 +39,7 @@
 /* Output format for variable export */
 #define OUTPUT_FORMAT_BASH 0
 #define OUTPUT_FORMAT_JSON 1
+#define OUTPUT_FORMAT_XML  2
 extern gint option_output_format;
 
 /* Thunor: Used to block signal emissions from action functions */
