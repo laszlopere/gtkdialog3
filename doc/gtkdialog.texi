@@ -614,6 +614,51 @@ labels.  Widgets are configured by placing sub-elements between their
 opening and closing tags (@pxref{Widget Sub-elements}).  Widgets must
 be placed inside containers (@pxref{Containers}).
 
+@section Tag attributes and GTK properties
+
+Opening tags can carry inline attributes that control the widget's
+appearance and behaviour:
+
+@example
+<entry visible="false" width-request="300">
+<window title="My App" resizable="false">
+<vbox spacing="10" border-width="8">
+@end example
+
+Any attribute whose name matches a GObject property of the underlying
+GTK widget is applied directly.  This means you can use any standard
+GTK property without gtkdialog3 needing explicit support for it.
+Boolean properties accept @code{true}/@code{false}, integer and float
+properties accept numeric values, and enum properties accept the GLib
+nick string (e.g.@: @code{start}, @code{center}, @code{end},
+@code{fill}).
+
+Some commonly used GTK widget properties:
+
+@table @code
+@item halign, valign
+Horizontal/vertical alignment: @code{fill}, @code{start}, @code{end},
+@code{center}, @code{baseline}.
+@item hexpand, vexpand
+Whether the widget requests extra space (@code{true}/@code{false}).
+@item margin-start, margin-end, margin-top, margin-bottom
+Margins in pixels.
+@item width-request, height-request
+Minimum widget size in pixels.
+@item sensitive
+Whether the widget responds to input (@code{true}/@code{false}).
+@item visible
+Whether the widget is shown (@code{true}/@code{false}).
+@end table
+
+The full list of properties for each widget can be found in the
+GTK 3 documentation at
+@uref{https://docs.gtk.org/gtk3/}.  Look up the widget class
+(e.g.@: GtkEntry, GtkButton, GtkBox) and check its ``Properties''
+section.  Container-specific properties such as @code{spacing},
+@code{homogeneous}, and @code{border-width} are documented with
+their respective container widgets (@pxref{Containers}).
+
 @menu
 * text::                Static text labels
 * button::              Pushbuttons

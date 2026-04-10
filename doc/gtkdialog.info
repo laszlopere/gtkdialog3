@@ -593,6 +593,76 @@ placed inside containers (*note Containers::).
 
 * Menu:
 
+* text::
+* button::
+* entry::
+* checkbox::
+* radiobutton::
+* togglebutton::
+* switch::
+* combobox::
+* comboboxtext::
+* comboboxentry::
+* list::
+* table::
+* tree::
+* edit::
+* pixmap::
+* hscale and vscale::
+* spinbutton::
+* colorbutton::
+* fontbutton::
+* progressbar::
+* statusbar::
+* timer::
+* hseparator and vseparator::
+* menubar::
+* terminal::
+* sourceview::
+* webview::
+
+5.1 Tag attributes and GTK properties
+=====================================
+
+Opening tags can carry inline attributes that control the widget's
+appearance and behaviour:
+
+     <entry visible="false" width-request="300">
+     <window title="My App" resizable="false">
+     <vbox spacing="10" border-width="8">
+
+   Any attribute whose name matches a GObject property of the underlying
+GTK widget is applied directly.  This means you can use any standard GTK
+property without gtkdialog3 needing explicit support for it.  Boolean
+properties accept ‘true’/‘false’, integer and float properties accept
+numeric values, and enum properties accept the GLib nick string (e.g.
+‘start’, ‘center’, ‘end’, ‘fill’).
+
+   Some commonly used GTK widget properties:
+
+‘halign, valign’
+     Horizontal/vertical alignment: ‘fill’, ‘start’, ‘end’, ‘center’,
+     ‘baseline’.
+‘hexpand, vexpand’
+     Whether the widget requests extra space (‘true’/‘false’).
+‘margin-start, margin-end, margin-top, margin-bottom’
+     Margins in pixels.
+‘width-request, height-request’
+     Minimum widget size in pixels.
+‘sensitive’
+     Whether the widget responds to input (‘true’/‘false’).
+‘visible’
+     Whether the widget is shown (‘true’/‘false’).
+
+   The full list of properties for each widget can be found in the GTK 3
+documentation at <https://docs.gtk.org/gtk3/>.  Look up the widget class
+(e.g. GtkEntry, GtkButton, GtkBox) and check its "Properties" section.
+Container-specific properties such as ‘spacing’, ‘homogeneous’, and
+‘border-width’ are documented with their respective container widgets
+(*note Containers::).
+
+* Menu:
+
 * text::                Static text labels
 * button::              Pushbuttons
 * entry::               Single-line text input
@@ -624,7 +694,7 @@ placed inside containers (*note Containers::).
 
 File: gtkdialog.info,  Node: text,  Next: button,  Up: Widgets
 
-5.1 ‘<text>’ -- Static label
+5.2 ‘<text>’ -- Static label
 ============================
 
 A non-editable text label.  The text can be set with ‘<label>’, loaded
@@ -642,7 +712,7 @@ From ‘examples/text/text’:
 
 File: gtkdialog.info,  Node: button,  Next: entry,  Prev: text,  Up: Widgets
 
-5.2 ‘<button>’ -- Pushbutton
+5.3 ‘<button>’ -- Pushbutton
 ============================
 
 A clickable button.  When clicked, its action chain runs.  If no action
@@ -674,7 +744,7 @@ From ‘examples/button/button_action_functions’:
          <action function="exit">Exit by button</action>
      </button>
 
-5.2.1 Pre-defined stock buttons
+5.3.1 Pre-defined stock buttons
 -------------------------------
 
 Gtkdialog3 provides shorthand stock buttons with a built-in label and
@@ -689,7 +759,7 @@ icon:
 
 File: gtkdialog.info,  Node: entry,  Next: checkbox,  Prev: button,  Up: Widgets
 
-5.3 ‘<entry>’ -- Single-line text input
+5.4 ‘<entry>’ -- Single-line text input
 =======================================
 
 A single-line text field for entering strings.  Actions fire when the
@@ -710,7 +780,7 @@ From ‘examples/entry/entry’:
 
 File: gtkdialog.info,  Node: checkbox,  Next: radiobutton,  Prev: entry,  Up: Widgets
 
-5.4 ‘<checkbox>’ -- Check mark
+5.5 ‘<checkbox>’ -- Check mark
 ==============================
 
 A labelled check box that the user can toggle on and off.  Use
@@ -734,7 +804,7 @@ From ‘examples/checkbox/checkbox’:
 
 File: gtkdialog.info,  Node: radiobutton,  Next: togglebutton,  Prev: checkbox,  Up: Widgets
 
-5.5 ‘<radiobutton>’ -- Mutually exclusive choice
+5.6 ‘<radiobutton>’ -- Mutually exclusive choice
 ================================================
 
 A radio button that automatically groups with adjacent radio buttons.
@@ -761,7 +831,7 @@ From ‘examples/radiobutton/radiobutton_attributes’:
 
 File: gtkdialog.info,  Node: togglebutton,  Next: switch,  Prev: radiobutton,  Up: Widgets
 
-5.6 ‘<togglebutton>’ -- Toggle button
+5.7 ‘<togglebutton>’ -- Toggle button
 =====================================
 
 A button that stays pressed when clicked and releases on the next click.
@@ -785,7 +855,7 @@ From ‘examples/togglebutton/togglebutton_advanced’:
 
 File: gtkdialog.info,  Node: switch,  Next: combobox,  Prev: togglebutton,  Up: Widgets
 
-5.7 ‘<switch>’ -- On/off switch
+5.8 ‘<switch>’ -- On/off switch
 ===============================
 
 A sliding toggle switch, similar in function to a checkbox but with a
@@ -812,7 +882,7 @@ From ‘examples/switch/switch’:
 
 File: gtkdialog.info,  Node: combobox,  Next: comboboxtext,  Prev: switch,  Up: Widgets
 
-5.8 ‘<combobox>’ -- Editable drop-down
+5.9 ‘<combobox>’ -- Editable drop-down
 ======================================
 
 A drop-down list with an editable text field.  Items can be added with
@@ -832,8 +902,8 @@ From ‘examples/combobox/combobox’:
 
 File: gtkdialog.info,  Node: comboboxtext,  Next: comboboxentry,  Prev: combobox,  Up: Widgets
 
-5.9 ‘<comboboxtext>’ -- Fixed drop-down
-=======================================
+5.10 ‘<comboboxtext>’ -- Fixed drop-down
+========================================
 
 A drop-down list where the user must choose from the available items (no
 free-form typing).  Items can come from ‘<item>’ elements, ‘<input>’
@@ -854,7 +924,7 @@ From ‘examples/comboboxtext/comboboxtext_advanced’:
 
 File: gtkdialog.info,  Node: comboboxentry,  Next: list,  Prev: comboboxtext,  Up: Widgets
 
-5.10 ‘<comboboxentry>’ -- Drop-down with entry
+5.11 ‘<comboboxentry>’ -- Drop-down with entry
 ==============================================
 
 A drop-down list combined with an editable entry field.  This is a
@@ -877,7 +947,7 @@ From ‘examples/comboboxentry/comboboxentry_advanced’:
 
 File: gtkdialog.info,  Node: list,  Next: table,  Prev: comboboxentry,  Up: Widgets
 
-5.11 ‘<list>’ -- Single-column list
+5.12 ‘<list>’ -- Single-column list
 ===================================
 
 A scrollable single-column list.  Items can be added with ‘<item>’
@@ -898,7 +968,7 @@ From ‘examples/list/list_attributes’:
 
 File: gtkdialog.info,  Node: table,  Next: tree,  Prev: list,  Up: Widgets
 
-5.12 ‘<table>’ -- Multi-column table
+5.13 ‘<table>’ -- Multi-column table
 ====================================
 
 A sortable multi-column table.  Column headers are defined by a
@@ -939,7 +1009,7 @@ From ‘examples/table/table’:
 
 File: gtkdialog.info,  Node: tree,  Next: edit,  Prev: table,  Up: Widgets
 
-5.13 ‘<tree>’ -- Multi-column tree view
+5.14 ‘<tree>’ -- Multi-column tree view
 =======================================
 
 A multi-column tree view, similar to ‘<table>’ but predating it.  Column
@@ -961,7 +1031,7 @@ From ‘examples/tree/tree_insert’:
 
 File: gtkdialog.info,  Node: edit,  Next: pixmap,  Prev: tree,  Up: Widgets
 
-5.14 ‘<edit>’ -- Multi-line text editor
+5.15 ‘<edit>’ -- Multi-line text editor
 =======================================
 
 A multi-line text editing area with scrollbars.  Use ‘<default>’ to set
@@ -987,7 +1057,7 @@ From ‘examples/edit/edit’:
 
 File: gtkdialog.info,  Node: pixmap,  Next: hscale and vscale,  Prev: edit,  Up: Widgets
 
-5.15 ‘<pixmap>’ -- Static image
+5.16 ‘<pixmap>’ -- Static image
 ===============================
 
 Displays a static image.  The image file is specified with ‘<input
@@ -1006,7 +1076,7 @@ From ‘examples/pixmap/pixmap’:
 
 File: gtkdialog.info,  Node: hscale and vscale,  Next: spinbutton,  Prev: pixmap,  Up: Widgets
 
-5.16 ‘<hscale>’, ‘<vscale>’ -- Sliders
+5.17 ‘<hscale>’, ‘<vscale>’ -- Sliders
 ======================================
 
 Horizontal and vertical slider controls for selecting a numeric value
@@ -1036,7 +1106,7 @@ From ‘examples/hscale/hscale_advanced’:
 
 File: gtkdialog.info,  Node: spinbutton,  Next: colorbutton,  Prev: hscale and vscale,  Up: Widgets
 
-5.17 ‘<spinbutton>’ -- Numeric spinner
+5.18 ‘<spinbutton>’ -- Numeric spinner
 ======================================
 
 A text entry for numeric values with up/down arrow buttons.  Supports
@@ -1056,7 +1126,7 @@ From ‘examples/spinbutton/spinbutton’:
 
 File: gtkdialog.info,  Node: colorbutton,  Next: fontbutton,  Prev: spinbutton,  Up: Widgets
 
-5.18 ‘<colorbutton>’ -- Colour picker
+5.19 ‘<colorbutton>’ -- Colour picker
 =====================================
 
 A button that displays a colour swatch and opens a colour chooser dialog
@@ -1077,7 +1147,7 @@ From ‘examples/colorbutton/colorbutton_advanced’:
 
 File: gtkdialog.info,  Node: fontbutton,  Next: progressbar,  Prev: colorbutton,  Up: Widgets
 
-5.19 ‘<fontbutton>’ -- Font picker
+5.20 ‘<fontbutton>’ -- Font picker
 ==================================
 
 A button that displays a font name and opens a font chooser dialog when
@@ -1096,7 +1166,7 @@ From ‘examples/fontbutton/fontbutton’:
 
 File: gtkdialog.info,  Node: progressbar,  Next: statusbar,  Prev: fontbutton,  Up: Widgets
 
-5.20 ‘<progressbar>’ -- Progress indicator
+5.21 ‘<progressbar>’ -- Progress indicator
 ==========================================
 
 A horizontal progress bar.  The ‘<input>’ command runs in a background
@@ -1117,7 +1187,7 @@ From ‘examples/progressbar/progressbar’:
 
 File: gtkdialog.info,  Node: statusbar,  Next: timer,  Prev: progressbar,  Up: Widgets
 
-5.21 ‘<statusbar>’ -- Status message bar
+5.22 ‘<statusbar>’ -- Status message bar
 ========================================
 
 A message bar typically placed at the bottom of a window.  The message
@@ -1137,7 +1207,7 @@ From ‘examples/statusbar/statusbar_advanced’:
 
 File: gtkdialog.info,  Node: timer,  Next: hseparator and vseparator,  Prev: statusbar,  Up: Widgets
 
-5.22 ‘<timer>’ -- Periodic timer
+5.23 ‘<timer>’ -- Periodic timer
 ================================
 
 An invisible widget that fires its action chain at regular intervals.
@@ -1168,7 +1238,7 @@ From ‘examples/timer/timer_advanced’:
 
 File: gtkdialog.info,  Node: hseparator and vseparator,  Next: menubar,  Prev: timer,  Up: Widgets
 
-5.23 ‘<hseparator>’, ‘<vseparator>’ -- Separators
+5.24 ‘<hseparator>’, ‘<vseparator>’ -- Separators
 =================================================
 
 Purely decorative horizontal or vertical lines used to visually separate
@@ -1180,7 +1250,7 @@ From ‘examples/hseparator/hseparator_advanced’:
 
 File: gtkdialog.info,  Node: menubar,  Next: terminal,  Prev: hseparator and vseparator,  Up: Widgets
 
-5.24 ‘<menubar>’ -- Menu bar
+5.25 ‘<menubar>’ -- Menu bar
 ============================
 
 A menu bar containing drop-down menus.  Build the menu hierarchy with
@@ -1210,7 +1280,7 @@ From ‘examples/menubar/menubar’:
 
 File: gtkdialog.info,  Node: terminal,  Next: sourceview,  Prev: menubar,  Up: Widgets
 
-5.25 ‘<terminal>’ -- Terminal emulator (optional)
+5.26 ‘<terminal>’ -- Terminal emulator (optional)
 =================================================
 
 An embedded VTE terminal emulator.  Requires libvte (VTE 2.91) at build
@@ -1240,7 +1310,7 @@ From ‘examples/terminal/terminal’:
 
 File: gtkdialog.info,  Node: sourceview,  Next: webview,  Prev: terminal,  Up: Widgets
 
-5.26 ‘<sourceview>’ -- Source editor (optional)
+5.27 ‘<sourceview>’ -- Source editor (optional)
 ===============================================
 
 A text editor with syntax highlighting, line numbers, and
@@ -1274,7 +1344,7 @@ From ‘examples/standard/sourceview’:
 
 File: gtkdialog.info,  Node: webview,  Prev: sourceview,  Up: Widgets
 
-5.27 ‘<webview>’ -- Web browser (optional)
+5.28 ‘<webview>’ -- Web browser (optional)
 ==========================================
 
 An embedded web browser using WebKitGTK. Requires libwebkit2gtk at build
@@ -2198,72 +2268,72 @@ Node: Multiple windows16908
 Node: Layout options18239
 Node: Window placement19003
 Node: Widgets19503
-Node: text21341
-Node: button21879
-Node: entry23399
-Node: checkbox24068
-Node: radiobutton24902
-Node: togglebutton25878
-Node: switch26667
-Ref: fig:switch27105
-Node: combobox27570
-Node: comboboxtext28235
-Node: comboboxentry29073
-Node: list30021
-Node: table30763
-Node: tree32263
-Node: edit33062
-Node: pixmap33874
-Node: hscale and vscale34471
-Node: spinbutton35349
-Node: colorbutton36068
-Node: fontbutton36883
-Node: progressbar37587
-Node: statusbar38341
-Node: timer39042
-Node: hseparator and vseparator40031
-Node: menubar40479
-Node: terminal41504
-Node: sourceview42501
-Node: webview43701
-Node: Containers44418
-Node: vbox and hbox45014
-Node: frame45978
-Node: notebook46485
-Node: eventbox47356
-Node: expander48068
-Node: buttonbox48849
-Node: window49535
-Node: Widget Sub-elements50290
-Node: variable51246
-Node: label52039
-Node: default52841
-Node: input53809
-Node: output file55410
-Node: item56028
-Node: sensitive56976
-Node: width and height57901
-Node: action58596
-Node: Shell commands60361
-Node: exit61336
-Node: launch61920
-Node: closewindow62537
-Node: presentwindow63116
-Node: enable63720
-Node: disable64220
-Node: show64717
-Node: hide65328
-Node: activate65862
-Node: grabfocus66568
-Node: refresh67052
-Node: save67781
-Node: fileselect68272
-Node: clear69337
-Node: removeselected69811
-Node: break70346
-Node: insert71018
-Node: append71624
-Node: Clipboard actions71989
+Node: text23420
+Node: button23958
+Node: entry25478
+Node: checkbox26147
+Node: radiobutton26981
+Node: togglebutton27957
+Node: switch28746
+Ref: fig:switch29184
+Node: combobox29649
+Node: comboboxtext30314
+Node: comboboxentry31154
+Node: list32102
+Node: table32844
+Node: tree34344
+Node: edit35143
+Node: pixmap35955
+Node: hscale and vscale36552
+Node: spinbutton37430
+Node: colorbutton38149
+Node: fontbutton38964
+Node: progressbar39668
+Node: statusbar40422
+Node: timer41123
+Node: hseparator and vseparator42112
+Node: menubar42560
+Node: terminal43585
+Node: sourceview44582
+Node: webview45782
+Node: Containers46499
+Node: vbox and hbox47095
+Node: frame48059
+Node: notebook48566
+Node: eventbox49437
+Node: expander50149
+Node: buttonbox50930
+Node: window51616
+Node: Widget Sub-elements52371
+Node: variable53327
+Node: label54120
+Node: default54922
+Node: input55890
+Node: output file57491
+Node: item58109
+Node: sensitive59057
+Node: width and height59982
+Node: action60677
+Node: Shell commands62442
+Node: exit63417
+Node: launch64001
+Node: closewindow64618
+Node: presentwindow65197
+Node: enable65801
+Node: disable66301
+Node: show66798
+Node: hide67409
+Node: activate67943
+Node: grabfocus68649
+Node: refresh69133
+Node: save69862
+Node: fileselect70353
+Node: clear71418
+Node: removeselected71892
+Node: break72427
+Node: insert73099
+Node: append73705
+Node: Clipboard actions74070
 
 End Tag Table
 
