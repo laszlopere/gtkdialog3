@@ -2,7 +2,7 @@
 @include version.texi
 @c %**start of header
 @setfilename gtkdialog.info
-@settitle NAME-OF-MANUAL VERSION
+@settitle Gtkdialog User's Manual @value{VERSION}
 @c %**end of header
 
 @copying
@@ -53,7 +53,7 @@ and with no Back-Cover Texts.
 * Invoking the Program::   How to call the program from various languages.
 * Widgets::    		   The elements of dialog boxes.
 * Containers::		   Dialog elements grouping widgets together.
-* Actions::		   What is happening when something happening.
+* Actions::		   What happens when something happens.
 @end menu
 
 
@@ -89,18 +89,18 @@ USA.
 
 @node Introduction 
 @chapter Introduction
-Gtkdialog is a small utility program based on the GTK+ library. The
-program mainly made for GUI development for shell scripts but can be
+Gtkdialog is a small utility program based on the GTK library. The
+program is mainly made for GUI development for shell scripts but can be
 used with many other programming languages. The programmer can easily
-create GUI not just for any shell script or UNIX command but for any
-interpreted or compiled program capable to start child process and use
-pipes.
+create a GUI not just for any shell script or UNIX command but for any
+interpreted or compiled program capable of starting a child process and
+using pipes.
 
 @node Invoking the Program
 @chapter Invoking the Program
 @section Examples
-Our first example program shows how to call the @command{gtkdialog}
-from a BASH script. 
+Our first example program shows how to call the @command{gtkdialog3}
+from a BASH script.
 
 @example
 #! /bin/bash
@@ -116,21 +116,21 @@ export MAIN_DIALOG='
   </hbox>
  </vbox>'
 
-gtkdialog --program MAIN_DIALOG
+gtkdialog3 --program MAIN_DIALOG
 @end example
 
 This example uses a very plain way to open a dialog box. We store the
 description of the dialog box in the @code{MAIN_DIALOG} environment
 variable which is exported to the child processes with the BASH
-@code{export} built-in. Then we call the @code{gtkdialog} program with
+@code{export} built-in. Then we call the @code{gtkdialog3} program with
 the @option{--program} option which is followed by the name of the
 variable holding the dialog box description. It is simple and easy to
 write BASH scripts in this manner.
 
 A similar calling method can be used when user input is needed. The
-@command{gtkdialog} send the state of the widgets to the standard
+@command{gtkdialog3} sends the state of the widgets to the standard
 output when exiting and this is how we can get user input for the BASH
-program. The  next example code show the reading process.
+program. The next example code shows the reading process.
 @example
 #! /bin/bash
 
@@ -146,7 +146,7 @@ export DIALOG='
 </vbox>'
 
 I=$IFS; IFS=""
-for STATEMENTS in  $(gtkdialog --program DIALOG); do
+for STATEMENTS in  $(gtkdialog3 --program DIALOG); do
   eval $STATEMENTS
 done
 IFS=$I
@@ -159,17 +159,17 @@ fi
 @end example
 
 In the example script we use the @code{for} built-in to go through the
-list @code{gtkdialog} produced. Changing the field separator (IFS) is
+list @code{gtkdialog3} produced. Changing the field separator (IFS) is
 a little bit disturbing but necessary since this is the only way to
 protect the space characters in user input. 
 
 In larger software projects it may be a good idea to break the code to
-separate files. Since @code{gtkdialog} can read the description
+separate files. Since @code{gtkdialog3} can read the description
 program from file it is easy to write self executable programs with
-it. This is how the next example constructed.
+it. This is how the next example is constructed.
 
 @example
-#! /usr/local/bin/gtkdialog -f
+#! /usr/local/bin/gtkdialog3 -f
 <vbox>
   <checkbox>
     <label>This is a checkbox</label>
@@ -185,8 +185,8 @@ it. This is how the next example constructed.
 </vbox>
 @end example
 
-When used in this fashion the state of the widgets can get from
-the standard output of the script as usually.
+When used in this fashion the state of the widgets can be read from
+the standard output of the script as usual.
 
 
 @node Widgets
@@ -232,13 +232,14 @@ The pushbutton is a clickable widget defined with the
 @subsection @code{<label></label>}
 The @code{<label>@var{string}</label>} directive sets the text label of
 the pushbutton. If no label and pixmap is given for the button,
-gtkdialog will use @var{OK} as default.
+gtkdialog3 will use @var{OK} as default.
 
 @subsection @code{<input file></input>}
 When creating buttons, the @command{<input file>@var{filename}</input>}
 tag can be used to insert a pixmap into the button. The @var{filename}
-must be a pixmap file. Gtkdialog will find this file with the
-@command{locate} utility if necessary.
+must be a pixmap file. Gtkdialog3 will search for this file in the
+directories listed in the @env{GTKDIALOG_PIXMAP_PATH} environment
+variable if it cannot be opened directly.
 
 The pushbuttons can contain a label and a pixmap simultaneously. For
 this you have to use the @code{<label></label>} and the 
@@ -252,9 +253,9 @@ this you have to use the @code{<label></label>} and the
 @end example
 
 @subsection @code{<action></action>}
-The @code{<action>@var{command}</action>} directive tells the gtkdialog
+The @code{<action>@var{command}</action>} directive tells gtkdialog3
 what to do, when the button is pressed. If the action is not given
-explicitly the gtkdialog uses the default action, which is to exit
+explicitly gtkdialog3 uses the default action, which is to exit
 the program. In this case the printed variable list will 
 contain a variable named @var{EXIT}, with the label of the activated 
 button as value.
@@ -272,8 +273,8 @@ activated by mouse or keyboard.
 @c -----------------------------------------------------------------
 @node Pre-defined pushbuttons
 @section Pre-defined pushbuttons
-Gtkdialog supports a few pre-defined pushbuttons for simplify the creation 
-of dialog boxes. The pre-defined buttons can be used the same manner the
+Gtkdialog supports a few pre-defined pushbuttons to simplify the creation
+of dialog boxes. The pre-defined buttons can be used in the same manner as the
 normal pushbuttons, but they have a default text, pixmap and output variable.
 Here is the list of available pre-defined pushbuttons:
 
@@ -326,9 +327,9 @@ The initial state of the checkbox can be set by the
 can be either @code{yes} or @code{no}.
 
 @subsection @code{<action></action>}
-The @code{<action></action>} directive tells the gtkdialog what to do,
-when the state of the checkbox is changed. As every widgets, the
-checkbox can hold multiply actions which are executed serially in the
+The @code{<action></action>} directive tells gtkdialog3 what to do,
+when the state of the checkbox is changed. As every widget, the
+checkbox can hold multiple actions which are executed serially in the
 order they are written.
 
 Actions of checkboxes can be written as conditional instructions with 
@@ -364,10 +365,10 @@ The @code{<pixmap></pixmap>} defines a static pixmap widget.
 
 The widget must have an input file defined with the 
 @code{<input file>@var{filename}</input>} tags. The @var{filename} 
-is the graphic image file for the pixmap. Gtkdialog will load this
-file if it can be opened for read, or will try to find a file with
-similar name (using the @code{locate} utility program) if the file
-is unreadable.  
+is the graphic image file for the pixmap. Gtkdialog3 will load this
+file if it can be opened for reading, or will search for it in the
+directories listed in the @env{GTKDIALOG_PIXMAP_PATH} environment
+variable.  
 
 The next example defines a static pixmap:
 
@@ -410,7 +411,7 @@ menu:
 @c -----------------------------------------------------------------
 @node Trees
 @section The tree
-OK, it is not complete, but the next example seems to be just fine.
+The following example shows a basic tree widget.
 
 @example
 <vbox>
@@ -438,15 +439,15 @@ OK, it is not complete, but the next example seems to be just fine.
 @c -----------------------------------------------------------------
 @node Actions
 @chapter Actions
-When the user changes the state of a widget, gtkdialog checks if there
+When the user changes the state of a widget, gtkdialog3 checks if there
 is something to do with it. If the tampered widget have one or more
 actions, the program will execute them for the new situation to be
 handled.
 
-Every widget can have multiply actions, a list of commands must be
-executed when the widget changed. Gtkdialog executes the axtions in
+Every widget can have multiple actions, a list of commands must be
+executed when the widget changed. Gtkdialog executes the actions in
 the order they found in the dialog description program, so one can
-write a complet program as a series of instructions.
+write a complete program as a series of instructions.
 
 @menu
 * Start and exit::	Actions that starts programs and exits dialogs
@@ -460,22 +461,23 @@ write a complet program as a series of instructions.
 @subsection Start programs
 
 If the action of a widget is created with the simple 
-@code{<action>@var{command}</action>} directive, gtkdialog will execute
-it in a subshell. That means it will start up @code{/bin/sh} to handle 
+@code{<action>@var{command}</action>} directive, gtkdialog3 will execute
+it in a subshell. That means it will start up the user's @code{$SHELL}
+(falling back to @code{/bin/sh}) to handle
 the operation. Here is how the subshell operation works:
 @enumerate
- @item First gtkdialog updates the environment variables holds the
+ @item First gtkdialog3 updates the environment variables holds the
  state and value of the widgets. This is how the child process will
  know what is happening in the GUI called it.
  
- @item Next the include file is checked. If the gtkdialog started
- with the @option{-i @var{file}} option gtkdialog will ask the
+ @item Next the include file is checked. If gtkdialog3 started
+ with the @option{-i @var{file}} option gtkdialog3 will ask the
  subshell to include the @var{file} before the execution of command.
 
  This strange method is needed for the action driven programs, where
  the subshell have to load the shell functions from the calling script.
 
- @item At the third step gtkdialog starts the command and waits for
+ @item At the third step gtkdialog3 starts the command and waits for
  it to complete. (Commands usually can be run in the background by 
  writing a @code{&} as last character, so the subshell will not wait 
  the program to complete.)
@@ -483,7 +485,7 @@ the operation. Here is how the subshell operation works:
 
 @subsection Exit dialog
 
-The @code{Exit:@var{Value}} command exits @command{gtkdialog}
+The @code{exit:@var{Value}} command exits @command{gtkdialog3}
 immediately. The @var{Value} will be printed to standard output as the
 value of the variable named @var{EXIT}.
 
@@ -491,41 +493,38 @@ value of the variable named @var{EXIT}.
 @node Widget manipulation
 @section Widget manipulation
 
-@subsection @code{Closewindow:@var{Name}}
-The command closes the named window opened by the @code{Launch:}
+@subsection @code{closewindow:@var{Name}}
+The command closes the named window opened by the @code{launch:}
 command. The program remain active if there are more windows active.
 
-@subsection @code{Launch:@var{Name}}
+@subsection @code{launch:@var{Name}}
 The command opens a new window using the environment variable
-@code{Widget}.
+@code{@var{Name}}.
 
-@subsection @code{Disable:@var{Name}}
+@subsection @code{disable:@var{Name}}
 The command disables the given widget if it is enabled. If the widget
 is disabled when the command is activated, nothing happens.
 
 The disabled widgets are insensitive to user actions, their shapes are
 indicating they are temporary unavailable.
 
-@subsection @code{Enable:@var{Name}}
-The command enables the given widget if it is diabled. If the widget
+@subsection @code{enable:@var{Name}}
+The command enables the given widget if it is disabled. If the widget
 is enabled nothing happens.
 
-@subsection @code{Refresh:@var{Name}}
+@subsection @code{refresh:@var{Name}}
 The command refresh the named widget. If the widget have one or more
-input actions, they will be called by @command{gtkdialog}.
+input actions, they will be called by @command{gtkdialog3}.
 
-@subsection @code{Save:@var{Name}}
-Some widgets can hold much data. (Currently only the edit widget
-capable to perform this action.)
+@subsection @code{save:@var{Name}}
+Some widgets can hold much data.
 
-The @code{Save:} action will save the data found in the named widget
+The @code{save:} action will save the data found in the named widget
 to the filename found in @code{<output file>} attribute.
 
-FIXME: This function is not working now, need to be fixed.
-
-@subsection @code{Fileselect:@var{Widget}}
-@subsection @code{Clear:@var{Widget}}
-@subsection @code{RemoveSelected:@var{Widget}}
+@subsection @code{fileselect:@var{Widget}}
+@subsection @code{clear:@var{Widget}}
+@subsection @code{removeselected:@var{Widget}}
 
 
 @bye
