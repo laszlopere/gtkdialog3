@@ -13,10 +13,10 @@ gtk-network  | Network Drive | /network/  | ak.pdf
 gtk-delete   | Trash         | /trash/    | 
 EOF
 
-MAIN_DIALOG='
+MAIN_DIALOG="
 <window>
 	<vbox>
-		<notebook labels="Checkbox|Radiobutton|Tree">
+		<notebook labels=\"Checkbox|Radiobutton|Tree\">
 			<vbox>
 				<checkbox>
 					<label>This is a checkbox</label>
@@ -41,21 +41,21 @@ MAIN_DIALOG='
 				</radiobutton>
 			</vbox>
 			<tree>
-				<input file>'"$TMPDIR"'/list.txt</input>
+				<input file>$TMPDIR/list.txt</input>
 				<label>First</label>
-				<item stock="gtk-floppy">This is a floppy</item>
-				<item stock="gtk-cdrom">This is a CD-ROM</item>
+				<item stock=\"gtk-floppy\">This is a floppy</item>
+				<item stock=\"gtk-cdrom\">This is a CD-ROM</item>
 				<item>This line has no icon</item>
 				<variable>EDITOR</variable>
 			</tree>
 		</notebook>
 		<hbox>
-			<button stock="cancel"/>
-			<button stock="ok"/>
+			<button stock=\"cancel\"/>
+			<button stock=\"ok\"/>
 		</hbox>
 	</vbox>
 </window>
-'
+"
 export MAIN_DIALOG
 
 case $1 in
