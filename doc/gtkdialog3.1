@@ -349,6 +349,7 @@ Widget	Library	Purpose
 _
 <terminal>	libvte (VTE 2.91)	Embedded terminal emulator
 <webview>	libwebkit2gtk (WebKitGTK)	Embedded HTML/web browser
+<sourceview>	libgtksourceview\-4 (GtkSourceView)	Syntax\-highlighting editor
 .TE
 .PP
 The
@@ -387,6 +388,43 @@ The widget exports its current URI as the variable value.
   <variable>myWeb</variable>
   <default>https://example.com</default>
 </webview>
+.EE
+.PP
+The
+.B <sourceview>
+widget embeds a GtkSourceView editor with syntax highlighting,
+line numbers, and auto\-indentation.
+Set the language with the
+.B language
+tag attribute (e.g.\&
+.BR c ,
+.BR json ,
+.BR sh ,
+.BR python ).
+Use
+.B <input file>
+to load a source file; a companion
+.B .lang
+file (containing just the language ID) switches the highlighting
+automatically on refresh.
+The widget exports its text content as the variable value.
+.PP
+.TS
+l l.
+Attribute	Purpose
+_
+language	Syntax highlighting language (e.g. c, sh, python, json)
+font\-name	Font name and size (e.g. "Monospace 12")
+show\-line\-numbers	Show line numbers (true/false, default true)
+highlight\-current\-line	Highlight current line (true/false, default true)
+tab\-width	Tab width in characters (default 4)
+.TE
+.PP
+.EX
+<sourceview language="c" font\-name="Monospace 12">
+  <variable>editor</variable>
+  <input file>/path/to/source.c</input>
+</sourceview>
 .EE
 .SS Attribute sub\-elements
 Attribute elements appear as children of any widget or container:
