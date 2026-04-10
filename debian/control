@@ -1,0 +1,35 @@
+Source: gtkdialog3
+Section: utils
+Priority: optional
+Maintainer: Laszlo Pere <pipas@linux.pte.hu>
+Build-Depends: debhelper-compat (= 13),
+               pkg-config,
+               flex,
+               bison,
+               libgtk-3-dev,
+               libvte-2.91-dev,
+               libwebkit2gtk-4.1-dev,
+               libgtksourceview-4-dev,
+               texinfo,
+               texlive-base
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+Package: gtkdialog3
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: utility for building GTK3 dialogs from shell scripts
+ GtkDialog3 is a program that reads an XML-like description of a dialog
+ and creates the corresponding GTK3 user interface.  It can be driven
+ from shell scripts to build rich graphical interfaces with buttons,
+ text entries, lists, trees, notebooks, terminal emulators, web browsers,
+ and source code editors.
+
+Package: gtkdialog3-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Recommends: gtkdialog3 (= ${source:Version})
+Description: documentation and examples for gtkdialog3
+ This package contains the Texinfo manual, PDF documentation,
+ info pages, and example scripts for gtkdialog3.

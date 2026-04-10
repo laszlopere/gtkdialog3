@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	dh_auto_build
+	$(MAKE) -C doc gtkdialog.pdf
+
+override_dh_auto_install:
+	dh_auto_install DESTDIR=$(CURDIR)/debian/tmp \
+		UPDATE_ICON_CACHE=true
+	# Install examples into doc package staging area
+	mkdir -p debian/gtkdialog3-doc/usr/share/doc/gtkdialog3/examples
+	cp -a examples/* debian/gtkdialog3-doc/usr/share/doc/gtkdialog3/examples/
+	# Install texi, PDF, and images
+	mkdir -p debian/gtkdialog3-doc/usr/share/doc/gtkdialog3
+	cp doc/gtkdialog.texi debian/gtkdialog3-doc/usr/share/doc/gtkdialog3/
+	cp doc/gtkdialog.pdf debian/gtkdialog3-doc/usr/share/doc/gtkdialog3/
+	cp -a doc/images debian/gtkdialog3-doc/usr/share/doc/gtkdialog3/
+	# Move info files to doc package
+	mkdir -p debian/gtkdialog3-doc/usr/share/info
+	mv debian/tmp/usr/share/info/* debian/gtkdialog3-doc/usr/share/info/ \
+		2>/dev/null || true
+	rmdir debian/tmp/usr/share/info 2>/dev/null || true
