@@ -41,7 +41,7 @@ MAIN_DIALOG="
 				</radiobutton>
 			</vbox>
 			<tree>
-				<input type="file">$TMPDIR/list.txt</input>
+				<input type=\"file\">$TMPDIR/list.txt</input>
 				<label>First</label>
 				<item stock=\"gtk-floppy\">This is a floppy</item>
 				<item stock=\"gtk-cdrom\">This is a CD-ROM</item>
