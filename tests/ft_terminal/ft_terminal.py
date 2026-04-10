@@ -159,7 +159,7 @@ t.check(btn_cancel is not None, "'Cancel' button found")
 t.begin("testGitStatusButton")
 if btn_git:
     click_button(btn_git)
-    time.sleep(2)
+    time.sleep(3)
 
     text = get_terminal_text(window)
     t.check(text is not None, "Terminal text is readable")
