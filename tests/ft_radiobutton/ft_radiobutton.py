@@ -123,6 +123,7 @@ time.sleep(1)
 
 t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('Configuration File Changed')
+t.screenshot('Configuration File Changed')
 
 if window is None:
     proc.kill()

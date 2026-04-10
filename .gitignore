@@ -44,6 +44,9 @@ doc/mdate-sh
 doc/texinfo.tex
 gtkdialog.spec
 
+# Test artifacts
+tests/screenshots/
+
 # Editor backups
 *~
 *.swp

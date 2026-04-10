@@ -12,6 +12,8 @@ Without --verbose, prints a brief one-line-per-step report.
 With --verbose, prints detailed PASS/FAIL lines and extra log output.
 """
 
+import os
+import subprocess
 import sys
 import time
 import warnings
@@ -25,6 +27,7 @@ STEP_NAME_WIDTH = 24
 class TestRunner:
     def __init__(self):
         self.verbose = '--verbose' in sys.argv
+        self.screenshots = '--screenshot' in sys.argv
         self.test_name = None
         self._steps = []       # list of (name, checks, failures, elapsed)
         self._cur_step = None
@@ -36,14 +39,12 @@ class TestRunner:
         self._aborted = False
 
         # Derive test name from script path
-        import os
         script = os.path.basename(sys.argv[0])
         if script.endswith('.py'):
             script = script[:-3]
         self.test_name = script
 
         # Print the test path header
-        import os.path
         script_path = sys.argv[0]
         # Try to make it relative to cwd
         try:
@@ -121,6 +122,37 @@ class TestRunner:
             self.end()
         self._print_summary()
         sys.exit(0 if self._total_failures == 0 else 1)
+
+    def screenshot(self, window_title):
+        """Capture a screenshot of the named window if --screenshot is set.
+
+        Uses xdotool to find the window by title and ImageMagick
+        import to capture it as PNG.  Screenshots are saved under
+        tests/screenshots/<test_name>.png.
+        """
+        if not self.screenshots or not window_title:
+            return
+        script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        tests_dir = os.path.dirname(script_dir)
+        shot_dir = os.path.join(tests_dir, 'screenshots')
+        os.makedirs(shot_dir, exist_ok=True)
+        out_path = os.path.join(shot_dir, self.test_name + '.png')
+        try:
+            wid = subprocess.check_output(
+                ['xdotool', 'search', '--name', window_title],
+                stderr=subprocess.DEVNULL
+            ).decode().strip().split('\n')[0]
+            subprocess.run(
+                ['import', '-window', wid, out_path],
+                check=True, stderr=subprocess.DEVNULL
+            )
+            if self.verbose:
+                print(f"  screenshot: {out_path}")
+        except (subprocess.CalledProcessError, IndexError,
+                FileNotFoundError):
+            if self.verbose:
+                print("  screenshot: SKIPPED"
+                      " (window not found or tools missing)")
 
     def _print_summary(self):
         passed = self._total_checks - self._total_failures

@@ -87,6 +87,7 @@ time.sleep(1)
 
 t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('System Configuration')
+t.screenshot('System Configuration')
 
 if window is None:
     proc.kill()

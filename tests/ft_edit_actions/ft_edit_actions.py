@@ -101,6 +101,7 @@ time.sleep(1.5)
 
 t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('Edit Actions')
+t.screenshot('Edit Actions')
 
 if window is None:
     proc.kill()

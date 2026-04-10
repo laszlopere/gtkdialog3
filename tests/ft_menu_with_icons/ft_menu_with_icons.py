@@ -125,6 +125,7 @@ time.sleep(1)
 
 t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('Menu With Icons')
+t.screenshot('Menu With Icons')
 
 if window is None:
     proc.kill()

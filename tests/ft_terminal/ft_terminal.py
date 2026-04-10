@@ -136,6 +136,7 @@ t.log(f"gtkdialog3 PID: {our_pid}")
 # --- Test 1: Window and widgets appear ---
 t.begin("testWindowAppears")
 window = wait_for_window(our_pid, 'Build Terminal')
+t.screenshot('Build Terminal')
 if not t.check(window is not None, "Build Terminal window found"):
     proc.kill()
     t.summary()

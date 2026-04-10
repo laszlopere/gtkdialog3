@@ -163,6 +163,7 @@ time.sleep(2)
 
 t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('table')
+t.screenshot('table')
 
 if window is None:
     # Try generic name as fallback

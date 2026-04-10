@@ -3,10 +3,12 @@
 # Pass --verbose to forward it to individual tests.
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-VERBOSE=""
-if [ "$1" = "--verbose" ]; then
-    VERBOSE="--verbose"
-fi
+ARGS=""
+for arg in "$@"; do
+    case "$arg" in
+        --verbose|--screenshot) ARGS="$ARGS $arg" ;;
+    esac
+done
 
 total=0
 failed=0
@@ -18,7 +20,7 @@ for test_dir in "$SCRIPT_DIR"/ft_*; do
         continue
     fi
     total=$((total + 1))
-    python3 "$test_script" $VERBOSE
+    python3 "$test_script" $ARGS
     if [ $? -ne 0 ]; then
         failed=$((failed + 1))
     fi

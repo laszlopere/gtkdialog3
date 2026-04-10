@@ -82,6 +82,7 @@ time.sleep(1)
 
 t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('Bash Event Driven')
+t.screenshot('Bash Event Driven')
 
 if window is None:
     proc.kill()

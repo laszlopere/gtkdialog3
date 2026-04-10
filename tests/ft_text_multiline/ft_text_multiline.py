@@ -92,6 +92,7 @@ time.sleep(1)
 
 t.log("Looking for window via AT-SPI...")
 app, window = wait_for_window('Multi-line Label Demo')
+t.screenshot('Multi-line Label Demo')
 
 if window is None:
     proc.kill()

@@ -125,6 +125,7 @@ t.log(f"gtkdialog3 PID: {our_pid}")
 # --- Test 1: Window and buttons appear ---
 t.begin("testWindowAppears")
 window = wait_for_window(our_pid, 'Source Code Viewer')
+t.screenshot('Source Code Viewer')
 if not t.check(window is not None, "Source Code Viewer window found"):
     proc.kill()
     t.summary()
