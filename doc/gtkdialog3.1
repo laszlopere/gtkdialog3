@@ -65,6 +65,21 @@ Set the default "expand" packing state for all widgets.
 .TP
 .BR \-\-space\-fill =\fISTATE\fR
 Set the default "fill" packing state for all widgets.
+.TP
+.BR \-\-output\-format =\fIFORMAT\fR
+Set the output format for widget values when the dialog closes.
+.I FORMAT
+is case\-insensitive and must be one of:
+.BR bash " (default) or " json .
+With
+.BR bash ,
+output is a series of
+.IB VAR =\(dq value \(dq
+lines suitable for
+.BR eval .
+With
+.BR json ,
+output is a single JSON object.
 .SH USAGE
 .SS Environment variable (most common)
 Store the dialog description in an exported environment variable and pass
@@ -106,6 +121,33 @@ IFS=$I
 if [ "$EXIT" = "OK" ]; then
   echo "You entered: $ENTRY."
 fi
+.EE
+.SS JSON output
+With
+.BR \-\-output\-format=json ,
+widget values are printed as a JSON object grouped by window name.
+The window name is taken from the
+.B <variable>
+element inside the
+.B <window>
+tag (or an auto\-generated name if none is specified).
+.PP
+.EX
+gtkdialog3 \-\-program=MAIN_DIALOG \-\-output\-format=json
+.EE
+.PP
+Example output:
+.PP
+.EX
+{
+  "widget_contents": {
+    "myWindow": {
+      "entName": "Alice",
+      "chkAgreed": "true"
+    }
+  },
+  "exit": "OK"
+}
 .EE
 .SS Standalone file
 A file containing only the dialog description can be executed directly
