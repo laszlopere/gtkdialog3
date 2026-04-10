@@ -111,9 +111,17 @@ GtkWidget *widget_vbox_create(
 		}
 	}
 
+	/* Save container-level defaults for resetting per iteration */
+	gint container_space_expand = space_expand;
+	gint container_space_fill = space_fill;
+
 	/* Pack the widgets into the container */
 	s = pop();
 	for (n = 0; n < s.nwidgets; ++n) {
+
+		/* Reset to container-level defaults before applying per-widget overrides */
+		space_expand = container_space_expand;
+		space_fill = container_space_fill;
 
 		/* Calculate values for expand and fill at the widget level */
 		var = find_variable_by_widget(s.widgets[n]);
