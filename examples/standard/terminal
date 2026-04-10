@@ -1,0 +1,60 @@
+#!/bin/sh
+
+GTKDIALOG=gtkdialog3
+
+TMPDIR=/tmp/gtkdialog3/examples/terminal
+mkdir -p "$TMPDIR"
+echo -n > "$TMPDIR"/cmd
+
+MAIN_DIALOG='
+<window title="Build Terminal" width-request="700" height-request="500">
+	<vbox spacing="6" border-width="8">
+		<frame title="Description">
+			<text>
+				<label>This is an interactive build terminal with shortcut buttons for common development
+tasks. Use the buttons at the top of the terminal frame to quickly insert frequently
+used commands such as building the project, installing it, or checking the repository
+status. You can also type commands directly into the terminal below. The terminal runs
+a full shell session, so any command you would normally run in a console will work here
+as well.</label>
+			</text>
+		</frame>
+		<frame title="Terminal">
+			<vbox>
+				<hbox spacing="6" space-expand="false" space-fill="false">
+					<button>
+						<label>make -j10</label>
+						<action>echo "make -j10" > '"$TMPDIR"'/cmd</action>
+						<action>refresh:term</action>
+					</button>
+					<button>
+						<label>sudo make install</label>
+						<action>echo "sudo make install" > '"$TMPDIR"'/cmd</action>
+						<action>refresh:term</action>
+					</button>
+					<button>
+						<label>git status</label>
+						<action>echo "git status" > '"$TMPDIR"'/cmd</action>
+						<action>refresh:term</action>
+					</button>
+				</hbox>
+				<terminal has-focus="true">
+					<variable>term</variable>
+					<input file>'"$TMPDIR"'/cmd</input>
+				</terminal>
+			</vbox>
+		</frame>
+		<buttonbox layout="end" space-expand="false" space-fill="false">
+			<button stock="cancel"/>
+		</buttonbox>
+	</vbox>
+	<variable>terminalDialog</variable>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true \
+		--program=MAIN_DIALOG --output-format=json ;;
+esac
