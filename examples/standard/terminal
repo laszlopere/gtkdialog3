@@ -38,7 +38,7 @@ as well.</label>
 						<action>refresh:term</action>
 					</button>
 				</hbox>
-				<terminal has-focus="true">
+				<terminal argv0="/bin/bash" has-focus="true">
 					<variable>term</variable>
 					<input file>'"$TMPDIR"'/cmd</input>
 				</terminal>
