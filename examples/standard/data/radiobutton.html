@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#1565c0}</style></head>
+<body>
+<h1>&lt;radiobutton&gt;</h1>
+<p>A mutually exclusive toggle button. Radio buttons placed inside the same
+container automatically form a group &mdash; only one in the group can be active
+at a time. Each exports <code>true</code> or <code>false</code>.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;label&gt;</code> &mdash; text displayed next to the radio circle</li>
+<li><code>&lt;default&gt;</code> &mdash; initial state (<code>true</code> or <code>false</code>)</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for this button's state</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when selected</li>
+</ul>
+<h2>Signals</h2>
+<ul>
+<li><code>toggled</code> (default) &mdash; fires when the selection changes</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;radiobutton&gt;
+  &lt;label&gt;Small&lt;/label&gt;
+  &lt;variable&gt;rbSmall&lt;/variable&gt;
+  &lt;default&gt;true&lt;/default&gt;
+&lt;/radiobutton&gt;
+&lt;radiobutton&gt;
+  &lt;label&gt;Large&lt;/label&gt;
+  &lt;variable&gt;rbLarge&lt;/variable&gt;
+&lt;/radiobutton&gt;</pre>
+</body>
+</html>

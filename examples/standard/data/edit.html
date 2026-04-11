@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#00695c}</style></head>
+<body>
+<h1>&lt;edit&gt;</h1>
+<p>A multi-line text editor with scrollbars. It can be pre-filled from a file
+or shell command and its full contents are exported when the dialog closes.
+Suitable for notes, configuration editing, or log display.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;default&gt;</code> &mdash; initial text content</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the full text</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command whose output fills the editor</li>
+<li><code>&lt;input file&gt;</code> &mdash; load contents from a file path</li>
+<li><code>&lt;output file&gt;</code> &mdash; save contents to a file on exit</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run on text changes</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>editable</code> &mdash; set to <code>false</code> for read-only display</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;edit&gt;
+  &lt;input&gt;cat /etc/hostname&lt;/input&gt;
+  &lt;variable&gt;edtNotes&lt;/variable&gt;
+  &lt;height&gt;200&lt;/height&gt;
+  &lt;width&gt;400&lt;/width&gt;
+&lt;/edit&gt;</pre>
+</body>
+</html>

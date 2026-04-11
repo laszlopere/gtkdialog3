@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#1565c0}</style></head>
+<body>
+<h1>&lt;checkbox&gt;</h1>
+<p>A toggle button with a text label. Exports <code>true</code> or
+<code>false</code> depending on whether the box is checked.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;label&gt;</code> &mdash; text displayed next to the check box</li>
+<li><code>&lt;default&gt;</code> &mdash; initial state (<code>true</code> or <code>false</code>)</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable name for the value</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when the state changes</li>
+</ul>
+<h2>Signals</h2>
+<ul>
+<li><code>toggled</code> (default) &mdash; fires when the user clicks the box</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;checkbox&gt;
+  &lt;label&gt;Enable logging&lt;/label&gt;
+  &lt;variable&gt;chkLog&lt;/variable&gt;
+  &lt;default&gt;true&lt;/default&gt;
+  &lt;action&gt;echo Logging: $chkLog&lt;/action&gt;
+&lt;/checkbox&gt;</pre>
+</body>
+</html>

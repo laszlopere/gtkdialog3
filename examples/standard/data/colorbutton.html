@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#ad1457}</style></head>
+<body>
+<h1>&lt;colorbutton&gt;</h1>
+<p>A button that displays the currently chosen colour and opens a colour
+chooser dialog when clicked. Exports the selected colour as a hex string
+(e.g. <code>#ff8800</code>).</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;default&gt;</code> &mdash; initial colour in hex (e.g. <code>#ff0000</code>)</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the chosen colour</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command whose output sets the colour</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when a new colour is picked</li>
+</ul>
+<h2>Signals</h2>
+<ul>
+<li><code>color-set</code> (default) &mdash; fires when the user confirms a colour</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;colorbutton&gt;
+  &lt;default&gt;#3465a4&lt;/default&gt;
+  &lt;variable&gt;clrFg&lt;/variable&gt;
+  &lt;action&gt;echo Colour: $clrFg&lt;/action&gt;
+&lt;/colorbutton&gt;</pre>
+</body>
+</html>

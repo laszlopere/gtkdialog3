@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#2e7d32}</style></head>
+<body>
+<h1>&lt;button&gt;</h1>
+<p>A clickable push button. It can display a text label, a stock icon, or both.
+When clicked it runs its action commands. Stock buttons like <code>ok</code> and
+<code>cancel</code> automatically close the dialog.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;label&gt;</code> &mdash; text displayed on the button</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable name for the button state</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when the button is clicked</li>
+<li><code>&lt;input file&gt;</code> &mdash; path to a custom icon image</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>stock</code> &mdash; use a stock button: <code>ok</code>, <code>cancel</code>, <code>yes</code>, <code>no</code>, etc.</li>
+<li><code>image-position</code> &mdash; icon placement: <code>top</code>, <code>bottom</code>, <code>left</code>, <code>right</code></li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;button&gt;
+  &lt;label&gt;Say Hello&lt;/label&gt;
+  &lt;action&gt;echo "Hello, world!"&lt;/action&gt;
+&lt;/button&gt;
+
+&lt;button stock="ok"/&gt;</pre>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#c62828}</style></head>
+<body>
+<h1>&lt;switch&gt;</h1>
+<p>A sliding on/off toggle, similar to a mobile-style switch. It exports
+<code>true</code> or <code>false</code> like a checkbox, but with a different
+visual style that clearly communicates an enabled/disabled state.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;default&gt;</code> &mdash; initial state (<code>true</code> or <code>false</code>)</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the current state</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command whose output sets the state</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when toggled</li>
+</ul>
+<h2>Signals</h2>
+<ul>
+<li><code>toggled</code> (default) &mdash; fires when the switch is flipped</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;switch&gt;
+  &lt;default&gt;true&lt;/default&gt;
+  &lt;variable&gt;swEnable&lt;/variable&gt;
+  &lt;action&gt;echo Enabled: $swEnable&lt;/action&gt;
+&lt;/switch&gt;</pre>
+</body>
+</html>

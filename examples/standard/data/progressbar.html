@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#00695c}</style></head>
+<body>
+<h1>&lt;progressbar&gt;</h1>
+<p>A horizontal bar that visualises progress from 0 to 100 percent. The value
+is typically fed from a shell command that prints numbers to stdout. The bar
+updates in real time as new values arrive.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;input&gt;</code> &mdash; a long-running command that prints progress values (0&ndash;100)</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the current value</li>
+<li><code>&lt;label&gt;</code> &mdash; text displayed inside the bar</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run on each value change</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>width</code>, <code>height</code> &mdash; bar dimensions in pixels</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;progressbar&gt;
+  &lt;label&gt;Copying files...&lt;/label&gt;
+  &lt;input&gt;for i in $(seq 0 5 100); do
+    echo $i; sleep 0.2
+  done&lt;/input&gt;
+  &lt;variable&gt;pbar&lt;/variable&gt;
+  &lt;action&gt;echo Done!&lt;/action&gt;
+&lt;/progressbar&gt;</pre>
+</body>
+</html>

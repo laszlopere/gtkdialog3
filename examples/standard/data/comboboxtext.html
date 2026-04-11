@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#c62828}</style></head>
+<body>
+<h1>&lt;comboboxtext&gt;</h1>
+<p>A drop-down selector that lets the user pick one item from a list. Items
+can be provided statically with <code>&lt;item&gt;</code> tags or dynamically
+from a shell command.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;item&gt;</code> &mdash; a selectable option in the drop-down</li>
+<li><code>&lt;default&gt;</code> &mdash; the initially selected item text</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the chosen value</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command producing one item per line</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when the selection changes</li>
+</ul>
+<h2>Signals</h2>
+<ul>
+<li><code>changed</code> (default) &mdash; fires when a new item is selected</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;comboboxtext&gt;
+  &lt;item&gt;English&lt;/item&gt;
+  &lt;item&gt;French&lt;/item&gt;
+  &lt;item&gt;German&lt;/item&gt;
+  &lt;default&gt;English&lt;/default&gt;
+  &lt;variable&gt;cmbLang&lt;/variable&gt;
+&lt;/comboboxtext&gt;</pre>
+</body>
+</html>

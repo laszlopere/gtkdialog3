@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#6a1b9a}</style></head>
+<body>
+<h1>&lt;spinbutton&gt;</h1>
+<p>A numeric entry with up/down arrows for incrementing and decrementing the
+value. The user can also type a number directly. Exports the current numeric
+value as a shell variable.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;default&gt;</code> &mdash; initial numeric value</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the current value</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command whose output sets the value</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when the value changes</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>range-min</code> &mdash; minimum allowed value</li>
+<li><code>range-max</code> &mdash; maximum allowed value</li>
+<li><code>range-step</code> &mdash; increment per click (default: 1)</li>
+<li><code>range-value</code> &mdash; initial value (alternative to <code>&lt;default&gt;</code>)</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;spinbutton range-min="0" range-max="100"
+            range-step="5" range-value="50"&gt;
+  &lt;variable&gt;spnCount&lt;/variable&gt;
+&lt;/spinbutton&gt;</pre>
+</body>
+</html>

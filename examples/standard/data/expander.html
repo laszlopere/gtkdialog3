@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#37474f}</style></head>
+<body>
+<h1>&lt;expander&gt;</h1>
+<p>A collapsible container with a clickable header. When the user clicks the
+arrow the child widgets are shown or hidden. Useful for optional or advanced
+settings that should not clutter the main view.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;label&gt;</code> &mdash; text displayed in the expander header</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the expanded state (<code>true</code>/<code>false</code>)</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when expanded or collapsed</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>expanded</code> &mdash; set to <code>true</code> to start in the open state</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;expander expanded="false"&gt;
+  &lt;label&gt;Advanced Options&lt;/label&gt;
+  &lt;vbox&gt;
+    &lt;checkbox&gt;
+      &lt;label&gt;Enable debug logging&lt;/label&gt;
+      &lt;variable&gt;chkDebug&lt;/variable&gt;
+    &lt;/checkbox&gt;
+  &lt;/vbox&gt;
+  &lt;variable&gt;expAdvanced&lt;/variable&gt;
+&lt;/expander&gt;</pre>
+</body>
+</html>

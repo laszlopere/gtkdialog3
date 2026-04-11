@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#6a1b9a}</style></head>
+<body>
+<h1>&lt;tree&gt;</h1>
+<p>A multi-column list view with sortable column headers. Items are defined
+with pipe-separated values. The widget exports the value of one chosen column
+for the selected row.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;label&gt;</code> &mdash; pipe-separated column headers, e.g. <code>Name|Size|Date</code></li>
+<li><code>&lt;item&gt;</code> &mdash; a row with pipe-separated values</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command producing pipe-separated rows</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the selected value</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>exported-column</code> &mdash; which column (0-based) to export (default: 0)</li>
+<li><code>selection-mode</code> &mdash; <code>single</code>, <code>browse</code>, <code>multiple</code>, or <code>none</code></li>
+<li><code>rules-hint</code> &mdash; alternate row shading for readability</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;tree exported-column="0" selection-mode="browse"&gt;
+  &lt;label&gt;Name|Description&lt;/label&gt;
+  &lt;item&gt;Alice|Developer&lt;/item&gt;
+  &lt;item&gt;Bob|Designer&lt;/item&gt;
+  &lt;variable&gt;TREE1&lt;/variable&gt;
+  &lt;action signal="cursor-changed"&gt;echo $TREE1&lt;/action&gt;
+&lt;/tree&gt;</pre>
+</body>
+</html>

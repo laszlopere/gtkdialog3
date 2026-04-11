@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#e65100}</style></head>
+<body>
+<h1>&lt;hscale&gt;</h1>
+<p>A horizontal slider that lets the user pick a numeric value by dragging
+a handle along a track. Useful for settings like volume, brightness, or any
+bounded numeric range.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;default&gt;</code> &mdash; initial numeric value</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the current value</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command whose output sets the value</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when the value changes</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>range-min</code> &mdash; minimum value (left end)</li>
+<li><code>range-max</code> &mdash; maximum value (right end)</li>
+<li><code>range-step</code> &mdash; step increment</li>
+<li><code>range-value</code> &mdash; initial position</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;hscale range-min="0" range-max="100"
+        range-step="1" range-value="50"&gt;
+  &lt;variable&gt;sclVolume&lt;/variable&gt;
+  &lt;action&gt;echo Volume: $sclVolume&lt;/action&gt;
+&lt;/hscale&gt;</pre>
+</body>
+</html>

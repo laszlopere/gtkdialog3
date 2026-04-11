@@ -1,0 +1,91 @@
+#!/bin/bash
+
+GTKDIALOG=gtkdialog3
+
+SCRIPTDIR="$(cd "$(dirname "$0")" && pwd)"
+DATADIR="$SCRIPTDIR/data"
+TMPDIR=/tmp/gtkdialog3/examples/list
+mkdir -p "$TMPDIR"
+
+# Copy the HTML detail page for the selected widget to the temp file.
+# Called on each tree selection change.
+function generate_detail()
+{
+	local widget="$1"
+	local file="$DATADIR/$widget.html"
+	if [ -f "$file" ]; then
+		cat "$file"
+	else
+		cat "$DATADIR/default.html"
+	fi
+}
+
+function widget_list()
+{
+	echo "button|Clickable push button"
+	echo "checkbox|Toggle with a text label"
+	echo "colorbutton|Colour chooser button"
+	echo "comboboxtext|Drop-down item selector"
+	echo "edit|Multi-line text editor"
+	echo "entry|Single-line text input"
+	echo "expander|Collapsible container"
+	echo "fontbutton|Font chooser button"
+	echo "hscale|Horizontal slider"
+	echo "notebook|Tabbed page container"
+	echo "progressbar|Visual progress indicator"
+	echo "radiobutton|Mutually exclusive toggle"
+	echo "spinbutton|Numeric entry with arrows"
+	echo "switch|Sliding on/off toggle"
+	echo "tree|Multi-column sortable list"
+	echo "webview|Embedded web browser"
+}
+export -f generate_detail widget_list
+export DATADIR TMPDIR
+
+# Generate the default page shown before any selection
+generate_detail "" > "$TMPDIR"/detail.html
+
+MAIN_DIALOG="
+<window title='GtkDialog3 Widget Reference' width-request='900' height-request='600'>
+	<vbox spacing='6' border-width='8'>
+		<frame title='Description' space-expand='false' space-fill='false'>
+			<text>
+				<label>Select a widget from the list on the left to view its
+detailed documentation on the right. The list uses a tree widget with
+two columns and the detail pane is a webview rendering HTML content.</label>
+			</text>
+		</frame>
+		<hbox spacing='6' space-expand='true' space-fill='true'>
+			<frame title='Widgets' space-expand='false' space-fill='false'>
+				<tree exported-column='0' selection-mode='browse'>
+					<label>Widget|Summary</label>
+					<input>widget_list</input>
+					<variable>wgtTree</variable>
+					<width>280</width>
+					<action signal='cursor-changed'>generate_detail \"\$wgtTree\" > $TMPDIR/detail.html</action>
+					<action signal='cursor-changed'>refresh:webDetail</action>
+				</tree>
+			</frame>
+			<frame title='Details' space-expand='true' space-fill='true'>
+				<webview space-expand='true' space-fill='true'>
+					<variable>webDetail</variable>
+					<default>file://$TMPDIR/detail.html</default>
+					<input>cat $TMPDIR/detail.html</input>
+				</webview>
+			</frame>
+		</hbox>
+		<buttonbox layout='end' space-expand='false' space-fill='false'>
+			<button stock='cancel'/>
+			<button stock='ok'/>
+		</buttonbox>
+	</vbox>
+	<variable>listDialog</variable>
+</window>
+"
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTKDIALOG --space-expand=true --space-fill=true \
+		--program=MAIN_DIALOG --output-format=json ;;
+esac

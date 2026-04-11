@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#2e7d32}</style></head>
+<body>
+<h1>&lt;entry&gt;</h1>
+<p>A single-line text input field. The user can type free-form text and the
+widget exports its contents as a shell variable when the dialog closes.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;default&gt;</code> &mdash; initial text shown in the field</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable name for the value</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command whose output sets the value</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when the user presses Enter</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>visible</code> &mdash; set to <code>false</code> to mask input (password mode)</li>
+<li><code>editable</code> &mdash; set to <code>false</code> to make the field read-only</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;entry&gt;
+  &lt;default&gt;localhost&lt;/default&gt;
+  &lt;variable&gt;entHostname&lt;/variable&gt;
+&lt;/entry&gt;</pre>
+</body>
+</html>

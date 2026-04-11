@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#e65100}</style></head>
+<body>
+<h1>&lt;notebook&gt;</h1>
+<p>A tabbed container that holds multiple pages. Each direct child widget
+becomes a separate tab. Tab labels are set with the <code>&lt;label&gt;</code>
+tag inside each page container.</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the active tab index (0-based)</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when the user switches tabs</li>
+</ul>
+<h2>Attributes</h2>
+<ul>
+<li><code>tab-pos</code> &mdash; tab position: <code>top</code>, <code>bottom</code>, <code>left</code>, or <code>right</code></li>
+<li><code>show-tabs</code> &mdash; set to <code>false</code> to hide the tab bar</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;notebook tab-pos="top"&gt;
+  &lt;vbox&gt;
+    &lt;text&gt;&lt;label&gt;First page content&lt;/label&gt;&lt;/text&gt;
+    &lt;label&gt;Page 1&lt;/label&gt;
+  &lt;/vbox&gt;
+  &lt;vbox&gt;
+    &lt;text&gt;&lt;label&gt;Second page content&lt;/label&gt;&lt;/text&gt;
+    &lt;label&gt;Page 2&lt;/label&gt;
+  &lt;/vbox&gt;
+  &lt;variable&gt;nbMain&lt;/variable&gt;
+&lt;/notebook&gt;</pre>
+</body>
+</html>

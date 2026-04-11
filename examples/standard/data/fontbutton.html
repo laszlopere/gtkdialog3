@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><style>body{font-family:sans-serif;margin:1.5em}code{background:#f0f0f0;padding:2px 6px;border-radius:3px}pre{background:#f0f0f0;padding:1em;border-radius:4px;overflow-x:auto}h1{color:#4527a0}</style></head>
+<body>
+<h1>&lt;fontbutton&gt;</h1>
+<p>A button that displays the currently chosen font and opens a font chooser
+dialog when clicked. Exports the selected font as a Pango font description
+string (e.g. <code>Sans Bold 12</code>).</p>
+<h2>Child Tags</h2>
+<ul>
+<li><code>&lt;default&gt;</code> &mdash; initial font description</li>
+<li><code>&lt;variable&gt;</code> &mdash; shell variable for the chosen font</li>
+<li><code>&lt;input&gt;</code> &mdash; shell command whose output sets the font</li>
+<li><code>&lt;action&gt;</code> &mdash; command to run when a new font is picked</li>
+</ul>
+<h2>Signals</h2>
+<ul>
+<li><code>font-set</code> (default) &mdash; fires when the user confirms a font</li>
+</ul>
+<h2>Example</h2>
+<pre>&lt;fontbutton&gt;
+  &lt;default&gt;Monospace 10&lt;/default&gt;
+  &lt;variable&gt;fntEditor&lt;/variable&gt;
+  &lt;action&gt;echo Font: $fntEditor&lt;/action&gt;
+&lt;/fontbutton&gt;</pre>
+</body>
+</html>
