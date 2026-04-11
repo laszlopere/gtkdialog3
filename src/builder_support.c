@@ -373,9 +373,12 @@ gtk_widget_signal_handler_connector(
 	 * signal handler, for it is already created.
 	 */
 	if (g_ascii_strcasecmp(signal_name, "realize") == 0) {
+		gchar *input_cmd;
 		var = find_variable_by_widget(GTK_WIDGET(object));
 		g_return_val_if_fail(var != NULL, FALSE);
-		attributeset_insert(var->Attributes, ATTR_INPUT, handler_name);
+		input_cmd = g_strdup_printf("Command:%s", handler_name);
+		attributeset_insert(var->Attributes, ATTR_INPUT, input_cmd);
+		g_free(input_cmd);
 		return TRUE;
 	}
 
