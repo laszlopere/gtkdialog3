@@ -373,12 +373,24 @@ gtk_widget_signal_handler_connector(
 	 * signal handler, for it is already created.
 	 */
 	if (g_ascii_strcasecmp(signal_name, "realize") == 0) {
-		gchar *input_cmd;
 		var = find_variable_by_widget(GTK_WIDGET(object));
 		g_return_val_if_fail(var != NULL, FALSE);
-		input_cmd = g_strdup_printf("Command:%s", handler_name);
-		attributeset_insert(var->Attributes, ATTR_INPUT, input_cmd);
-		g_free(input_cmd);
+		/*
+		 * If the handler already carries a recognised prefix
+		 * (file:, Command:) store it as-is; otherwise treat it
+		 * as a shell command and prepend "Command:".
+		 */
+		if (strncasecmp(handler_name, "file:", 5) == 0 ||
+		    strncasecmp(handler_name, "command:", 8) == 0) {
+			attributeset_insert(var->Attributes, ATTR_INPUT,
+					    handler_name);
+		} else {
+			gchar *input_cmd;
+			input_cmd = g_strdup_printf("Command:%s", handler_name);
+			attributeset_insert(var->Attributes, ATTR_INPUT,
+					    input_cmd);
+			g_free(input_cmd);
+		}
 		return TRUE;
 	}
 
