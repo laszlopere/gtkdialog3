@@ -7,6 +7,9 @@
 *.dylib
 src/gtkdialog2
 src/gtkdialog
+src/gtkdialog3
+compile_commands.json
+*.tar.gz
 
 # Autotools generated
 autom4te.cache/
@@ -44,8 +47,34 @@ doc/mdate-sh
 doc/texinfo.tex
 gtkdialog.spec
 
+# TeX build artifacts
+doc/gtkdialog.aux
+doc/gtkdialog.log
+doc/gtkdialog.pdf
+doc/gtkdialog.toc
+doc/gtkdialog.t2p/
+
+# Debian build artifacts
+debian/.debhelper/
+debian/autoreconf.after
+debian/autoreconf.before
+debian/debhelper-build-stamp
+debian/files
+debian/*.debhelper.log
+debian/*.substvars
+debian/gtkdialog3/
+debian/gtkdialog3-doc/
+debian/tmp/
+
 # Test artifacts
 tests/screenshots/
+tests/__pycache__/
+
+# IDE / tooling
+.cache/
+
+# Temporary
+tmp/
 
 # Editor backups
 *~
