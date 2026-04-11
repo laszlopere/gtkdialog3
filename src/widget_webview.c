@@ -95,7 +95,7 @@ void widget_webview_refresh(variable *var)
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
 	while (act) {
 		if (input_is_shell_command(act)) {
-			if ((infile = widget_opencommand(act))) {
+			if ((infile = widget_opencommand(act + 8))) {
 				GString *html = g_string_sized_new(4096);
 				while (fgets(line, 512, infile)) {
 					g_string_append(html, line);
