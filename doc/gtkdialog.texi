@@ -313,8 +313,8 @@ Read the dialog description from standard input.
 Execute the file as an event-driven program.
 
 @item -g, --glade-xml=@var{FILENAME}
-Read the dialog description from a Glade XML file.  Only available if
-gtkdialog3 was built with Glade library support.
+Read the dialog description from a GtkBuilder UI file (as produced by
+the Glade interface designer).
 
 @item -i, --include=@var{FILENAME}
 Source the given shell script before executing action commands, making
