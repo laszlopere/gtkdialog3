@@ -312,9 +312,8 @@ Read the dialog description from standard input.
 @item -e, --event-driven=@var{FILENAME}
 Execute the file as an event-driven program.
 
-@item -g, --glade-xml=@var{FILENAME}
-Read the dialog description from a GtkBuilder UI file (as produced by
-the Glade interface designer).
+@item -u, --ui-file=@var{FILENAME}
+Read the dialog description from a GtkBuilder UI file.
 
 @item -i, --include=@var{FILENAME}
 Source the given shell script before executing action commands, making

@@ -16,7 +16,7 @@ EXTRA_DIST = \
 	examples/expander/* \
 	examples/fontbutton/* \
 	examples/frame/* \
-	examples/glade/* \
+	examples/builder/* \
 	examples/hbox/* \
 	examples/hscale/* \
 	examples/hseparator/* \

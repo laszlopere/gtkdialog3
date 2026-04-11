@@ -2,5 +2,5 @@
 
 cd "$(dirname "$0")"
 
-gtkdialog3 --glade-xml=glade-toolbar_buttons.ui \
+gtkdialog3 --ui-file=builder-toolbar_buttons.ui \
           --program=MAIN_WINDOW

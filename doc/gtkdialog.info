@@ -304,9 +304,8 @@ File: gtkdialog.info,  Node: Command-line options,  Next: Environment variable, 
 ‘-e, --event-driven=FILENAME’
      Execute the file as an event-driven program.
 
-‘-g, --glade-xml=FILENAME’
-     Read the dialog description from a GtkBuilder UI file (as produced
-     by the Glade interface designer).
+‘-u, --ui-file=FILENAME’
+     Read the dialog description from a GtkBuilder UI file.
 
 ‘-i, --include=FILENAME’
      Source the given shell script before executing action commands,
@@ -2346,86 +2345,86 @@ Node: Implicit window element7669
 Node: Unsupported XML features8467
 Node: Invoking the Program9158
 Node: Command-line options10133
-Node: Environment variable12182
-Node: Capturing output13174
-Node: Output formats13974
-Node: Reading from a file15203
-Node: Standard input16125
-Node: Including function libraries16569
-Node: Multiple windows17255
-Node: Layout options18586
-Node: Window placement19350
-Node: Widgets19850
-Node: text23767
-Node: button24312
-Node: entry25839
-Node: checkbox26508
-Node: radiobutton27342
-Node: togglebutton28318
-Node: switch29114
-Ref: fig:switch29552
-Node: combobox30017
-Node: comboboxtext30682
-Node: comboboxentry31529
-Node: list32491
-Node: table33239
-Node: tree34746
-Node: edit35545
-Node: pixmap36370
-Node: hscale and vscale36981
-Node: spinbutton37859
-Node: colorbutton38578
-Node: fontbutton39393
-Node: progressbar40097
-Node: statusbar40851
-Node: timer41567
-Node: hseparator and vseparator42556
-Node: menubar43004
-Node: terminal44029
-Ref: fig:terminal45329
-Node: sourceview45481
-Ref: fig:sourceview47140
-Node: webview47300
-Ref: fig:webview48314
-Node: Containers48521
-Node: vbox and hbox49117
-Node: frame50081
-Node: notebook50595
-Node: eventbox51466
-Node: expander52178
-Node: buttonbox52959
-Node: window53645
-Node: Widget Sub-elements54400
-Node: variable55351
-Node: label56144
-Node: default56946
-Node: input57914
-Node: output59491
-Node: item60108
-Node: sensitive61051
-Node: width and height61976
-Node: action62671
-Node: Shell commands64483
-Node: exit65458
-Node: launch66042
-Node: closewindow66659
-Node: presentwindow67238
-Node: enable67842
-Node: disable68342
-Node: show68839
-Node: hide69450
-Node: activate69984
-Node: grabfocus70690
-Node: refresh71174
-Node: save71917
-Node: fileselect72415
-Node: clear73479
-Node: removeselected73953
-Node: break74487
-Node: insert75159
-Node: append75764
-Node: Clipboard actions76129
-Node: set77317
+Node: Environment variable12129
+Node: Capturing output13121
+Node: Output formats13921
+Node: Reading from a file15150
+Node: Standard input16072
+Node: Including function libraries16516
+Node: Multiple windows17202
+Node: Layout options18533
+Node: Window placement19297
+Node: Widgets19797
+Node: text23714
+Node: button24259
+Node: entry25786
+Node: checkbox26455
+Node: radiobutton27289
+Node: togglebutton28265
+Node: switch29061
+Ref: fig:switch29499
+Node: combobox29964
+Node: comboboxtext30629
+Node: comboboxentry31476
+Node: list32438
+Node: table33186
+Node: tree34693
+Node: edit35492
+Node: pixmap36317
+Node: hscale and vscale36928
+Node: spinbutton37806
+Node: colorbutton38525
+Node: fontbutton39340
+Node: progressbar40044
+Node: statusbar40798
+Node: timer41514
+Node: hseparator and vseparator42503
+Node: menubar42951
+Node: terminal43976
+Ref: fig:terminal45276
+Node: sourceview45428
+Ref: fig:sourceview47087
+Node: webview47247
+Ref: fig:webview48261
+Node: Containers48468
+Node: vbox and hbox49064
+Node: frame50028
+Node: notebook50542
+Node: eventbox51413
+Node: expander52125
+Node: buttonbox52906
+Node: window53592
+Node: Widget Sub-elements54347
+Node: variable55298
+Node: label56091
+Node: default56893
+Node: input57861
+Node: output59438
+Node: item60055
+Node: sensitive60998
+Node: width and height61923
+Node: action62618
+Node: Shell commands64430
+Node: exit65405
+Node: launch65989
+Node: closewindow66606
+Node: presentwindow67185
+Node: enable67789
+Node: disable68289
+Node: show68786
+Node: hide69397
+Node: activate69931
+Node: grabfocus70637
+Node: refresh71121
+Node: save71864
+Node: fileselect72362
+Node: clear73426
+Node: removeselected73900
+Node: break74434
+Node: insert75106
+Node: append75711
+Node: Clipboard actions76076
+Node: set77264
 
 End Tag Table
 

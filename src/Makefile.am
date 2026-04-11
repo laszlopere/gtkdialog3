@@ -23,7 +23,7 @@ gtkdialog3_SOURCES = \
 	widgets.c widgets.h \
 	actions.c actions.h \
 	tag_attributes.c tag_attributes.h \
-	glade_support.c glade_support.h \
+	builder_support.c builder_support.h \
 	widget_button.c widget_button.h \
 	widget_checkbox.c widget_checkbox.h \
 	widget_colorbutton.c widget_colorbutton.h \

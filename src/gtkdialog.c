@@ -41,7 +41,7 @@
 #include "variables.h"
 #include "automaton.h"
 #include "widgets.h"
-#include "glade_support.h"
+#include "builder_support.h"
 #include "gtkdialog_parser.h"
 
 #undef DEBUG
@@ -54,7 +54,7 @@ gboolean option_version = FALSE;
 gboolean option_debug = FALSE;
 gchar *option_input_variable = NULL;
 gchar *option_input_file = NULL;
-gchar *option_glade_file = NULL;
+gchar *option_ui_file = NULL;
 gchar *option_include_file = NULL;
 gchar *option_event_file = NULL;
 gchar *option_geometry = NULL;
@@ -162,8 +162,8 @@ gtkdialog_init(
 		"Get the GUI description from the environment.", "variable"
 	},
 	{
-		"glade-xml", 'g',
-		0, G_OPTION_ARG_STRING, &option_glade_file,
+		"ui-file", 'u',
+		0, G_OPTION_ARG_STRING, &option_ui_file,
 		"Get the GUI description from a GtkBuilder UI file.", "filename"
 	},
 	{ 
@@ -595,19 +595,19 @@ main(int argc, char *argv[])
 		goto gtkdialog_initialized;
 	}
 	
-	if (option_input_variable != NULL && option_glade_file == NULL) { 
+	if (option_input_variable != NULL && option_ui_file == NULL) { 
 		get_program_from_variable(option_input_variable);
 		goto gtkdialog_initialized;
 	}
 	
-	if (option_glade_file == NULL)
+	if (option_ui_file == NULL)
 		get_program_from_variable("MAIN_DIALOG");
 
 gtkdialog_initialized:
 	gtk_init(&argc, &argv);
 	
-	if (option_glade_file != NULL) {
-		run_program_by_glade(option_glade_file, option_input_variable);
+	if (option_ui_file != NULL) {
+		run_program_by_builder(option_ui_file, option_input_variable);
 		exit(EXIT_SUCCESS);
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * glade_support.h: GtkBuilder UI file support for Gtkdialog.
+ * builder_support.h: GtkBuilder UI file support for Gtkdialog.
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
@@ -19,8 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GLADE_SUPPORT_H
-#define GLADE_SUPPORT_H
+#ifndef BUILDER_SUPPORT_H
+#define BUILDER_SUPPORT_H
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -28,6 +28,6 @@
 
 #include <gtk/gtk.h>
 
-void run_program_by_glade(const gchar *filename, const gchar *window_name);
+void run_program_by_builder(const gchar *filename, const gchar *window_name);
 
 #endif
