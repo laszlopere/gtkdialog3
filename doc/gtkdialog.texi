@@ -590,6 +590,30 @@ gtkdialog3 --ui-file=dialog.ui \
           --program=main_window
 @end example
 
+@subsection Designing with Glade
+
+The recommended way to create UI files is the Glade interface
+designer (@command{glade}, available as the @code{glade} package on
+Debian/Ubuntu).  Design the layout visually, then save the file and
+load it with @option{--ui-file}.
+
+Glade's signal editor expects C function names in the
+@code{Handler} column, but the @code{TYPE:name} action format used
+by gtkdialog3 is accepted without problems because it contains no
+spaces or special characters.  Actions such as @code{exit:OK},
+@code{exit:Cancel}, @code{refresh:myEntry}, or
+@code{closewindow:myDialog} can be typed directly into the Handler
+field.  Shell commands that contain spaces or quotes are harder to
+enter in Glade; for those, define a shell function in a separate
+file, load it with @option{--include}, and use the function name as
+the handler.
+
+Static default values (such as the @code{text} property of a
+GtkEntry) can be set in Glade's property editor and are applied
+automatically.  For dynamic initialisation at startup, add a
+@code{realize} signal whose handler is the command to run --- Glade
+supports this in its signal editor as well.
+
 @subsection UI file format
 
 The UI file is a standard GtkBuilder XML document.  A minimal
