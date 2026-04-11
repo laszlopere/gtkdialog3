@@ -555,8 +555,19 @@ supported:
 execute in order.
 
    A ‘realize’ signal is handled specially: its handler string is stored
-as the widget's ‘<input>’ command and executed when the widget is first
-shown, which lets you populate fields at startup.
+as the widget's ‘<input>’ and processed when the widget is first shown,
+which lets you populate fields at startup.  The handler string supports
+the same prefixes as the native ‘<input>’ element:
+
+‘handler="COMMAND"’
+     Run COMMAND in a shell and use its output to populate the widget
+     (the ‘Command:’ prefix is added automatically).
+
+‘handler="command:COMMAND"’
+     Same as above, with an explicit prefix.
+
+‘handler="file:/PATH/TO/FILE"’
+     Read the widget's initial value from a file.
 
 4.8.3 Including shell functions
 -------------------------------
@@ -573,24 +584,62 @@ available to signal handlers:
 
 The recommended way to create UI files is the Glade interface designer
 (‘glade’, available as the ‘glade’ package on Debian/Ubuntu).  Design
-the layout visually, then save the file and load it with ‘--ui-file’.
+the layout visually, then save and load the file with ‘--ui-file’.
+Modern versions of Glade (3.x and later) always save in GtkBuilder
+format regardless of whether the file extension is ‘.glade’ or ‘.ui’ --
+both work identically with gtkdialog3.
 
-   Glade's signal editor expects C function names in the ‘Handler’
-column, but the ‘TYPE:name’ action format used by gtkdialog3 is accepted
-without problems because it contains no spaces or special characters.
-Actions such as ‘exit:OK’, ‘exit:Cancel’, ‘refresh:myEntry’, or
+Setting widget IDs
+..................
+
+Every widget that you want gtkdialog3 to export must have an *ID* set in
+Glade (the first field at the top of the General properties tab).  The
+ID becomes the shell variable name in the output.  Widgets without an ID
+receive auto-generated names such as ‘___object_1___’, which are not
+useful in scripts.
+
+   The top-level window _must_ have an ID. By default gtkdialog3 looks
+for ‘MAIN_WINDOW’; pass ‘--program=ID’ to select a different one.
+
+Signal handlers in Glade
+........................
+
+Glade's signal editor expects C function names in the ‘Handler’ column,
+but the ‘TYPE:name’ action format used by gtkdialog3 is accepted without
+problems because it contains no spaces or special characters.  Actions
+such as ‘exit:OK’, ‘exit:Cancel’, ‘refresh:myEntry’, or
 ‘closewindow:myDialog’ can be typed directly into the Handler field.
 Shell commands that contain spaces or quotes are harder to enter in
 Glade; for those, define a shell function in a separate file, load it
 with ‘--include’, and use the function name as the handler.
 
-   Static default values (such as the ‘text’ property of a GtkEntry) can
-be set in Glade's property editor and are applied automatically.  For
+Default values and dynamic initialisation
+.........................................
+
+Static default values (such as the ‘text’ property of a GtkEntry) can be
+set in Glade's property editor and are applied automatically.  For
 dynamic initialisation at startup, add a ‘realize’ signal whose handler
 is the command to run -- Glade supports this in its signal editor as
 well.
 
-4.8.5 UI file format
+4.8.5 Limitations compared to native dialogs
+--------------------------------------------
+
+GtkBuilder UI files are designed for layout, not for gtkdialog3's
+data-binding model.  The following native XML features have no direct
+equivalent in the GtkBuilder format:
+
+   • ‘<item>’ tags -- populating comboboxes, lists, or trees with rows
+     of data.
+   • ‘<output file="/path">’ -- writing the widget value to a file
+     whenever it changes.
+
+   Shell-command and file-based input (‘<input>’) can be achieved via
+‘realize’ signal handlers (*note GtkBuilder UI files::).  For dialogs
+that need item lists or file output, use gtkdialog3's native XML
+language instead.
+
+4.8.6 UI file format
 --------------------
 
 The UI file is a standard GtkBuilder XML document.  A minimal example
@@ -634,7 +683,7 @@ Properties, packing, and child relationships follow the standard
 GtkBuilder schema; see the GtkBuilder documentation
 (https://docs.gtk.org/gtk3/class.Builder.html) for the full reference.
 
-4.8.6 Supported widget types
+4.8.7 Supported widget types
 ----------------------------
 
 Gtkdialog3 recognises the following GTK widget classes in UI files and
@@ -2523,80 +2572,80 @@ Node: Reading from a file15219
 Node: Standard input16141
 Node: Including function libraries16585
 Node: GtkBuilder UI files17274
-Node: Multiple windows23973
-Node: Layout options25295
-Node: Window placement26061
-Node: Widgets26561
-Node: text30478
-Node: button31023
-Node: entry32550
-Node: checkbox33219
-Node: radiobutton34053
-Node: togglebutton35029
-Node: switch35825
-Ref: fig:switch36263
-Node: combobox36728
-Node: comboboxtext37393
-Node: comboboxentry38240
-Node: list39202
-Node: table39950
-Node: tree41457
-Node: edit42256
-Node: pixmap43081
-Node: hscale and vscale43692
-Node: spinbutton44570
-Node: colorbutton45289
-Node: fontbutton46104
-Node: progressbar46808
-Node: statusbar47562
-Node: timer48278
-Node: hseparator and vseparator49267
-Node: menubar49715
-Node: terminal50740
-Ref: fig:terminal52040
-Node: sourceview52192
-Ref: fig:sourceview53851
-Node: webview54011
-Ref: fig:webview55025
-Node: Containers55232
-Node: vbox and hbox55828
-Node: frame56792
-Node: notebook57306
-Node: eventbox58177
-Node: expander58889
-Node: buttonbox59670
-Node: window60356
-Node: Widget Sub-elements61111
-Node: variable62062
-Node: label62855
-Node: default63657
-Node: input64625
-Node: output66202
-Node: item66819
-Node: sensitive67762
-Node: width and height68687
-Node: action69382
-Node: Shell commands71194
-Node: exit72169
-Node: launch72753
-Node: closewindow73370
-Node: presentwindow73949
-Node: enable74553
-Node: disable75053
-Node: show75550
-Node: hide76161
-Node: activate76695
-Node: grabfocus77401
-Node: refresh77885
-Node: save78628
-Node: fileselect79126
-Node: clear80190
-Node: removeselected80664
-Node: break81198
-Node: insert81870
-Node: append82475
-Node: Clipboard actions82840
-Node: set84028
+Node: Multiple windows25863
+Node: Layout options27185
+Node: Window placement27951
+Node: Widgets28451
+Node: text32368
+Node: button32913
+Node: entry34440
+Node: checkbox35109
+Node: radiobutton35943
+Node: togglebutton36919
+Node: switch37715
+Ref: fig:switch38153
+Node: combobox38618
+Node: comboboxtext39283
+Node: comboboxentry40130
+Node: list41092
+Node: table41840
+Node: tree43347
+Node: edit44146
+Node: pixmap44971
+Node: hscale and vscale45582
+Node: spinbutton46460
+Node: colorbutton47179
+Node: fontbutton47994
+Node: progressbar48698
+Node: statusbar49452
+Node: timer50168
+Node: hseparator and vseparator51157
+Node: menubar51605
+Node: terminal52630
+Ref: fig:terminal53930
+Node: sourceview54082
+Ref: fig:sourceview55741
+Node: webview55901
+Ref: fig:webview56915
+Node: Containers57122
+Node: vbox and hbox57718
+Node: frame58682
+Node: notebook59196
+Node: eventbox60067
+Node: expander60779
+Node: buttonbox61560
+Node: window62246
+Node: Widget Sub-elements63001
+Node: variable63952
+Node: label64745
+Node: default65547
+Node: input66515
+Node: output68092
+Node: item68709
+Node: sensitive69652
+Node: width and height70577
+Node: action71272
+Node: Shell commands73084
+Node: exit74059
+Node: launch74643
+Node: closewindow75260
+Node: presentwindow75839
+Node: enable76443
+Node: disable76943
+Node: show77440
+Node: hide78051
+Node: activate78585
+Node: grabfocus79291
+Node: refresh79775
+Node: save80518
+Node: fileselect81016
+Node: clear82080
+Node: removeselected82554
+Node: break83088
+Node: insert83760
+Node: append84365
+Node: Clipboard actions84730
+Node: set85918
 
 End Tag Table
 
