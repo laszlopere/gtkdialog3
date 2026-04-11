@@ -282,6 +282,7 @@ output when the dialog closes.
 * Reading from a file::         Loading the dialog from a file
 * Standard input::              Piping the dialog via stdin
 * Including function libraries:: Sourcing shell functions for actions
+* GtkBuilder UI files::         Using externally designed interfaces
 * Multiple windows::            Working with more than one window
 * Layout options::              Controlling widget packing defaults
 * Window placement::            Setting window position and size
@@ -528,6 +529,159 @@ Without @option{--include}, action commands run in a fresh subshell
 that only has the exported environment variables.  With it, the
 included file is dot-sourced (via @code{. @var{file}}) before each
 action command, so unexported shell functions become available.
+
+@c -----------------------------------------------------------------
+@node GtkBuilder UI files
+@section GtkBuilder UI files
+
+Instead of writing the dialog in gtkdialog3's own XML language, you
+can design the interface in a visual tool such as Glade and load the
+resulting GtkBuilder UI file with @option{--ui-file}.  Gtkdialog3
+registers every widget from the UI file, exports their values on exit
+(just like native dialogs), and connects signals so that the
+@code{handler} attribute of each @code{<signal>} element is executed
+as a shell command.
+
+@subsection Basic usage
+
+@example
+gtkdialog3 --ui-file=dialog.ui --program=main_window
+@end example
+
+The @option{--program} argument selects which top-level window to
+show.  It must match an @code{id} attribute in the UI file.  If
+omitted, gtkdialog3 looks for a widget called @code{MAIN_WINDOW}.
+
+@subsection Signal handlers
+
+In a GtkBuilder UI file the @code{handler} attribute of a
+@code{<signal>} element is normally a C function name.  When loaded
+by gtkdialog3, the handler string is instead executed as a shell
+command, exactly like an @code{<action>} element in the native
+language.  The same action prefixes are supported:
+
+@table @code
+@item handler="@var{command}"
+Run @var{command} in a shell.  Widget values are available as
+@code{$@var{id}} variables.
+
+@item handler="exit:@var{label}"
+Close the dialog with the given exit label.
+
+@item handler="refresh:@var{id}"
+Re-read the @code{<input>} of the named widget.
+@end table
+
+Multiple @code{<signal>} elements on the same widget are supported;
+they execute in order.
+
+A @code{realize} signal is handled specially: its handler string is
+stored as the widget's @code{<input>} command and executed when the
+widget is first shown, which lets you populate fields at startup.
+
+@subsection Including shell functions
+
+Use @option{--include} together with @option{--ui-file} to make
+shell functions available to signal handlers:
+
+@example
+gtkdialog3 --ui-file=dialog.ui \
+          --include=functions.sh \
+          --program=main_window
+@end example
+
+@subsection UI file format
+
+The UI file is a standard GtkBuilder XML document.  A minimal
+example with an entry field and two buttons:
+
+@example
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkWindow" id="main_window">
+    <property name="title">Example</property>
+    <child>
+      <object class="GtkBox" id="vbox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkEntry" id="name_entry">
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="ok_button">
+            <property name="visible">True</property>
+            <property name="label">OK</property>
+            <signal name="clicked" handler="exit:OK"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="cancel_button">
+            <property name="visible">True</property>
+            <property name="label">Cancel</property>
+            <signal name="clicked" handler="exit:Cancel"/>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
+@end example
+
+Each @code{<object>} element corresponds to a GTK widget.  The
+@code{id} attribute becomes the variable name that gtkdialog3
+exports on exit.  Properties, packing, and child relationships
+follow the standard GtkBuilder schema; see the
+@uref{https://docs.gtk.org/gtk3/class.Builder.html, GtkBuilder documentation}
+for the full reference.
+
+@subsection Supported widget types
+
+Gtkdialog3 recognises the following GTK widget classes in UI files
+and maps them to its internal types for value export and signal
+handling:
+
+@multitable @columnfractions .40 .60
+@headitem GtkBuilder class @tab Gtkdialog3 type
+@item GtkWindow @tab window
+@item GtkButton @tab button
+@item GtkToggleButton @tab togglebutton
+@item GtkCheckButton @tab checkbox
+@item GtkRadioButton @tab radiobutton
+@item GtkColorButton @tab colorbutton
+@item GtkFontButton @tab fontbutton
+@item GtkEntry @tab entry
+@item GtkSpinButton @tab spinbutton
+@item GtkComboBox @tab comboboxtext
+@item GtkComboBox (has-entry) @tab comboboxentry
+@item GtkScale (horizontal) @tab hscale
+@item GtkScale (vertical) @tab vscale
+@item GtkProgressBar @tab progressbar
+@item GtkLabel @tab text
+@item GtkImage @tab pixmap
+@item GtkTextView @tab edit
+@item GtkTreeView @tab tree
+@item GtkNotebook @tab notebook
+@item GtkFrame @tab frame
+@item GtkExpander @tab expander
+@item GtkBox (horizontal) @tab hbox
+@item GtkBox (vertical) @tab vbox
+@item GtkMenuBar @tab menubar
+@item GtkMenu @tab menu
+@item GtkMenuItem @tab menuitem
+@item GtkSeparatorMenuItem @tab menuitemseparator
+@item GtkStatusbar @tab statusbar
+@item GtkEventBox @tab eventbox
+@item GtkScrolledWindow @tab scrolledwindow
+@item GtkFileChooserWidget @tab chooser
+@item GtkSeparator (horizontal) @tab hseparator
+@item GtkSeparator (vertical) @tab vseparator
+@end multitable
+
+Widgets not listed above are still loaded and displayed, but their
+values are not exported and their signals must be generic GtkWidget
+signals.
 
 @c -----------------------------------------------------------------
 @node Multiple windows

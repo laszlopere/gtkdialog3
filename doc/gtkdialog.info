@@ -274,6 +274,7 @@ output when the dialog closes.
 * Reading from a file::         Loading the dialog from a file
 * Standard input::              Piping the dialog via stdin
 * Including function libraries:: Sourcing shell functions for actions
+* GtkBuilder UI files::         Using externally designed interfaces
 * Multiple windows::            Working with more than one window
 * Layout options::              Controlling widget packing defaults
 * Window placement::            Setting window position and size
@@ -493,7 +494,7 @@ Use ‘--stdin’ to read the dialog description from a pipe:
 pipeline.
 
 
-File: gtkdialog.info,  Node: Including function libraries,  Next: Multiple windows,  Prev: Standard input,  Up: Invoking the Program
+File: gtkdialog.info,  Node: Including function libraries,  Next: GtkBuilder UI files,  Prev: Standard input,  Up: Invoking the Program
 
 4.7 Including function libraries
 ================================
@@ -510,9 +511,157 @@ is dot-sourced (via ‘. FILE’) before each action command, so unexported
 shell functions become available.
 
 
-File: gtkdialog.info,  Node: Multiple windows,  Next: Layout options,  Prev: Including function libraries,  Up: Invoking the Program
+File: gtkdialog.info,  Node: GtkBuilder UI files,  Next: Multiple windows,  Prev: Including function libraries,  Up: Invoking the Program
 
-4.8 Multiple windows
+4.8 GtkBuilder UI files
+=======================
+
+Instead of writing the dialog in gtkdialog3's own XML language, you can
+design the interface in a visual tool such as Glade and load the
+resulting GtkBuilder UI file with ‘--ui-file’.  Gtkdialog3 registers
+every widget from the UI file, exports their values on exit (just like
+native dialogs), and connects signals so that the ‘handler’ attribute of
+each ‘<signal>’ element is executed as a shell command.
+
+4.8.1 Basic usage
+-----------------
+
+     gtkdialog3 --ui-file=dialog.ui --program=main_window
+
+   The ‘--program’ argument selects which top-level window to show.  It
+must match an ‘id’ attribute in the UI file.  If omitted, gtkdialog3
+looks for a widget called ‘MAIN_WINDOW’.
+
+4.8.2 Signal handlers
+---------------------
+
+In a GtkBuilder UI file the ‘handler’ attribute of a ‘<signal>’ element
+is normally a C function name.  When loaded by gtkdialog3, the handler
+string is instead executed as a shell command, exactly like an
+‘<action>’ element in the native language.  The same action prefixes are
+supported:
+
+‘handler="COMMAND"’
+     Run COMMAND in a shell.  Widget values are available as ‘$ID’
+     variables.
+
+‘handler="exit:LABEL"’
+     Close the dialog with the given exit label.
+
+‘handler="refresh:ID"’
+     Re-read the ‘<input>’ of the named widget.
+
+   Multiple ‘<signal>’ elements on the same widget are supported; they
+execute in order.
+
+   A ‘realize’ signal is handled specially: its handler string is stored
+as the widget's ‘<input>’ command and executed when the widget is first
+shown, which lets you populate fields at startup.
+
+4.8.3 Including shell functions
+-------------------------------
+
+Use ‘--include’ together with ‘--ui-file’ to make shell functions
+available to signal handlers:
+
+     gtkdialog3 --ui-file=dialog.ui \
+               --include=functions.sh \
+               --program=main_window
+
+4.8.4 UI file format
+--------------------
+
+The UI file is a standard GtkBuilder XML document.  A minimal example
+with an entry field and two buttons:
+
+     <?xml version="1.0" encoding="UTF-8"?>
+     <interface>
+       <object class="GtkWindow" id="main_window">
+         <property name="title">Example</property>
+         <child>
+           <object class="GtkBox" id="vbox">
+             <property name="visible">True</property>
+             <property name="orientation">vertical</property>
+             <child>
+               <object class="GtkEntry" id="name_entry">
+                 <property name="visible">True</property>
+               </object>
+             </child>
+             <child>
+               <object class="GtkButton" id="ok_button">
+                 <property name="visible">True</property>
+                 <property name="label">OK</property>
+                 <signal name="clicked" handler="exit:OK"/>
+               </object>
+             </child>
+             <child>
+               <object class="GtkButton" id="cancel_button">
+                 <property name="visible">True</property>
+                 <property name="label">Cancel</property>
+                 <signal name="clicked" handler="exit:Cancel"/>
+               </object>
+             </child>
+           </object>
+         </child>
+       </object>
+     </interface>
+
+   Each ‘<object>’ element corresponds to a GTK widget.  The ‘id’
+attribute becomes the variable name that gtkdialog3 exports on exit.
+Properties, packing, and child relationships follow the standard
+GtkBuilder schema; see the GtkBuilder documentation
+(https://docs.gtk.org/gtk3/class.Builder.html) for the full reference.
+
+4.8.5 Supported widget types
+----------------------------
+
+Gtkdialog3 recognises the following GTK widget classes in UI files and
+maps them to its internal types for value export and signal handling:
+
+GtkBuilder class              Gtkdialog3 type
+--------------------------------------------------------------------------
+GtkWindow                     window
+GtkButton                     button
+GtkToggleButton               togglebutton
+GtkCheckButton                checkbox
+GtkRadioButton                radiobutton
+GtkColorButton                colorbutton
+GtkFontButton                 fontbutton
+GtkEntry                      entry
+GtkSpinButton                 spinbutton
+GtkComboBox                   comboboxtext
+GtkComboBox (has-entry)       comboboxentry
+GtkScale (horizontal)         hscale
+GtkScale (vertical)           vscale
+GtkProgressBar                progressbar
+GtkLabel                      text
+GtkImage                      pixmap
+GtkTextView                   edit
+GtkTreeView                   tree
+GtkNotebook                   notebook
+GtkFrame                      frame
+GtkExpander                   expander
+GtkBox (horizontal)           hbox
+GtkBox (vertical)             vbox
+GtkMenuBar                    menubar
+GtkMenu                       menu
+GtkMenuItem                   menuitem
+GtkSeparatorMenuItem          menuitemseparator
+GtkStatusbar                  statusbar
+GtkEventBox                   eventbox
+GtkScrolledWindow             scrolledwindow
+GtkFileChooserWidget          chooser
+GtkSeparator (horizontal)     hseparator
+GtkSeparator (vertical)       vseparator
+
+   Widgets not listed above are still loaded and displayed, but their
+values are not exported and their signals must be generic GtkWidget
+signals.
+
+
+File: gtkdialog.info,  Node: Multiple windows,  Next: Layout options,  Prev: GtkBuilder UI files,  Up: Invoking the Program
+
+4.9 Multiple windows
 ====================
 
 Define each window in a separate exported shell variable.  The variable
@@ -552,8 +701,8 @@ From ‘examples/languages/bash_script_multi_window’:
 
 File: gtkdialog.info,  Node: Layout options,  Next: Window placement,  Prev: Multiple windows,  Up: Invoking the Program
 
-4.9 Layout options
-==================
+4.10 Layout options
+===================
 
 The ‘--space-expand’ and ‘--space-fill’ flags set the default packing
 behaviour for all widgets in the dialog.  These defaults can be
@@ -571,7 +720,7 @@ where widgets should stretch to fill the window.
 
 File: gtkdialog.info,  Node: Window placement,  Prev: Layout options,  Up: Invoking the Program
 
-4.10 Window placement
+4.11 Window placement
 =====================
 
 Use ‘--center’ to center the window on the screen:
@@ -2344,87 +2493,88 @@ Node: Imperative constructs6466
 Node: Implicit window element7669
 Node: Unsupported XML features8467
 Node: Invoking the Program9158
-Node: Command-line options10133
-Node: Environment variable12129
-Node: Capturing output13121
-Node: Output formats13921
-Node: Reading from a file15150
-Node: Standard input16072
-Node: Including function libraries16516
-Node: Multiple windows17202
-Node: Layout options18533
-Node: Window placement19297
-Node: Widgets19797
-Node: text23714
-Node: button24259
-Node: entry25786
-Node: checkbox26455
-Node: radiobutton27289
-Node: togglebutton28265
-Node: switch29061
-Ref: fig:switch29499
-Node: combobox29964
-Node: comboboxtext30629
-Node: comboboxentry31476
-Node: list32438
-Node: table33186
-Node: tree34693
-Node: edit35492
-Node: pixmap36317
-Node: hscale and vscale36928
-Node: spinbutton37806
-Node: colorbutton38525
-Node: fontbutton39340
-Node: progressbar40044
-Node: statusbar40798
-Node: timer41514
-Node: hseparator and vseparator42503
-Node: menubar42951
-Node: terminal43976
-Ref: fig:terminal45276
-Node: sourceview45428
-Ref: fig:sourceview47087
-Node: webview47247
-Ref: fig:webview48261
-Node: Containers48468
-Node: vbox and hbox49064
-Node: frame50028
-Node: notebook50542
-Node: eventbox51413
-Node: expander52125
-Node: buttonbox52906
-Node: window53592
-Node: Widget Sub-elements54347
-Node: variable55298
-Node: label56091
-Node: default56893
-Node: input57861
-Node: output59438
-Node: item60055
-Node: sensitive60998
-Node: width and height61923
-Node: action62618
-Node: Shell commands64430
-Node: exit65405
-Node: launch65989
-Node: closewindow66606
-Node: presentwindow67185
-Node: enable67789
-Node: disable68289
-Node: show68786
-Node: hide69397
-Node: activate69931
-Node: grabfocus70637
-Node: refresh71121
-Node: save71864
-Node: fileselect72362
-Node: clear73426
-Node: removeselected73900
-Node: break74434
-Node: insert75106
-Node: append75711
-Node: Clipboard actions76076
-Node: set77264
+Node: Command-line options10202
+Node: Environment variable12198
+Node: Capturing output13190
+Node: Output formats13990
+Node: Reading from a file15219
+Node: Standard input16141
+Node: Including function libraries16585
+Node: GtkBuilder UI files17274
+Node: Multiple windows22825
+Node: Layout options24147
+Node: Window placement24913
+Node: Widgets25413
+Node: text29330
+Node: button29875
+Node: entry31402
+Node: checkbox32071
+Node: radiobutton32905
+Node: togglebutton33881
+Node: switch34677
+Ref: fig:switch35115
+Node: combobox35580
+Node: comboboxtext36245
+Node: comboboxentry37092
+Node: list38054
+Node: table38802
+Node: tree40309
+Node: edit41108
+Node: pixmap41933
+Node: hscale and vscale42544
+Node: spinbutton43422
+Node: colorbutton44141
+Node: fontbutton44956
+Node: progressbar45660
+Node: statusbar46414
+Node: timer47130
+Node: hseparator and vseparator48119
+Node: menubar48567
+Node: terminal49592
+Ref: fig:terminal50892
+Node: sourceview51044
+Ref: fig:sourceview52703
+Node: webview52863
+Ref: fig:webview53877
+Node: Containers54084
+Node: vbox and hbox54680
+Node: frame55644
+Node: notebook56158
+Node: eventbox57029
+Node: expander57741
+Node: buttonbox58522
+Node: window59208
+Node: Widget Sub-elements59963
+Node: variable60914
+Node: label61707
+Node: default62509
+Node: input63477
+Node: output65054
+Node: item65671
+Node: sensitive66614
+Node: width and height67539
+Node: action68234
+Node: Shell commands70046
+Node: exit71021
+Node: launch71605
+Node: closewindow72222
+Node: presentwindow72801
+Node: enable73405
+Node: disable73905
+Node: show74402
+Node: hide75013
+Node: activate75547
+Node: grabfocus76253
+Node: refresh76737
+Node: save77480
+Node: fileselect77978
+Node: clear79042
+Node: removeselected79516
+Node: break80050
+Node: insert80722
+Node: append81327
+Node: Clipboard actions81692
+Node: set82880
 
 End Tag Table
 
