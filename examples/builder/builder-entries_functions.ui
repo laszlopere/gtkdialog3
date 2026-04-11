@@ -105,7 +105,6 @@
               <object class="GtkButton" id="cancel_button">
                 <property name="visible">True</property>
                 <property name="label">Cancel</property>
-                <signal name="clicked" handler="echo &quot;hello&quot;"/>
                 <signal name="clicked" handler="exit:Cancel"/>
               </object>
             </child>
