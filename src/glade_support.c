@@ -1,19 +1,19 @@
 /*
- * glade_support.c: The interface between Glade and Gtkdialog.
+ * glade_support.c: GtkBuilder UI file support for Gtkdialog.
  * Gtkdialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -25,11 +25,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#if HAVE_GLADE_LIB
-#include <glade/glade.h>
-#include "widgets.h"
+#include <gtk/gtk.h>
 #include "glade_support.h"
+#include "widgets.h"
+#include "actions.h"
 #include "signals.h"
 
 /*************************************************************************
@@ -46,12 +45,12 @@ typedef struct _gtkdialog_signal {
 gint widget_get_type_from_pointer(GtkWidget *widget);
 
 /*
-** Signal handler callbascks.
+** Signal handler callbacks.
 */
 
-static void 
+static void
 on_any_button_clicked(
-		GtkButton *widget, 
+		GtkButton *widget,
 		gchar     *full_command)
 {
 	gchar *prefix, *command;
@@ -61,14 +60,14 @@ on_any_button_clicked(
 	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
-	execute_action(widget, command, prefix);
+	execute_action(GTK_WIDGET(widget), command, prefix);
 	g_free(command);
 	g_free(prefix);
 }
 
 
-static void 
-on_any_entry_almost_any(GtkEntry *widget, 
+static void
+on_any_entry_almost_any(GtkEntry *widget,
 		gchar     *full_command)
 {
 	gchar *prefix, *command;
@@ -78,54 +77,54 @@ on_any_entry_almost_any(GtkEntry *widget,
 	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
-	execute_action(widget, command, prefix);
+	execute_action(GTK_WIDGET(widget), command, prefix);
 	g_free(command);
 	g_free(prefix);
 }
 
 
-static void 
+static void
 on_any_entry_delete_from_cursor(
-		GtkEntry *entry, 
-		GtkDeleteType *arg1, 
-		gint arg2, 
-		gpointer user_data) 
+		GtkEntry *entry,
+		GtkDeleteType *arg1,
+		gint arg2,
+		gpointer user_data)
 {
 	on_any_entry_almost_any(entry, user_data);
 }
 
-static void 
+static void
 on_any_entry_insert_at_cursor(
-		GtkEntry *entry, 
-		gchar *arg1, 
+		GtkEntry *entry,
+		gchar *arg1,
 		gpointer user_data)
 {
 	on_any_entry_almost_any(entry, user_data);
 }
 
-static void 
+static void
 on_any_entry_move_cursor(
-		GtkEntry *entry, 
-		GtkMovementStep *arg1, 
-		gint arg2, 
-		gboolean arg3, 
+		GtkEntry *entry,
+		GtkMovementStep *arg1,
+		gint arg2,
+		gboolean arg3,
 		gpointer user_data)
 {
 	on_any_entry_almost_any(entry, user_data);
 }
 
-static void 
+static void
 on_any_entry_populate_popup(
-		GtkEntry *entry, 
-		GtkMenu *arg1, 
+		GtkEntry *entry,
+		GtkMenu *arg1,
 		gpointer user_data)
 {
 	on_any_entry_almost_any(entry, user_data);
 }
 
-static void 
+static void
 on_any_combobox_changed(
-		GtkComboBox *widget, 
+		GtkComboBox *widget,
 		gchar     *full_command)
 {
 	gchar *prefix, *command;
@@ -135,14 +134,14 @@ on_any_combobox_changed(
 	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
-	execute_action(widget, command, prefix);
+	execute_action(GTK_WIDGET(widget), command, prefix);
 	g_free(command);
 	g_free(prefix);
 }
 
-static void 
+static void
 on_any_scale_value_changed(
-		GtkScale *widget, 
+		GtkScale *widget,
 		gchar     *full_command)
 {
 	gchar *prefix, *command;
@@ -152,14 +151,14 @@ on_any_scale_value_changed(
 	g_message("%s(%p, '%s')", __func__, widget, full_command);
 #endif
 	command_get_prefix(full_command, &prefix, &command);
-	execute_action(widget, command, prefix);
+	execute_action(GTK_WIDGET(widget), command, prefix);
 	g_free(command);
 	g_free(prefix);
 }
 
-static void 
+static void
 on_any_widget_almost_any(
-		GtkWidget *widget, 
+		GtkWidget *widget,
 		gchar *full_command)
 {
 	gchar *prefix, *command;
@@ -174,71 +173,15 @@ on_any_widget_almost_any(
 	g_free(prefix);
 }
 
-static gboolean 
+static gboolean
 on_any_widget_almost_any_gdk_event(
-		 GtkWidget *widget, 
-		 GdkEvent *event, 
+		 GtkWidget *widget,
+		 GdkEvent *event,
 		 gpointer user_data)
 {
 	on_any_widget_almost_any(widget, user_data);
 	return FALSE;
 }
-
-#if 0
- /* 
-  * GtkWidget unhandled signals.
-  */
-"can-activate-accel"
- gboolean user_function (GtkWidget *widget, guint signal_id, gpointer user_data)
-"child-notify"
- void user_function (GtkWidget *widget, GParamSpec *pspec, gpointer user_data)
-"direction-changed"
- void user_function (GtkWidget *widget, GtkTextDirection *arg1, gpointer user_data)
-"drag-begin"
- void user_function (GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data)
-"drag-data-delete"
- void user_function (GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data)
-"drag-data-get"
- void user_function (GtkWidget *widget, GdkDragContext *drag_context, GtkSelectionData *data, guint info, guint time, gpointer user_data)
-"drag-data-received"
- void user_function (GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data)
-"drag-drop"
- gboolean user_function (GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data)
-"drag-end"
- void user_function (GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data)
-"drag-leave"
- void user_function (GtkWidget *widget, GdkDragContext *drag_context, guint time, gpointer user_data)
-"drag-motion"
- gboolean user_function (GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data)
-"focus"
- gboolean user_function (GtkWidget *widget, GtkDirectionType *arg1, gpointer user_data)
-"grab-notify"
- void user_function (GtkWidget *widget, gboolean was_grabbed, gpointer user_data)
-"hierarchy-changed"
- void user_function (GtkWidget *widget, GtkWidget *widget2, gpointer user_data)
-"mnemonic-activate"
- gboolean user_function (GtkWidget *widget, gboolean arg1, gpointer user_data)
-"parent-set"
- void user_function (GtkWidget *widget, GtkObject *old_parent, gpointer user_data)
-"screen-changed"
- void user_function (GtkWidget *widget, GdkScreen *arg1, gpointer user_data)
-"selection-get"
- void user_function (GtkWidget *widget, GtkSelectionData *data, guint info, guint time, gpointer user_data)
-"selection-received"
- void user_function (GtkWidget *widget, GtkSelectionData *data, guint time, gpointer user_data)
-"show-help"
- gboolean user_function (GtkWidget *widget, GtkWidgetHelpType *arg1, gpointer user_data)
-"size-allocate"
- void user_function (GtkWidget *widget, GtkAllocation *allocation, gpointer user_data)
-"size-request"
- void user_function (GtkWidget *widget, GtkRequisition *requisition, gpointer user_data)
-"state-changed"
- void user_function (GtkWidget *widget, GtkStateType state, gpointer user_data)
-"style-set"
- void user_function (GtkWidget *widget, GtkStyle *previous_style, gpointer user_data)
-"window-state-event"
- gboolean user_function (GtkWidget *widget, GdkEventWindowState *event, gpointer user_data)
-#endif 
 
 /*
 ** Signal handler connectors for each widget types we support.
@@ -251,14 +194,15 @@ find_and_connect_handler(
 		const gchar *handler_name)
 {
 	gint n;
-	
+
 	for (n = 0; signals[n].name != NULL; ++n) {
-		if (g_ascii_strcasecmp(signals[n].name, signal_name) == 0)
-			g_signal_connect(G_OBJECT(widget), 
-					signal_name, 
-					signals[n].callback, 
+		if (g_ascii_strcasecmp(signals[n].name, signal_name) == 0) {
+			g_signal_connect(G_OBJECT(widget),
+					signal_name,
+					signals[n].callback,
 					g_strdup(handler_name));
 			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -267,22 +211,17 @@ find_and_connect_handler(
 
 static gboolean
 gtk_toggle_button_signal_handler_connector(
-		const gchar *handler_name, 
-		GObject *object, 
-		const gchar *signal_name, 
-		const gchar *signal_data, 
-		GObject *connect_object, 
-		gboolean after, 
+		const gchar *handler_name,
+		GObject *object,
+		const gchar *signal_name,
+		GObject *connect_object,
+		GConnectFlags flags,
 		gpointer user_data)
 {
-	/*
-	 * As I see, the "toggle" function is the very same as of the "clicked"
-	 * signal of the normal buttons.
-	 */
 	if (g_ascii_strcasecmp(signal_name, "toggled") == 0) {
-		g_signal_connect(object, 
-				signal_name, 
-				G_CALLBACK(on_any_button_clicked), 
+		g_signal_connect(object,
+				signal_name,
+				G_CALLBACK(on_any_button_clicked),
 				g_strdup(handler_name));
 		return TRUE;
 	}
@@ -291,12 +230,11 @@ gtk_toggle_button_signal_handler_connector(
 
 static gboolean
 gtk_button_signal_handler_connector(
-		const gchar *handler_name, 
-		GObject *object, 
-		const gchar *signal_name, 
-		const gchar *signal_data, 
-		GObject *connect_object, 
-		gboolean after, 
+		const gchar *handler_name,
+		GObject *object,
+		const gchar *signal_name,
+		GObject *connect_object,
+		GConnectFlags flags,
 		gpointer user_data)
 {
 	gint n;
@@ -307,9 +245,9 @@ gtk_button_signal_handler_connector(
 
 	for (n = 0; signal_names[n] != NULL; ++n) {
 		if (g_ascii_strcasecmp(signal_name, signal_names[n]) == 0) {
-			g_signal_connect(object, 
-					signal_names[n], 
-					G_CALLBACK(on_any_button_clicked), 
+			g_signal_connect(object,
+					signal_names[n],
+					G_CALLBACK(on_any_button_clicked),
 					g_strdup(handler_name));
 			return TRUE;
 		}
@@ -319,15 +257,13 @@ gtk_button_signal_handler_connector(
 
 static gboolean
 gtk_entry_signal_handler_connector(
-		const gchar *handler_name, 
-		GObject *object, 
-		const gchar *signal_name, 
-		const gchar *signal_data, 
-		GObject *connect_object, 
-		gboolean after, 
+		const gchar *handler_name,
+		GObject *object,
+		const gchar *signal_name,
+		GObject *connect_object,
+		GConnectFlags flags,
 		gpointer user_data)
 {
-	gint n;
 	gtkdialog_signal entry_signals[] = {
 		{ "activate",           (GCallback)on_any_entry_almost_any },
 		{ "backspace",          (GCallback)on_any_entry_almost_any },
@@ -342,26 +278,25 @@ gtk_entry_signal_handler_connector(
 		{ NULL,                 (GCallback)NULL }
 	};
 
-	return find_and_connect_handler(GTK_WIDGET(object), 
-			entry_signals, 
+	return find_and_connect_handler(GTK_WIDGET(object),
+			entry_signals,
 			signal_name,
 			handler_name);
 }
 
 static gboolean
 gtk_combobox_signal_handler_connector(
-		const gchar *handler_name, 
-		GObject *object, 
-		const gchar *signal_name, 
-		const gchar *signal_data, 
-		GObject *connect_object, 
-		gboolean after, 
+		const gchar *handler_name,
+		GObject *object,
+		const gchar *signal_name,
+		GObject *connect_object,
+		GConnectFlags flags,
 		gpointer user_data)
 {
 	if (g_ascii_strcasecmp(signal_name, "changed") == 0) {
-		g_signal_connect(object, 
-				signal_name, 
-				G_CALLBACK(on_any_combobox_changed), 
+		g_signal_connect(object,
+				signal_name,
+				G_CALLBACK(on_any_combobox_changed),
 				g_strdup(handler_name));
 		return TRUE;
 	}
@@ -370,26 +305,18 @@ gtk_combobox_signal_handler_connector(
 
 static gboolean
 gtk_scale_signal_handler_connector(
-		const gchar *handler_name, 
-		GObject *object, 
-		const gchar *signal_name, 
-		const gchar *signal_data, 
-		GObject *connect_object, 
-		gboolean after, 
+		const gchar *handler_name,
+		GObject *object,
+		const gchar *signal_name,
+		GObject *connect_object,
+		GConnectFlags flags,
 		gpointer user_data)
 {
-	/* Thunor: There's an issue with the name of this signal as the Glade
-	 * Interface Designer and the GTK+ 2 Reference Manual:GtkScale will
-	 * write it with an underscore but it's actually the GtkRange signal
-	 * value-changed and this is equivalent to the GtkSpinButton signal
-	 * value-changed and both widgets are identical in code. I'd say that
-	 * GTK+ doesn't distinguish between underscores and hyphens as a
-	 * separator within names but Gtkdialog up until now did */
 	if ((g_ascii_strcasecmp(signal_name, "value_changed") == 0) ||
 		(g_ascii_strcasecmp(signal_name, "value-changed") == 0)) {
-		g_signal_connect(object, 
-				signal_name, 
-				G_CALLBACK(on_any_scale_value_changed), 
+		g_signal_connect(object,
+				signal_name,
+				G_CALLBACK(on_any_scale_value_changed),
 				g_strdup(handler_name));
 		return TRUE;
 	}
@@ -398,12 +325,11 @@ gtk_scale_signal_handler_connector(
 
 static gboolean
 gtk_widget_signal_handler_connector(
-		const gchar *handler_name, 
-		GObject *object, 
-		const gchar *signal_name, 
-		const gchar *signal_data, 
-		GObject *connect_object, 
-		gboolean after, 
+		const gchar *handler_name,
+		GObject *object,
+		const gchar *signal_name,
+		GObject *connect_object,
+		GConnectFlags flags,
 		gpointer user_data)
 {
 	variable *var;
@@ -418,26 +344,21 @@ gtk_widget_signal_handler_connector(
 		{ "unmap",                     (GCallback)on_any_widget_almost_any },
 		{ "unrealize",                 (GCallback)on_any_widget_almost_any },
 		{ "button-press-event",        (GCallback)on_any_widget_almost_any_gdk_event },
-		{ "client-event",              (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "configure-event",           (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "delete-event",              (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "destroy-event",             (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "enter-notify-event",        (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "event",                     (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "event-after",               (GCallback)on_any_widget_almost_any_gdk_event },
-		{ "expose-event",              (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "focus-in-event",            (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "focus-out-event",           (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "grab-broken-event",         (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "key-press-event",           (GCallback)on_any_widget_almost_any_gdk_event },
-		{ "key-relese-event",          (GCallback)on_any_widget_almost_any_gdk_event },
+		{ "key-release-event",         (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "leave-notify-event",        (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "map-event",                 (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "motion-notify-event",       (GCallback)on_any_widget_almost_any_gdk_event },
-		{ "no-expose-event",           (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "property-notify-event",     (GCallback)on_any_widget_almost_any_gdk_event },
-		{ "proximity-in-event",        (GCallback)on_any_widget_almost_any_gdk_event },
-		{ "proximity-out-event",       (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "scroll-event",              (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "selection-clear-event",     (GCallback)on_any_widget_almost_any_gdk_event },
 		{ "selection-notify-event",    (GCallback)on_any_widget_almost_any_gdk_event },
@@ -453,79 +374,69 @@ gtk_widget_signal_handler_connector(
 	 */
 	if (g_ascii_strcasecmp(signal_name, "realize") == 0) {
 		var = find_variable_by_widget(GTK_WIDGET(object));
-		/*
-		 * We should always find this variable.
-		 */
 		g_return_val_if_fail(var != NULL, FALSE);
 		attributeset_insert(var->Attributes, ATTR_INPUT, handler_name);
 		return TRUE;
 	}
-	
-	return find_and_connect_handler(GTK_WIDGET(object), 
-			widget_signals, 
+
+	return find_and_connect_handler(GTK_WIDGET(object),
+			widget_signals,
 			signal_name,
 			handler_name);
 }
 
 
 /*
- */
-static void 
+** Main signal handler connector called by gtk_builder_connect_signals_full().
+*/
+static void
 signal_handler_connector(
-		const gchar *handler_name, 
-		GObject *object, 
-		const gchar *signal_name, 
-		const gchar *signal_data, 
-		GObject *connect_object, 
-		gboolean after, 
-		gpointer user_data)
+		GtkBuilder  *builder,
+		GObject     *object,
+		const gchar *signal_name,
+		const gchar *handler_name,
+		GObject     *connect_object,
+		GConnectFlags flags,
+		gpointer     user_data)
 {
 #ifdef DEBUG
 	g_message("%s(): start", __func__);
 	g_message("      signal_name: '%s'", signal_name);
 	g_message("     handler_name: '%s'", handler_name);
-	//g_message("           object: %p", object);
-	//g_message("      signal_data: '%s' <------", signal_data);
-	//g_message("   connect_object: '%p'", connect_object);
-	//g_message("        user_data: '%s'", user_data);
 #endif
 	if (GTK_IS_ENTRY(object))
-		if (gtk_entry_signal_handler_connector(handler_name, 
+		if (gtk_entry_signal_handler_connector(handler_name,
 					object,
 					signal_name,
-					signal_data,
 					connect_object,
-					after,
+					flags,
 					user_data))
 			return;
-	
+
 	if (GTK_IS_TOGGLE_BUTTON(object))
-		if (gtk_toggle_button_signal_handler_connector(handler_name, 
+		if (gtk_toggle_button_signal_handler_connector(handler_name,
 					object,
 					signal_name,
-					signal_data,
 					connect_object,
-					after,
+					flags,
 					user_data))
 			return;
 
 	if (GTK_IS_BUTTON(object))
-		if (gtk_button_signal_handler_connector(handler_name, 
+		if (gtk_button_signal_handler_connector(handler_name,
 					object,
 					signal_name,
-					signal_data,
 					connect_object,
-					after,
+					flags,
 					user_data))
 			return;
-	
+
 	if (GTK_IS_TOOL_BUTTON(object))
 		if (gtk_button_signal_handler_connector(handler_name,
 					object,
 					signal_name,
-					signal_data,
 					connect_object,
-					after,
+					flags,
 					user_data))
 			return;
 
@@ -533,9 +444,8 @@ signal_handler_connector(
 		if (gtk_combobox_signal_handler_connector(handler_name,
 					object,
 					signal_name,
-					signal_data,
 					connect_object,
-					after,
+					flags,
 					user_data))
 			return;
 
@@ -543,197 +453,187 @@ signal_handler_connector(
 		if (gtk_scale_signal_handler_connector(handler_name,
 					object,
 					signal_name,
-					signal_data,
 					connect_object,
-					after,
+					flags,
 					user_data))
 			return;
-	/*
-	 * Some thing is obviously missing.
-	 */
+
 	if (GTK_IS_WIDGET(object))
-		if (gtk_widget_signal_handler_connector(handler_name, 
+		if (gtk_widget_signal_handler_connector(handler_name,
 				object,
 				signal_name,
-				signal_data,
 				connect_object,
-				after,
+				flags,
 				user_data))
 			return;
 
 	g_warning("%s(): Unhandled signal: '%s'", __func__, signal_name);
-		
+
 }
 
 
 static void
-register_widgets(GladeXML *glade_xml)
+register_widgets(GtkBuilder *builder)
 {
-	GList        *widget_list, *li;
+	GSList       *object_list, *li;
 	GtkWidget    *widget;
 	AttributeSet *Attr;
 	gint          type;
 	const gchar  *name;
 
-	widget_list = glade_xml_get_widget_prefix(glade_xml, "");
-	for (li = widget_list; li != NULL; li = li->next) {
-		widget = li->data;
-		name = gtk_widget_get_name(li->data);
+	object_list = gtk_builder_get_objects(builder);
+	for (li = object_list; li != NULL; li = li->next) {
+		if (!GTK_IS_WIDGET(li->data))
+			continue;
+		widget = GTK_WIDGET(li->data);
+		/*
+		 * GtkBuilder stores the id in the buildable name, not the
+		 * widget name.  Copy it so the rest of gtkdialog (which uses
+		 * gtk_widget_get_name) sees the builder id.
+		 */
+		name = gtk_buildable_get_name(GTK_BUILDABLE(widget));
+		if (name != NULL)
+			gtk_widget_set_name(widget, name);
 		Attr = attributeset_new();
 		attributeset_set_if_unset(Attr, ATTR_VARIABLE, name);
 		type = widget_get_type_from_pointer(widget);
 		variables_new_with_widget(Attr, NULL, widget, type);
 #ifdef DEBUG
-		g_message("%s(): widget name: %s, type: %d", 
+		g_message("%s(): widget name: %s, type: %d",
 				__func__, name, type);
 #endif
 	}
-	g_list_free(widget_list);
+	g_slist_free(object_list);
 }
 
 static void
-refresh_widgets(GladeXML *glade_xml)
+refresh_widgets(GtkBuilder *builder)
 {
-	GList        *widget_list, *li;
-	GtkWidget    *widget;
-	AttributeSet *Attr;
-	gint          type;
+	GSList       *object_list, *li;
 	const gchar  *name;
 
-	widget_list = glade_xml_get_widget_prefix(glade_xml, "");
-	for (li = widget_list; li != NULL; li = li->next) {
-		widget = li->data;
-		name = gtk_widget_get_name(li->data);
+	object_list = gtk_builder_get_objects(builder);
+	for (li = object_list; li != NULL; li = li->next) {
+		if (!GTK_IS_WIDGET(li->data))
+			continue;
+		name = gtk_buildable_get_name(GTK_BUILDABLE(li->data));
 		variables_refresh(name);
 	}
 
-	g_list_free(widget_list);
+	g_slist_free(object_list);
 }
 
-/* Thunor 2011-07-16: This seems so incredibly out-of-date -- it's only
- * got 20% of the widgets in there! It's returning the widget type to
- * glade_support.c and variable->Type is checked throughout the code so
- * it must be important.
- * 
+/*
+ * Map a GtkWidget pointer to the internal gtkdialog widget type.
+ *
  * These MUST be in an order that returns widgets lower down the
  * hierarchy before those higher up.
- * 
- * WIDGET_GVIM is a custom widget and isn't included.
  */
-
 gint widget_get_type_from_pointer(GtkWidget *widget)
 {
-	gint              retval = 0;
+	gint retval = 0;
 
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton--->GtkRadioButton */
+/* GtkRadioButton */
 	if (GTK_IS_RADIO_BUTTON(widget))
 		retval = WIDGET_RADIOBUTTON;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton--->GtkCheckButton */
+/* GtkCheckButton */
 	else if (GTK_IS_CHECK_BUTTON(widget))
 		retval = WIDGET_CHECKBOX;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkColorButton */
+/* GtkColorButton */
 	else if (GTK_IS_COLOR_BUTTON(widget))
 		retval = WIDGET_COLORBUTTON;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkToggleButton */
+/* GtkToggleButton */
 	else if (GTK_IS_TOGGLE_BUTTON(widget))
 		retval = WIDGET_TOGGLEBUTTON;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton--->GtkFontButton */
+/* GtkFontButton */
 	else if (GTK_IS_FONT_BUTTON(widget))
 		retval = WIDGET_FONTBUTTON;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkButton */
+/* GtkButton */
 	else if (GTK_IS_BUTTON(widget))
 		retval = WIDGET_BUTTON;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkComboBox--->GtkComboBoxEntry */
-	else if (GTK_IS_COMBO_BOX_ENTRY(widget))
+/* GtkComboBox with entry */
+	else if (GTK_IS_COMBO_BOX(widget) && gtk_combo_box_get_has_entry(GTK_COMBO_BOX(widget)))
 		retval = WIDGET_COMBOBOXENTRY;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkComboBox */
-/* NOTE: <comboboxtext> is actually a combobox and not a comboboxtext */
+/* GtkComboBox (also matches GtkComboBoxText) */
 	else if (GTK_IS_COMBO_BOX(widget))
 		retval = WIDGET_COMBOBOXTEXT;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkEventBox */
+/* GtkEventBox */
 	else if (GTK_IS_EVENT_BOX(widget))
 		retval = WIDGET_EVENTBOX;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkExpander */
+/* GtkExpander */
 	else if (GTK_IS_EXPANDER(widget))
 		retval = WIDGET_EXPANDER;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkFrame */
+/* GtkFrame */
 	else if (GTK_IS_FRAME(widget))
 		retval = WIDGET_FRAME;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem--->GtkSeparatorMenuItem */
+/* GtkSeparatorMenuItem */
 	else if (GTK_IS_SEPARATOR_MENU_ITEM(widget))
 		retval = WIDGET_MENUITEMSEPARATOR;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkItem--->GtkMenuItem */
+/* GtkMenuItem */
 	else if (GTK_IS_MENU_ITEM(widget))
 		retval = WIDGET_MENUITEM;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkScrolledWindow */
+/* GtkScrolledWindow */
 	else if (GTK_IS_SCROLLED_WINDOW(widget))
 		retval = WIDGET_SCROLLEDW;
-/* GtkWidget--->GtkContainer--->GtkBin--->GtkWindow */
+/* GtkWindow */
 	else if (GTK_IS_WINDOW(widget))
 		retval = WIDGET_WINDOW;
-/* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox--->GtkCombo */
-	else if (GTK_IS_COMBO(widget))
-		retval = WIDGET_COMBOBOX;
-/* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox--->GtkStatusbar */
+/* GtkStatusbar */
 	else if (GTK_IS_STATUSBAR(widget))
 		retval = WIDGET_STATUSBAR;
-/* GtkWidget--->GtkContainer--->GtkBox--->GtkHBox */
-	else if (GTK_IS_HBOX(widget))
-		retval = WIDGET_HBOX;
-/* GtkWidget--->GtkContainer--->GtkBox--->GtkVBox--->GtkFileChooserWidget */
-	else if (GTK_IS_FILE_CHOOSER_WIDGET(widget))
-		retval = WIDGET_CHOOSER;
-/* GtkWidget--->GtkContainer--->GtkBox--->GtkVBox */
-	else if (GTK_IS_VBOX(widget))
-		retval = WIDGET_VBOX;
-/* GtkWidget--->GtkContainer--->GtkCList */
-	else if (GTK_IS_CLIST(widget))
-		retval = WIDGET_TABLE;
-/* GtkWidget--->GtkContainer--->GtkList */
-	else if (GTK_IS_LIST(widget))
-		retval = WIDGET_LIST;
-/* GtkWidget--->GtkContainer--->GtkMenuShell--->GtkMenuBar */
+/* GtkBox: check orientation to distinguish hbox/vbox */
+	else if (GTK_IS_BOX(widget)) {
+		if (GTK_IS_FILE_CHOOSER_WIDGET(widget))
+			retval = WIDGET_CHOOSER;
+		else if (gtk_orientable_get_orientation(GTK_ORIENTABLE(widget)) == GTK_ORIENTATION_HORIZONTAL)
+			retval = WIDGET_HBOX;
+		else
+			retval = WIDGET_VBOX;
+	}
+/* GtkMenuBar */
 	else if (GTK_IS_MENU_BAR(widget))
 		retval = WIDGET_MENUBAR;
-/* GtkWidget--->GtkContainer--->GtkMenuShell--->GtkMenu */
+/* GtkMenu */
 	else if (GTK_IS_MENU(widget))
 		retval = WIDGET_MENU;
-/* GtkWidget--->GtkContainer--->GtkNotebook */
+/* GtkNotebook */
 	else if (GTK_IS_NOTEBOOK(widget))
 		retval = WIDGET_NOTEBOOK;
-/* GtkWidget--->GtkContainer--->GtkTextView */
+/* GtkTextView */
 	else if (GTK_IS_TEXT_VIEW(widget))
 		retval = WIDGET_EDIT;
-/* GtkWidget--->GtkContainer--->GtkTreeView */
+/* GtkTreeView */
 	else if (GTK_IS_TREE_VIEW(widget))
 		retval = WIDGET_TREE;
-/* GtkWidget--->GtkEntry-->GtkSpinButton */
+/* GtkSpinButton */
 	else if (GTK_IS_SPIN_BUTTON(widget))
 		retval = WIDGET_SPINBUTTON;
-/* GtkWidget--->GtkEntry */
+/* GtkEntry */
 	else if (GTK_IS_ENTRY(widget))
 		retval = WIDGET_ENTRY;
-/* GtkWidget--->GtkMisc--->GtkImage */
+/* GtkImage */
 	else if (GTK_IS_IMAGE(widget))
 		retval = WIDGET_PIXMAP;
-/* GtkWidget--->GtkMisc--->GtkLabel */
+/* GtkLabel */
 	else if (GTK_IS_LABEL(widget))
 		retval = WIDGET_TEXT;
-/* GtkWidget--->GtkProgress--->GtkProgressBar */
+/* GtkProgressBar */
 	else if (GTK_IS_PROGRESS_BAR(widget))
 		retval = WIDGET_PROGRESSBAR;
-/* GtkWidget--->GtkRange--->GtkScale--->GtkHScale */
-	else if (GTK_IS_HSCALE(widget))
-		retval = WIDGET_HSCALE;
-/* GtkWidget--->GtkRange--->GtkScale--->GtkVScale */
-	else if (GTK_IS_VSCALE(widget))
-		retval = WIDGET_VSCALE;
-/* GtkWidget--->GtkSeparator--->GtkHSeparator */
-	else if (GTK_IS_HSEPARATOR(widget))
-		retval = WIDGET_HSEPARATOR;
-/* GtkWidget--->GtkSeparator--->GtkVSeparator */
-	else if (GTK_IS_VSEPARATOR(widget))
-		retval = WIDGET_VSEPARATOR;
+/* GtkScale: check orientation to distinguish hscale/vscale */
+	else if (GTK_IS_SCALE(widget)) {
+		if (gtk_orientable_get_orientation(GTK_ORIENTABLE(widget)) == GTK_ORIENTATION_HORIZONTAL)
+			retval = WIDGET_HSCALE;
+		else
+			retval = WIDGET_VSCALE;
+	}
+/* GtkSeparator: check orientation */
+	else if (GTK_IS_SEPARATOR(widget)) {
+		if (gtk_orientable_get_orientation(GTK_ORIENTABLE(widget)) == GTK_ORIENTATION_HORIZONTAL)
+			retval = WIDGET_HSEPARATOR;
+		else
+			retval = WIDGET_VSEPARATOR;
+	}
 /* GtkWidget hasn't been accounted for */
 	else
 		retval = 0;
@@ -749,38 +649,43 @@ gint widget_get_type_from_pointer(GtkWidget *widget)
 void
 run_program_by_glade(
 		const gchar *filename,
-		const gchar *window_name) 
+		const gchar *window_name)
 {
-	GladeXML  *glade_xml;
-	GtkWidget *main_window;
+	GtkBuilder *builder;
+	GtkWidget  *main_window;
+	GError     *error = NULL;
 
-	glade_init();	
-	glade_xml = glade_xml_new(filename, NULL, PACKAGE);
+	builder = gtk_builder_new();
+	if (!gtk_builder_add_from_file(builder, filename, &error))
+		g_error("Failed to load UI file '%s': %s", filename,
+				error->message);
+
 	if (window_name != NULL)
-		main_window = glade_xml_get_widget(glade_xml, window_name);
+		main_window = GTK_WIDGET(gtk_builder_get_object(builder, window_name));
 	else
-		main_window = glade_xml_get_widget(glade_xml, "MAIN_WINDOW");
+		main_window = GTK_WIDGET(gtk_builder_get_object(builder, "MAIN_WINDOW"));
 
 	if (main_window == NULL)
-		g_error("Can not load '%s' from file '%s'", window_name,
+		g_error("Can not find widget '%s' in file '%s'",
+				window_name ? window_name : "MAIN_WINDOW",
 				filename);
 	/*
-	 *
+	 * Register all widgets from the UI file.
 	 */
-	register_widgets(glade_xml);
+	register_widgets(builder);
 	/*
 	 * Connecting the signals.
 	 */
-	glade_xml_signal_autoconnect_full(glade_xml,
-			(GladeXMLConnectFunc) signal_handler_connector,
+	gtk_builder_connect_signals_full(builder,
+			(GtkBuilderConnectFunc) signal_handler_connector,
 			NULL);
-	gtk_signal_connect(GTK_OBJECT(main_window), "delete-event",
-			   GTK_SIGNAL_FUNC(window_delete_event_handler), NULL);
-	
-	refresh_widgets(glade_xml);
-	
+	g_signal_connect(G_OBJECT(main_window), "delete-event",
+			G_CALLBACK(window_delete_event_handler), NULL);
+
+	refresh_widgets(builder);
+
 	gtk_widget_show(main_window);
 	gtk_main();
-}
 
-#endif	/* HAVE_GLADE_LIB */
+	g_object_unref(builder);
+}

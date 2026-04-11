@@ -36,15 +36,12 @@
 #include <getopt.h>
 #include <gtk/gtk.h>
 
-#if HAVE_GLADE_LIB
-# include <glade/glade.h>
-#endif
-
 #include "config.h"
 #include "gtkdialog.h"
 #include "variables.h"
 #include "automaton.h"
 #include "widgets.h"
+#include "glade_support.h"
 #include "gtkdialog_parser.h"
 
 #undef DEBUG
@@ -58,7 +55,6 @@ gboolean option_debug = FALSE;
 gchar *option_input_variable = NULL;
 gchar *option_input_file = NULL;
 gchar *option_glade_file = NULL;
-gchar *option_ignored = NULL;
 gchar *option_include_file = NULL;
 gchar *option_event_file = NULL;
 gchar *option_geometry = NULL;
@@ -165,19 +161,11 @@ gtkdialog_init(
 		0, G_OPTION_ARG_STRING, &option_input_variable, 
 		"Get the GUI description from the environment.", "variable"
 	},
-#if HAVE_GLADE_LIB
-	{ 
-		"glade-xml", 'g', 
-		0, G_OPTION_ARG_STRING, &option_glade_file, 
-		"Get the GUI description from this Glade file.", "filename"
+	{
+		"glade-xml", 'g',
+		0, G_OPTION_ARG_STRING, &option_glade_file,
+		"Get the GUI description from a GtkBuilder UI file.", "filename"
 	},
-#else
-	{ 
-		"glade-xml", 'g', 
-		0, G_OPTION_ARG_STRING, &option_ignored, 
-		"Ignored, since no Glade library found.", "filename"
-	},
-#endif
 	{ 
 		"file", 'f', 
 		0, G_OPTION_ARG_STRING, &option_input_file, 
@@ -405,9 +393,6 @@ print_version_exit(int exitcode)
 	printf("%s version %s %s (C) 2003-2007 Laszlo Pere, 2011-2012 Thunor\n", 
 		PACKAGE_NAME, PACKAGE_VERSION, BUILD_DETAILS);
 	printf("Built with additional support for: ");
-#if HAVE_GLADE_LIB
-	printf("Glade"); extralibs++;
-#endif
 #if HAVE_VTE
 	if (extralibs) printf(", ");
 	printf("VTE"); extralibs++;
@@ -615,22 +600,16 @@ main(int argc, char *argv[])
 		goto gtkdialog_initialized;
 	}
 	
-#if HAVE_GLADE_LIB
-	if (option_glade_file == NULL) 
+	if (option_glade_file == NULL)
 		get_program_from_variable("MAIN_DIALOG");
-#else
-		get_program_from_variable("MAIN_DIALOG");
-#endif
 
 gtkdialog_initialized:
 	gtk_init(&argc, &argv);
 	
-#if HAVE_GLADE_LIB
 	if (option_glade_file != NULL) {
 		run_program_by_glade(option_glade_file, option_input_variable);
 		exit(EXIT_SUCCESS);
 	}
-#endif
 	
 	gtkdialog_parse();
 	build_window(get_program_name());
