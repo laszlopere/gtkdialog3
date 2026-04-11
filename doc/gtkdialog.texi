@@ -1444,6 +1444,12 @@ Navigate to the given URL or local @code{file://} path.
 </button>
 @end example
 
+@float Figure,fig:webview
+@center @image{images/widget_webview,5in,,The webview widget example}
+@caption{The webview widget from @file{examples/standard/list}, showing
+a tree-driven widget reference with HTML detail pane.}
+@end float
+
 @c -----------------------------------------------------------------
 @node Containers
 @chapter Containers
