@@ -44,6 +44,34 @@ who needs to put a friendly face on a script.
 - **Well documented.** A complete widget reference plus a worked example for
   every widget.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center" valign="top">
+      <img src="doc/images/widget_webview.png" width="440" alt="tree and webview widgets"><br>
+      <sub><b>&lt;tree&gt; + &lt;webview&gt;</b> — a widget-reference browser: a
+      list on the left, WebKit-rendered HTML on the right.</sub>
+    </td>
+    <td align="center" valign="top">
+      <img src="doc/images/widget_sourceview.png" width="440" alt="sourceview widget"><br>
+      <sub><b>&lt;sourceview&gt;</b> — syntax-highlighted source with
+      language switching (GtkSourceView).</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <img src="doc/images/widget_terminal.png" width="440" alt="terminal widget"><br>
+      <sub><b>&lt;terminal&gt;</b> — an embedded shell with shortcut
+      buttons (VTE).</sub>
+    </td>
+    <td align="center" valign="top">
+      <img src="doc/images/widget_switch.png" width="440" alt="switch widget"><br>
+      <sub><b>&lt;switch&gt;</b> — sliding on/off toggles (core GTK 3).</sub>
+    </td>
+  </tr>
+</table>
+
 ## Installing
 
 ### Dependencies
