@@ -80,3 +80,6 @@ tmp/
 *~
 *.swp
 *.swo
+
+# Claude Code project guidance (kept local)
+CLAUDE.md
