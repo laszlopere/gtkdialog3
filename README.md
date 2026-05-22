@@ -132,6 +132,41 @@ These are not installed by default, so copy them somewhere if you want them
 around. Older Glade-generated interfaces are still loadable, but building new
 GtkDialog3 apps that way is not recommended.
 
+## Building dialogs with an AI assistant
+
+If you use an AI coding assistant — such as
+[Claude Code](https://claude.com/claude-code), Anthropic's command-line tool —
+this repository ships a ready-made knowledge pack in
+**[`for-claude/`](for-claude/)** that turns the assistant into a GtkDialog3
+expert. It can then write, fix, and explain dialogs for you, so you can describe
+what you want ("a form with a name field and OK/Cancel") instead of learning the
+markup yourself.
+
+The pack is distilled from this project's manual, the per-widget reference, the
+examples, and the source code — including the non-obvious quirks — and every
+example in it was run and verified.
+
+**How to use it:**
+
+- **The easy way (recommended):** copy the skill into your project so the
+  assistant picks it up automatically whenever you ask it to build a dialog:
+
+  ```sh
+  cp -r for-claude/skills/gtkdialog3 your-project/.claude/skills/
+  ```
+
+  Use `~/.claude/skills/` instead to make it available in every project. Then
+  just ask, e.g. *"build a GtkDialog3 password prompt and read the value back."*
+
+- **Without setup:** point your assistant at the files directly — open
+  [`for-claude/skills/gtkdialog3/SKILL.md`](for-claude/skills/gtkdialog3/SKILL.md)
+  and the `reference/` files beside it, or paste a section into the chat, and ask
+  your question.
+
+You don't need to be an AI expert: the files are also plain, readable Markdown,
+so they double as a quick-start cheat sheet even if you never use an assistant.
+See [`for-claude/README.md`](for-claude/README.md) for details.
+
 ## Platform notes
 
 **ARM** — a widget packing-order issue on ARM is worked around with an
