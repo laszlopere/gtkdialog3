@@ -2,7 +2,6 @@ SUBDIRS=src doc data
 
 EXTRA_DIST = \
 	README.md \
-	tests/screenshots/*.png \
 	autogen.sh \
 	install.iss pango.modules pango.aliases gdk-pixbuf.loaders \
 	doc/reference/* \
