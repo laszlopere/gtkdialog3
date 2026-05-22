@@ -50,7 +50,6 @@ gtkdialog.spec
 # TeX build artifacts
 doc/gtkdialog.aux
 doc/gtkdialog.log
-doc/gtkdialog.pdf
 doc/gtkdialog.toc
 doc/gtkdialog.t2p/
 

@@ -122,6 +122,8 @@ found, that widget is left out and the rest still builds.
 
 ## Documentation & examples
 
+- 📖 **[User Manual (PDF)](doc/gtkdialog.pdf)** — the full reference manual,
+  click to read it online.
 - **Widget reference:** `doc/reference/` (HTML).
 - **Examples:** `examples/` — one folder per widget, plus larger sample
   applications (`pfeme`, `pfontview`, `playmusic`).
