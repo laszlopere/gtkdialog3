@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# login_dialog --- a minimal GtkDialog3 login prompt.
+#
+# The kind of script a Claude Code agent produces from the gtkdialog3 skill in
+# response to: "build me a login dialog with username and password and run it."
+
+export MAIN_DIALOG='
+<window title="Login" icon-name="dialog-password" resizable="false" width-request="340">
+  <vbox spacing="10" border-width="12">
+    <hbox spacing="8">
+      <text width-request="80" xalign="0"><label>Username</label></text>
+      <entry space-expand="true" space-fill="true"><variable>USERNAME</variable></entry>
+    </hbox>
+    <hbox spacing="8">
+      <text width-request="80" xalign="0"><label>Password</label></text>
+      <entry space-expand="true" space-fill="true">
+        <sensitive>password</sensitive>
+        <variable>PASSWORD</variable>
+      </entry>
+    </hbox>
+    <buttonbox layout="end">
+      <button stock="cancel"></button>
+      <button stock="ok"></button>
+    </buttonbox>
+  </vbox>
+</window>'
+
+I=$IFS; IFS=""
+for STATEMENTS in $(gtkdialog3 --program=MAIN_DIALOG); do eval "$STATEMENTS"; done
+IFS=$I
+
+if [ "$EXIT" = "OK" ]; then
+  echo "Signed in as: $USERNAME"
+else
+  echo "Login cancelled."
+fi

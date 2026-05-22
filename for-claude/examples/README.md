@@ -7,7 +7,8 @@ which are smaller and focused on a single widget.
 
 | Example | What it demonstrates |
 |---|---|
+| [`login-dialog/`](login-dialog/) | The simplest case: one plain-language request → a runnable login dialog (username, masked password, OK/Cancel). Shown on the project's main README. |
 | [`system-dashboard/`](system-dashboard/) | Driving a Claude Code **agent** to design and build a non-trivial, multi-tab app (live process list with auto-refresh and "kill selected", disk usage, system info). See its [`PROMPT.md`](system-dashboard/PROMPT.md). |
 
-Each example folder contains a `PROMPT.md` (the prompt to give the assistant, plus
-how the agent workflow goes) and the finished, runnable program.
+The bigger examples include a `PROMPT.md` (the prompt to give the assistant, plus
+how the agent workflow goes) alongside the finished, runnable program.

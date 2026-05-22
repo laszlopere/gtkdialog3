@@ -146,6 +146,27 @@ The pack is distilled from this project's manual, the per-widget reference, the
 examples, and the source code — including the non-obvious quirks — and every
 example in it was run and verified.
 
+### Example: one line in, a dialog out
+
+With the skill installed, just describe what you want at the Claude Code prompt:
+
+```text
+> Using the gtkdialog3 skill, build a login dialog with a username field,
+  a password field, and OK/Cancel buttons, then run it.
+```
+
+The assistant reads the skill, writes a runnable shell script, and launches it —
+you don't touch the markup:
+
+<p align="center">
+  <img src="doc/images/ai_login_dialog.png" width="350" alt="A login dialog built by Claude Code from a one-line request">
+</p>
+
+The generated script is in
+[`for-claude/examples/login-dialog/`](for-claude/examples/login-dialog/). For a
+bigger, agent-driven build, see
+[`for-claude/examples/system-dashboard/`](for-claude/examples/system-dashboard/).
+
 **How to use it:**
 
 - **The easy way (recommended):** copy the skill into your project so the
@@ -165,10 +186,7 @@ example in it was run and verified.
 
 You don't need to be an AI expert: the files are also plain, readable Markdown,
 so they double as a quick-start cheat sheet even if you never use an assistant.
-See [`for-claude/README.md`](for-claude/README.md) for details, or jump to the
-worked example
-[`for-claude/examples/system-dashboard/`](for-claude/examples/system-dashboard/)
-— a real prompt that drives an agent to build a multi-tab system monitor.
+See [`for-claude/README.md`](for-claude/README.md) for the full details.
 
 ## Platform notes
 
