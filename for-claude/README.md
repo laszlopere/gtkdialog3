@@ -56,6 +56,17 @@ how to drive a Claude Code **agent** to design and build a non-trivial dashboard
 
 ## Use without installing
 
-The reference files are plain Markdown, so you can also `@`-mention them
-(`@for-claude/skills/gtkdialog3/SKILL.md`) or paste a section into context without
-installing the skill.
+If you'd rather leave this folder where it is (for example, while working inside
+the gtkdialog3 repository), you don't have to copy anything — just tell the
+assistant where to read. At the Claude Code prompt:
+
+```text
+> Read for-claude/skills/gtkdialog3/SKILL.md and the reference/ files next to it,
+  then build a <describe your dialog here> and run it.
+```
+
+The assistant opens `SKILL.md` and pulls in whichever `reference/` files it needs
+before writing the script — the same knowledge as the installed skill, just loaded
+on request instead of automatically. The files are plain Markdown, so you can also
+`@`-mention them (`@for-claude/skills/gtkdialog3/SKILL.md`), paste a section into
+the chat, or simply read them yourself as a cheat sheet.

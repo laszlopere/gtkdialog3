@@ -179,10 +179,19 @@ bigger, agent-driven build, see
   Use `~/.claude/skills/` instead to make it available in every project. Then
   just ask, e.g. *"build a GtkDialog3 password prompt and read the value back."*
 
-- **Without setup:** point your assistant at the files directly — open
+- **Without installing:** if the `for-claude/` folder is just sitting in your
+  project (for example, when you are working inside this repository), point the
+  assistant at it in your request. At the Claude Code prompt:
+
+  ```text
+  > Read for-claude/skills/gtkdialog3/SKILL.md and the reference/ files next to
+    it, then build a login dialog with a username field, a password field, and
+    OK/Cancel buttons, and run it.
+  ```
+
+  The assistant opens the files itself before building. You can also `@`-mention
   [`for-claude/skills/gtkdialog3/SKILL.md`](for-claude/skills/gtkdialog3/SKILL.md)
-  and the `reference/` files beside it, or paste a section into the chat, and ask
-  your question.
+  to pull it into the chat, or just paste a section in and ask your question.
 
 You don't need to be an AI expert: the files are also plain, readable Markdown,
 so they double as a quick-start cheat sheet even if you never use an assistant.
