@@ -1,4 +1,4 @@
-# Copyright (c) 2003 Pere Laszlo pipas@linux.pte.hu
+# Copyright (c) 2003 Pere Laszlo laszlopere@gmail.com
 # Forked as GtkDialog3 in 2026
 #
 %define name gtkdialog3
@@ -11,7 +11,7 @@ Version: %{version}
 Release: %{release}
 License: GPL GNU
 Group: Application/Misc
-Packager: Pere Laszlo pipas@linux.pte.hu
+Packager: Pere Laszlo laszlopere@gmail.com
 Source: %{name}-%{version}.tar.gz
 URL: ftp://linux.pte.hu/pub/gtkdialog/%{name}-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-%{version}

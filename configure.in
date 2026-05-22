@@ -1,5 +1,5 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT([gtkdialog3], [0.9.0], [pipas@linux.pte.hu], [gtkdialog3],
+AC_INIT([gtkdialog3], [0.9.0], [laszlopere@gmail.com], [gtkdialog3],
 	[])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS([config.h])

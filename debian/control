@@ -1,7 +1,7 @@
 Source: gtkdialog3
 Section: utils
 Priority: optional
-Maintainer: Laszlo Pere <pipas@linux.pte.hu>
+Maintainer: Laszlo Pere <laszlopere@gmail.com>
 Build-Depends: debhelper-compat (= 13),
                pkg-config,
                flex,
