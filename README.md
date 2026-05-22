@@ -8,52 +8,41 @@
 
 **GtkDialog3** builds GTK 3 graphical user interfaces *declaratively*. You
 describe the interface in a small XML-like markup language — embedded straight
-into a shell script or kept in a standalone file — and GtkDialog3 parses it and
-creates the live GTK widgets at runtime, exporting widget values back to your
-script as shell variables. It is ideal for giving quick, native dialogs and
-front-ends to bash scripts without writing any C.
+into a shell script or kept in a standalone file — and GtkDialog3 creates the
+live GTK widgets at runtime, exporting widget values back to your script as
+shell variables.
 
-This is a fork of the original **Gtkdialog** by Pere László (*pipas*), which was
-maintained by *Thunor* from 2011 to 2013. Development continues here under the
-name GtkDialog3, ported to GTK 3 with new widgets and fixes.
+## 💜 Sponsor this project
 
-## Screenshots
+GtkDialog3 is free and open source, developed and maintained in my spare time.
+If it is useful to you or your organisation, please consider
+**[sponsoring its development](https://github.com/sponsors/laszlopere)**. Your
+support directly funds new widgets, bug fixes, and documentation — and sponsor
+feature requests carry extra weight. Every contribution, large or small, is
+hugely appreciated. 🙏
 
-<table>
-  <tr>
-    <td align="center" valign="top">
-      <img src="tests/screenshots/ft_list_webview.png" width="440" alt="tree and webview widgets"><br>
-      <sub><b>&lt;tree&gt; + &lt;webview&gt;</b> — a widget-reference browser: a
-      list on the left, WebKit-rendered HTML on the right.</sub>
-    </td>
-    <td align="center" valign="top">
-      <img src="tests/screenshots/ft_sourceview.png" width="440" alt="sourceview widget"><br>
-      <sub><b>&lt;sourceview&gt;</b> — syntax-highlighted source with
-      language switching (GtkSourceView).</sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      <img src="tests/screenshots/ft_terminal.png" width="440" alt="terminal widget"><br>
-      <sub><b>&lt;terminal&gt;</b> — an embedded shell with shortcut
-      buttons (VTE).</sub>
-    </td>
-    <td align="center" valign="top">
-      <img src="tests/screenshots/ft_switch.png" width="440" alt="switch widget"><br>
-      <sub><b>&lt;switch&gt;</b> — sliding on/off toggles (core GTK 3).</sub>
-    </td>
-  </tr>
-</table>
+## Who is it for?
 
-## Features
+GtkDialog3 is for people who want a clean, native graphical interface but
+**don't want to become a GUI developer**. If you can write a shell script, you
+can build a real GTK application — no C, no event loops, no toolkit
+boilerplate. It is a great fit for sysadmins, packagers, hobbyists, and anyone
+who needs to put a friendly face on a script.
 
-- Declarative, XML-like markup — no C required.
-- 30+ widgets: windows, boxes, buttons, entries, lists, trees, notebooks,
-  menus, scales, and more.
-- Embed the markup directly in bash, or load it from a file.
-- Widget values are exported back to the calling script as shell variables.
-- Signal/action handlers run shell commands, refresh widgets, launch dialogs.
-- Optional rich widgets when their libraries are present (see below).
+## Why GtkDialog3?
+
+- **Flexible — build almost anything.** Compose 30+ widgets into windows of any
+  layout, from a one-line prompt to a full multi-pane application.
+- **Easy and quick.** Describe the UI in simple, readable markup; there is no UI
+  to compile and no callbacks to wire up by hand.
+- **Shell-script friendly.** Embed the markup right in bash. Widget values come
+  back to you as ordinary shell variables, and actions run shell commands.
+- **Simple.** A small, focused tool with a gentle learning curve.
+- **Lots of widgets and options.** Buttons, lists, trees, notebooks, menus,
+  scales, entries — plus optional terminals, source editors, and web views —
+  each with many attributes to tune.
+- **Well documented.** A complete widget reference plus a worked example for
+  every widget.
 
 ## Installing
 
@@ -128,9 +117,20 @@ Copyright (C) 2003-2026  László Pere   <laszlopere@gmail.com>
 Copyright (C) 2011-2012  Thunor        <thunorsif@hotmail.com>
 ```
 
+## Download the source
+
+The current, maintained source lives on GitHub:
+
+```sh
+git clone https://github.com/laszlopere/gtkdialog3.git
+```
+
+Release tarballs are on the
+[Releases](https://github.com/laszlopere/gtkdialog3/releases) page.
+
+The original (no longer maintained) project was hosted at
+<http://code.google.com/p/gtkdialog/>.
+
 ## Contact
 
 Maintainer: **László Pere** — <laszlopere@gmail.com>
-
-The original (no longer maintained) project lived at
-<http://code.google.com/p/gtkdialog/>.
