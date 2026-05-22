@@ -1,8 +1,9 @@
 /*
  * widget_spinbutton.h: 
  * Gtkdialog - A small utility for fast and easy GUI building.
- * Copyright (C) 2003-2007  L�szl� Pere <pipas@linux.pte.hu>
+ * Copyright (C) 2003-2007  László Pere <laszlopere@gmail.com>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
+ * Copyright (C) 2026       László Pere <laszlopere@gmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
