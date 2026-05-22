@@ -1,0 +1,44 @@
+title: "[Idea] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        💡 **Thanks for suggesting an idea for GtkDialog3!**
+
+        This is a **wishlist, not a roadmap** — I read everything (and sponsor
+        input carries extra weight), but nothing here is a promise or a
+        committed deliverable. Give a 👍 to ideas you'd like to see.
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What would you like GtkDialog3 to do?
+      placeholder: "e.g. A new <calendar> widget, or a 'wrap' attribute that works on <text>."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would it solve?
+      description: What are you trying to accomplish — the use case behind the idea?
+    validations:
+      required: false
+  - type: dropdown
+    id: usage
+    attributes:
+      label: Would you use this yourself?
+      options:
+        - Yes, regularly
+        - Yes, occasionally
+        - Just an idea I'd like to see
+    validations:
+      required: false
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: Before posting
+      options:
+        - label: I searched existing ideas and this isn't a duplicate.
+          required: false
+        - label: I understand this is a wishlist, not a guarantee it will be built.
+          required: true
