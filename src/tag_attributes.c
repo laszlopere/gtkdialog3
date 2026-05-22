@@ -4,6 +4,7 @@
  * Copyright (C) 2003-2007  László Pere <laszlopere@gmail.com>
  * Copyright (C) 2012       Thunor <thunorsif@hotmail.com>
  * Copyright (C) 2026       László Pere <laszlopere@gmail.com>
+ * SPDX-License-Identifier: GPL-2.0-or-later
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

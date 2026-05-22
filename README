@@ -1,5 +1,9 @@
 GtkDialog3 - A small utility for fast and easy GUI building
 
+Copyright (C) 2003-2026 László Pere <laszlopere@gmail.com>
+Copyright (C) 2011-2012 Thunor <thunorsif@hotmail.com>
+Released under the GNU General Public License v2.0 or later (see COPYING).
+
 This is a fork of the original Gtkdialog project, created by the
 original author Pere László (pipas). The original project was maintained
 by Thunor from 2011 to 2013. This fork continues development under the
