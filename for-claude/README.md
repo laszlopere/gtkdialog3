@@ -39,10 +39,20 @@ skills/gtkdialog3/
     actions-signals.md         # the 24 action functions, signals, conditions, $PTR_*/$KEY_*
     gotchas.md                 # non-obvious behaviour, each cited to file:line
     templates.md               # complete runnable starting points
+examples/                      # worked examples: a prompt + the verified app it builds
+  system-dashboard/            # driving an agent to build a non-trivial multi-tab app
 ```
 
 `SKILL.md` stays lean and always-loaded; the `reference/` files are pulled in only
 when needed.
+
+## Worked examples
+
+[`examples/`](examples/) pairs real prompts with the verified apps they produce.
+The headline one, [`examples/system-dashboard/`](examples/system-dashboard/), shows
+how to drive a Claude Code **agent** to design and build a non-trivial dashboard
+(live process list with auto-refresh and "kill selected", disk usage, system info)
+— see its [`PROMPT.md`](examples/system-dashboard/PROMPT.md).
 
 ## Use without installing
 

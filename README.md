@@ -165,7 +165,10 @@ example in it was run and verified.
 
 You don't need to be an AI expert: the files are also plain, readable Markdown,
 so they double as a quick-start cheat sheet even if you never use an assistant.
-See [`for-claude/README.md`](for-claude/README.md) for details.
+See [`for-claude/README.md`](for-claude/README.md) for details, or jump to the
+worked example
+[`for-claude/examples/system-dashboard/`](for-claude/examples/system-dashboard/)
+— a real prompt that drives an agent to build a multi-tab system monitor.
 
 ## Platform notes
 

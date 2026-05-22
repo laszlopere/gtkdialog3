@@ -1,0 +1,141 @@
+#!/bin/bash
+#
+# system_dashboard --- a GtkDialog3 system monitor.
+#
+# A tabbed window: a live process list (auto-refreshing, with "kill selected"),
+# disk usage, and a system-info pane, plus a statusbar.
+#
+# Built by a Claude Code agent from the gtkdialog3 skill (see PROMPT.md).
+# Run it:  ./system_dashboard      Parse-check it:  ./system_dashboard --check
+
+GTKDIALOG=gtkdialog3
+
+# --- Data sources -----------------------------------------------------------
+# These live in exported shell functions, not inline in the markup: the markup
+# is a single-quoted string and so cannot contain the single quotes that awk
+# needs. Functions are reached from <input> with `bash -c name` (see gotchas).
+
+proc_list() {
+	# PID | CPU% | MEM% | Command, busiest first. Columns are pipe-separated.
+	ps -eo pid,pcpu,pmem,comm --sort=-pcpu | tail -n +2 \
+		| awk '{ printf "%s|%s|%s|%s\n", $1, $2, $3, $4 }'
+}
+
+disk_list() {
+	# Filesystem | Size | Used | Avail | Use% | Mounted-on
+	df -hP | tail -n +2 \
+		| awk '{ print $1 "|" $2 "|" $3 "|" $4 "|" $5 "|" $6 }'
+}
+
+proc_count() { echo "$(ps -e --no-headers | wc -l) processes   ·   updated $(date '+%H:%M:%S')"; }
+mem_use()    { free -h | awk 'NR==2 { print $3 " / " $2 }'; }
+
+export -f proc_list disk_list proc_count mem_use
+
+# --- The dialog -------------------------------------------------------------
+
+export MAIN_DIALOG='
+<window title="System Dashboard" icon-name="utilities-system-monitor" width-request="560" height-request="420">
+  <vbox spacing="6" border-width="8">
+
+    <notebook labels="Processes|Disk|System" space-expand="true" space-fill="true">
+
+      <vbox spacing="6">
+        <tree exported-column="0" space-expand="true" space-fill="true">
+          <variable>PROCTREE</variable>
+          <label>PID|CPU%|MEM%|Command</label>
+          <height>300</height>
+          <input>bash -c proc_list</input>
+        </tree>
+        <hbox>
+          <checkbox>
+            <label>Auto-refresh (2s)</label>
+            <variable>AUTO</variable>
+            <default>true</default>
+            <action>if true enable:TMR</action>
+            <action>if false disable:TMR</action>
+          </checkbox>
+          <button>
+            <label>Refresh</label>
+            <action>refresh:PROCTREE</action>
+            <action>refresh:STATUS</action>
+          </button>
+          <button tooltip-text="Send SIGTERM to the selected process">
+            <label>Kill selected</label>
+            <action>[ -n "$PROCTREE" ] && kill "$PROCTREE"</action>
+            <action>refresh:PROCTREE</action>
+            <action>refresh:STATUS</action>
+          </button>
+        </hbox>
+        <timer interval="2" visible="false">
+          <variable>TMR</variable>
+          <action>refresh:PROCTREE</action>
+          <action>refresh:STATUS</action>
+        </timer>
+      </vbox>
+
+      <vbox spacing="6">
+        <tree exported-column="5" space-expand="true" space-fill="true">
+          <variable>DISKTREE</variable>
+          <label>Filesystem|Size|Used|Avail|Use%|Mounted on</label>
+          <height>300</height>
+          <input>bash -c disk_list</input>
+        </tree>
+        <hbox>
+          <button>
+            <label>Refresh</label>
+            <action>refresh:DISKTREE</action>
+          </button>
+        </hbox>
+      </vbox>
+
+      <vbox spacing="6">
+        <frame title="System">
+          <hbox><text width-request="90" xalign="0"><label>Host:</label></text>
+                <text xalign="0" space-expand="true" space-fill="true"><variable>SYS_HOST</variable><input>hostname</input></text></hbox>
+          <hbox><text width-request="90" xalign="0"><label>Kernel:</label></text>
+                <text xalign="0" space-expand="true" space-fill="true"><variable>SYS_KERN</variable><input>uname -sr</input></text></hbox>
+          <hbox><text width-request="90" xalign="0"><label>Uptime:</label></text>
+                <text xalign="0" space-expand="true" space-fill="true"><variable>SYS_UP</variable><input>uptime -p</input></text></hbox>
+          <hbox><text width-request="90" xalign="0"><label>Memory:</label></text>
+                <text xalign="0" space-expand="true" space-fill="true"><variable>SYS_MEM</variable><input>bash -c mem_use</input></text></hbox>
+        </frame>
+        <hbox>
+          <button>
+            <label>Refresh</label>
+            <action>refresh:SYS_HOST</action>
+            <action>refresh:SYS_KERN</action>
+            <action>refresh:SYS_UP</action>
+            <action>refresh:SYS_MEM</action>
+          </button>
+        </hbox>
+      </vbox>
+
+    </notebook>
+
+    <statusbar>
+      <variable>STATUS</variable>
+      <input>bash -c proc_count</input>
+    </statusbar>
+
+    <hbox>
+      <button>
+        <label>Refresh all</label>
+        <action>refresh:PROCTREE</action>
+        <action>refresh:DISKTREE</action>
+        <action>refresh:STATUS</action>
+      </button>
+      <button>
+        <label>Quit</label>
+        <action function="exit">Quit</action>
+      </button>
+    </hbox>
+
+  </vbox>
+</window>'
+
+case "$1" in
+	-c | --check) $GTKDIALOG --program=MAIN_DIALOG --print-ir ;;
+	-d | --dump)  echo "$MAIN_DIALOG" ;;
+	*)            $GTKDIALOG --program=MAIN_DIALOG ;;
+esac
