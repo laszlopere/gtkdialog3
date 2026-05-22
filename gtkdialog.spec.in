@@ -13,7 +13,7 @@ License: GPL GNU
 Group: Application/Misc
 Packager: Pere Laszlo laszlopere@gmail.com
 Source: %{name}-%{version}.tar.gz
-URL: ftp://linux.pte.hu/pub/gtkdialog/%{name}-%{version}.tar.gz
+URL: https://github.com/laszlopere/gtkdialog3
 BuildRoot: /var/tmp/%{name}-%{version}
 
 Summary: GtkDialog3 - GUI creation tool for shells and arbitrary interpreters.

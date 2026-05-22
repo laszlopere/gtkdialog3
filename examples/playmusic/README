@@ -39,7 +39,7 @@ for example:
 Requirements
 ============
 
-Gtkdialog >= 0.8.0 - http://code.google.com/p/gtkdialog/
+Gtkdialog >= 0.8.0 - https://github.com/laszlopere/gtkdialog3
 
 Configuration
 =============
@@ -101,6 +101,6 @@ Contacting Us
 
 Thunor <thunorsif@hotmail.com>
 
-http://code.google.com/p/gtkdialog/
+https://github.com/laszlopere/gtkdialog3
 
 2012-11-08

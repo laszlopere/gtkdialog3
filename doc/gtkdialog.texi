@@ -61,8 +61,8 @@ and with no Back-Cover Texts.
 @node Getting Gtkdialog
 @chapter Getting Gtkdialog
 @section Download 
-The source of Gtkdialog can be downloaded from Anonymous FTP at URL
-@uref{ftp://linux.pte.hu/pub/gtkdialog/}.
+The source of Gtkdialog can be downloaded from the following URL
+@uref{https://github.com/laszlopere/gtkdialog3}.
 
 @section How to Install the Program
 The program can be installed using the standard @command{./configure},

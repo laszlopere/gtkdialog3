@@ -33,7 +33,7 @@ fi
     echo 
     echo "**Error**: You must have \`intltool' installed."
     echo "You can get it from:"
-    echo "  ftp://ftp.gnome.org/pub/GNOME/"
+    echo "  https://download.gnome.org/"
     DIE=1
   }
 }
@@ -43,7 +43,7 @@ fi
     echo
     echo "**Error**: You must have \`xml-i18n-toolize' installed."
     echo "You can get it from:"
-    echo "  ftp://ftp.gnome.org/pub/GNOME/"
+    echo "  https://download.gnome.org/"
     DIE=1
   }
 }
