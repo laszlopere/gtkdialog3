@@ -69,6 +69,7 @@ gboolean option_centering = FALSE;
 gboolean option_debug_geometry = FALSE;
 gint option_output_format = OUTPUT_FORMAT_BASH;
 static gchar *option_output_format_str = NULL;
+gchar *option_dbus_name = NULL;
 
 static gint source = PRG_UNKNOWN;    // Where the program is coming from?
 gchar *program_src = NULL;           // The actual program source.
@@ -229,6 +230,13 @@ gtkdialog_init(
 		"Output format for variable export: bash, json, or xml.", "format"
 	},
 	{
+		"dbus-name", '\0',
+		0, G_OPTION_ARG_STRING, &option_dbus_name,
+		"Set the application/AT-SPI name and default window title "
+		"(useful for identifying a specific instance during testing).",
+		"name"
+	},
+	{
 		NULL
 	}
     };
@@ -305,6 +313,24 @@ gtkdialog_init(
 				error->message);
 
 	g_option_context_free(context);
+
+	/* The application name may also come from the environment, which is
+	 * handy when gtkdialog is launched via a wrapper script that does not
+	 * forward command line options (e.g. the example scripts). An explicit
+	 * --dbus-name takes precedence over GTKDIALOG_DBUS_NAME. */
+	if (option_dbus_name == NULL && g_getenv("GTKDIALOG_DBUS_NAME") != NULL)
+		option_dbus_name = g_strdup(g_getenv("GTKDIALOG_DBUS_NAME"));
+
+	/* If a D-Bus/application name was requested, apply it now (before
+	 * gtk_init() registers the ATK/AT-SPI bridge). This sets the name
+	 * that AT-SPI advertises for the application, letting test harnesses
+	 * pick out one specific gtkdialog instance instead of matching the
+	 * generic "gtkdialog3" shared by every instance. It is also used as
+	 * the default window title (see widget_window_create()). */
+	if (option_dbus_name != NULL) {
+		g_set_prgname(option_dbus_name);
+		g_set_application_name(option_dbus_name);
+	}
 
 	/* Also enable debug-geometry via environment variable */
 	if (!option_debug_geometry && g_getenv("GTKDIALOG_DEBUG_GEOMETRY") != NULL)
@@ -575,20 +601,25 @@ main(int argc, char *argv[])
 #endif
 	if (option_event_file != NULL) {
 		gchar *command;
+		gchar *dbus_name_opt = option_dbus_name
+				? g_strconcat("--dbus-name=", option_dbus_name, " ", NULL)
+				: g_strdup("");
 		command = g_strdup_printf(
 				/* Debian 01_bashism patch: use dot rather than source.
 				"source %s; " */
 				". %s; "
-				"%s %s%s%s%s%s%s -i %s",
+				"%s %s%s%s%s%s%s%s -i %s",
 				option_event_file,
 				argv[0],
 				option_debug ? "-d " : "",
 				option_no_warning ? "-w" : "",
 				option_centering ? "-c " : "",
 				option_print_ir ? "--print-ir " : "",
+				dbus_name_opt,
 				option_input_variable ? "--program=" : "",
 				option_input_variable ? option_input_variable : "",
 				option_event_file);
+		g_free(dbus_name_opt);
 		exit(system(command));
 	}
 	

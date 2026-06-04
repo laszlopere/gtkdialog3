@@ -35,6 +35,7 @@
 
 #include "gdg_debug.h"
 extern gboolean option_centering;
+extern gchar *option_dbus_name;
 extern gboolean have_geometry_xy;
 extern gboolean have_geometry_dxdy;
 extern gint geometry_dx;
@@ -84,8 +85,11 @@ GtkWidget *widget_window_create(
 	/* Create the window widget */
 	widget = gtk_window_new(GTK_WINDOW_TOPLEVEL);  
 
-	/* Set a default window title */
-	attributeset_set_if_unset(Attr, ATTR_LABEL, PACKAGE);
+	/* Set a default window title. When --dbus-name was given, prefer it
+	 * over PACKAGE so the window is identifiable per-instance (e.g. for
+	 * AT-SPI driven tests); an explicit <window> title still wins. */
+	attributeset_set_if_unset(Attr, ATTR_LABEL,
+		option_dbus_name != NULL ? option_dbus_name : PACKAGE);
 	gtk_window_set_title(GTK_WINDOW(widget), 
 		attributeset_get_first(&element, Attr, ATTR_LABEL));
 
