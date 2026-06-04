@@ -394,7 +394,7 @@ char *find_pixmap(char *filename)
 
 	if (access(filename, R_OK) == 0) {
 
-		strcpy(retval, filename);
+		g_strlcpy(retval, filename, sizeof(retval));
 
 	} else {
 
@@ -417,10 +417,10 @@ char *find_pixmap(char *filename)
 
 			count = 0;
 			while (folders[count]) {
-				strcpy(fullpath, folders[count]);
-				if (fullpath[strlen(fullpath) - 1] != '/')
-					strcat(fullpath, "/");
-				strcat(fullpath, filename);
+				g_strlcpy(fullpath, folders[count], sizeof(fullpath));
+				if (strlen(fullpath) && fullpath[strlen(fullpath) - 1] != '/')
+					g_strlcat(fullpath, "/", sizeof(fullpath));
+				g_strlcat(fullpath, filename, sizeof(fullpath));
 
 #ifdef DEBUG
 				fprintf(stderr, "%s(): Finding \"%s\"\n", __func__,
@@ -428,7 +428,7 @@ char *find_pixmap(char *filename)
 #endif
 
 				if (access(fullpath, R_OK) == 0) {
-					strcpy(retval, fullpath);
+					g_strlcpy(retval, fullpath, sizeof(retval));
 					break;
 				}
 
@@ -459,7 +459,8 @@ list_t *linecutter(char *str, int fs)
 {
 	list_t *parts;
 	int n, q;
-	
+	size_t len;
+
 	g_assert(str != NULL);
 #ifdef DEBUG
 	g_message("%s(%s, %c)", __func__, str, fs);
@@ -468,21 +469,33 @@ list_t *linecutter(char *str, int fs)
 	parts = g_malloc(sizeof(list_t));
 	parts->n_lines = 1;
 	parts->maxlines = 128;
-	parts->line = g_malloc(sizeof(char *) * 128);
+	parts->line = g_malloc(sizeof(char *) * parts->maxlines);
 
 	/* Thunor: These need to be nullified because some functions may
 	 * require more parts than were found and they will expect NULL */
-	for (n = 0; n < 128; n++) parts->line[n] = NULL;
+	for (n = 0; n < parts->maxlines; n++) parts->line[n] = NULL;
 
 	parts->line[0] = str;
-	
-	for(n = 0; n <= strlen(str); ++n){
+
+	len = strlen(str);
+	for(n = 0; n <= len; ++n){
 		if (str[n] == fs){
+			/* Grow the array so that n_lines and the trailing NULL
+			 * terminator always fit, avoiding a buffer overflow when
+			 * the input contains more separators than the initial size */
+			if (parts->n_lines + 1 >= parts->maxlines) {
+				int oldmax = parts->maxlines;
+				parts->maxlines *= 2;
+				parts->line = g_realloc(parts->line,
+					sizeof(char *) * parts->maxlines);
+				for (q = oldmax; q < parts->maxlines; q++)
+					parts->line[q] = NULL;
+			}
 			parts->line[parts->n_lines] = strdup(str + n + 1);
 			++parts->n_lines;
 		}
 	}
-	
+
 	parts->line[parts->n_lines] = NULL;
 
 	for (n = 0; n < parts->n_lines - 1; ++n){

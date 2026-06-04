@@ -108,7 +108,7 @@ gchar *widget_spinbutton_envvar_all_construct(variable *var)
 
 gchar *widget_spinbutton_envvar_construct(GtkWidget *widget)
 {
-	gchar             envvar[32];
+	gchar             envvar[512];
 	gchar            *string;
 	gdouble           value;
 	guint             digits;
@@ -118,59 +118,59 @@ gchar *widget_spinbutton_envvar_construct(GtkWidget *widget)
 	value = gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget));
 	switch (digits) {
 		case 0:
-			sprintf(envvar, "%.0f", value);
+			snprintf(envvar, sizeof(envvar),"%.0f", value);
 			break;
 		case 1:
-			sprintf(envvar, "%.1f", value);
+			snprintf(envvar, sizeof(envvar),"%.1f", value);
 			break;
 		case 2:
-			sprintf(envvar, "%.2f", value);
+			snprintf(envvar, sizeof(envvar),"%.2f", value);
 			break;
 		case 3:
-			sprintf(envvar, "%.3f", value);
+			snprintf(envvar, sizeof(envvar),"%.3f", value);
 			break;
 		case 4:
-			sprintf(envvar, "%.4f", value);
+			snprintf(envvar, sizeof(envvar),"%.4f", value);
 			break;
 		case 5:
-			sprintf(envvar, "%.5f", value);
+			snprintf(envvar, sizeof(envvar),"%.5f", value);
 			break;
 		case 6:
-			sprintf(envvar, "%.6f", value);
+			snprintf(envvar, sizeof(envvar),"%.6f", value);
 			break;
 		case 7:
-			sprintf(envvar, "%.7f", value);
+			snprintf(envvar, sizeof(envvar),"%.7f", value);
 			break;
 		case 8:
-			sprintf(envvar, "%.8f", value);
+			snprintf(envvar, sizeof(envvar),"%.8f", value);
 			break;
 		case 9:
-			sprintf(envvar, "%.9f", value);
+			snprintf(envvar, sizeof(envvar),"%.9f", value);
 			break;
 		case 10:
-			sprintf(envvar, "%.10f", value);
+			snprintf(envvar, sizeof(envvar),"%.10f", value);
 			break;
 		case 11:
-			sprintf(envvar, "%.11f", value);
+			snprintf(envvar, sizeof(envvar),"%.11f", value);
 			break;
 		case 12:
-			sprintf(envvar, "%.12f", value);
+			snprintf(envvar, sizeof(envvar),"%.12f", value);
 			break;
 		case 13:
-			sprintf(envvar, "%.13f", value);
+			snprintf(envvar, sizeof(envvar),"%.13f", value);
 			break;
 		case 14:
-			sprintf(envvar, "%.14f", value);
+			snprintf(envvar, sizeof(envvar),"%.14f", value);
 			break;
 		case 15:
-			sprintf(envvar, "%.15f", value);
+			snprintf(envvar, sizeof(envvar),"%.15f", value);
 			break;
 		case 16:
-			sprintf(envvar, "%.16f", value);
+			snprintf(envvar, sizeof(envvar),"%.16f", value);
 			break;
 		/* Is there much point going beyond 16? */
 		default:
-			sprintf(envvar, "%f", value);
+			snprintf(envvar, sizeof(envvar),"%f", value);
 			break;
 	}
 

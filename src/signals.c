@@ -1270,7 +1270,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			condition = strchr(condition, '(') + 1;
 
 			/* Get argument and locate end */
-			strcpy(argument, condition);
+			g_strlcpy(argument, condition, sizeof(argument));
 			for (index = strlen(argument) - 1; index >= 0; index--) {
 				if (argument[index] == ')') {
 					argument[index] = 0;

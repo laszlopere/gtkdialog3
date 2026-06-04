@@ -122,7 +122,7 @@ gchar *widget_hscale_envvar_all_construct(variable *var)
 gchar *widget_hscale_envvar_construct(GtkWidget *widget)
 {
 	gchar            *string;
-	gchar             value[32];
+	gchar             value[512];
 	gdouble           val;
 	gint              digits;
 
@@ -131,59 +131,59 @@ gchar *widget_hscale_envvar_construct(GtkWidget *widget)
 	val = gtk_range_get_value(GTK_RANGE(widget));
 	switch (digits) {
 		case 0:
-			sprintf(value, "%.0f", val);
+			snprintf(value, sizeof(value),"%.0f", val);
 			break;
 		case 1:
-			sprintf(value, "%.1f", val);
+			snprintf(value, sizeof(value),"%.1f", val);
 			break;
 		case 2:
-			sprintf(value, "%.2f", val);
+			snprintf(value, sizeof(value),"%.2f", val);
 			break;
 		case 3:
-			sprintf(value, "%.3f", val);
+			snprintf(value, sizeof(value),"%.3f", val);
 			break;
 		case 4:
-			sprintf(value, "%.4f", val);
+			snprintf(value, sizeof(value),"%.4f", val);
 			break;
 		case 5:
-			sprintf(value, "%.5f", val);
+			snprintf(value, sizeof(value),"%.5f", val);
 			break;
 		case 6:
-			sprintf(value, "%.6f", val);
+			snprintf(value, sizeof(value),"%.6f", val);
 			break;
 		case 7:
-			sprintf(value, "%.7f", val);
+			snprintf(value, sizeof(value),"%.7f", val);
 			break;
 		case 8:
-			sprintf(value, "%.8f", val);
+			snprintf(value, sizeof(value),"%.8f", val);
 			break;
 		case 9:
-			sprintf(value, "%.9f", val);
+			snprintf(value, sizeof(value),"%.9f", val);
 			break;
 		case 10:
-			sprintf(value, "%.10f", val);
+			snprintf(value, sizeof(value),"%.10f", val);
 			break;
 		case 11:
-			sprintf(value, "%.11f", val);
+			snprintf(value, sizeof(value),"%.11f", val);
 			break;
 		case 12:
-			sprintf(value, "%.12f", val);
+			snprintf(value, sizeof(value),"%.12f", val);
 			break;
 		case 13:
-			sprintf(value, "%.13f", val);
+			snprintf(value, sizeof(value),"%.13f", val);
 			break;
 		case 14:
-			sprintf(value, "%.14f", val);
+			snprintf(value, sizeof(value),"%.14f", val);
 			break;
 		case 15:
-			sprintf(value, "%.15f", val);
+			snprintf(value, sizeof(value),"%.15f", val);
 			break;
 		case 16:
-			sprintf(value, "%.16f", val);
+			snprintf(value, sizeof(value),"%.16f", val);
 			break;
 		/* Is there much point going beyond 16? */
 		default:
-			sprintf(value, "%f", val);
+			snprintf(value, sizeof(value),"%f", val);
 			break;
 	}
 	string = g_strdup(value);

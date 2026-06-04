@@ -60,9 +60,10 @@ void widget_comboboxtext_clear(variable *var)
 
 	/* Record the currently selected text if any */
 	if ((string = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(var->Widget)))) {
-		strcpy(oldselected, string);
+		g_strlcpy(oldselected, string, sizeof(oldselected));
+		g_free(string);
 	} else {
-		strcpy(oldselected, "");
+		oldselected[0] = '\0';
 	}
 	GDG_DEBUG("oldselected='%s'", oldselected);
 
@@ -239,9 +240,10 @@ void widget_comboboxtext_refresh(variable *var)
 	/* Record the currently selected text if any */
 	if ((string = gtk_combo_box_text_get_active_text(
 		GTK_COMBO_BOX_TEXT(var->Widget)))) {
-		strcpy(oldselected, string);
+		g_strlcpy(oldselected, string, sizeof(oldselected));
+		g_free(string);
 	} else {
-		strcpy(oldselected, "");
+		oldselected[0] = '\0';
 	}
 	GDG_DEBUG("oldselected='%s'", oldselected);
 
@@ -301,9 +303,10 @@ void widget_comboboxtext_refresh(variable *var)
 	/* Record the currently selected text if any */
 	if ((string = gtk_combo_box_text_get_active_text(
 		GTK_COMBO_BOX_TEXT(var->Widget)))) {
-		strcpy(newselected, string);
+		g_strlcpy(newselected, string, sizeof(newselected));
+		g_free(string);
 	} else {
-		strcpy(newselected, "");
+		newselected[0] = '\0';
 	}
 	GDG_DEBUG("newselected='%s'", newselected);
 	/* If the before and after selected items are different then
@@ -403,9 +406,10 @@ void widget_comboboxtext_removeselected(variable *var)
 
 	/* Record the currently selected text if any */
 	if ((string = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(var->Widget)))) {
-		strcpy(oldselected, string);
+		g_strlcpy(oldselected, string, sizeof(oldselected));
+		g_free(string);
 	} else {
-		strcpy(oldselected, "");
+		oldselected[0] = '\0';
 	}
 	GDG_DEBUG("oldselected='%s'", oldselected);
 	/* Delete the selected item */
@@ -428,9 +432,10 @@ void widget_comboboxtext_removeselected(variable *var)
 
 	/* Record the currently selected text if any */
 	if ((string = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(var->Widget)))) {
-		strcpy(newselected, string);
+		g_strlcpy(newselected, string, sizeof(newselected));
+		g_free(string);
 	} else {
-		strcpy(newselected, "");
+		newselected[0] = '\0';
 	}
 	GDG_DEBUG("newselected='%s'", newselected);
 	/* If the before and after selected items are different then
