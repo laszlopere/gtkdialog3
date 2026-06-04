@@ -54,8 +54,8 @@ File: gtkdialog.info,  Node: Getting Gtkdialog,  Next: Introduction,  Prev: Top,
 1.1 Download
 ============
 
-The source of Gtkdialog can be downloaded from Anonymous FTP at URL
-<ftp://linux.pte.hu/pub/gtkdialog/>.
+The source of Gtkdialog can be downloaded from the following URL
+<https://github.com/laszlopere/gtkdialog3>.
 
 1.2 How to Install the Program
 ==============================
@@ -342,6 +342,20 @@ File: gtkdialog.info,  Node: Command-line options,  Next: Environment variable, 
      Print widget geometry negotiations to stderr, showing preferred and
      allocated sizes for each widget.  Can also be enabled by setting
      the environment variable ‘GTKDIALOG_DEBUG_GEOMETRY’.
+
+‘--dbus-name=NAME’
+     Set the application name reported to the accessibility (AT-SPI) and
+     GTK toolkit layer, and use it as the default window title for any
+     window that has no title of its own.  By default every instance is
+     named ‘gtkdialog3’, so concurrent or leftover instances look
+     identical to tools that find a window by name.  Giving each
+     instance a unique NAME lets a test harness or script address one
+     specific dialog reliably.  Can also be set with the environment
+     variable ‘GTKDIALOG_DBUS_NAME’, which is convenient when gtkdialog3
+     is started by a wrapper script that does not forward command-line
+     options; an explicit ‘--dbus-name’ takes precedence.  The
+     functional test suite under ‘tests/’ uses this to isolate each
+     test's window.
 
 
 File: gtkdialog.info,  Node: Environment variable,  Next: Capturing output,  Prev: Command-line options,  Up: Invoking the Program
@@ -2556,96 +2570,96 @@ webview:
 Tag Table:
 Node: Top638
 Node: Getting Gtkdialog1788
-Node: Introduction3054
-Node: The Description Language3567
-Node: Backslash escaping4650
-Node: Space in tag names5422
-Node: Imperative constructs6466
-Node: Implicit window element7669
-Node: Unsupported XML features8467
-Node: Invoking the Program9158
-Node: Command-line options10202
-Node: Environment variable12198
-Node: Capturing output13190
-Node: Output formats13990
-Node: Reading from a file15219
-Node: Standard input16141
-Node: Including function libraries16585
-Node: GtkBuilder UI files17274
-Node: Multiple windows25863
-Node: Layout options27185
-Node: Window placement27951
-Node: Widgets28451
-Node: text32368
-Node: button32913
-Node: entry34440
-Node: checkbox35109
-Node: radiobutton35943
-Node: togglebutton36919
-Node: switch37715
-Ref: fig:switch38153
-Node: combobox38618
-Node: comboboxtext39283
-Node: comboboxentry40130
-Node: list41092
-Node: table41840
-Node: tree43347
-Node: edit44146
-Node: pixmap44971
-Node: hscale and vscale45582
-Node: spinbutton46460
-Node: colorbutton47179
-Node: fontbutton47994
-Node: progressbar48698
-Node: statusbar49452
-Node: timer50168
-Node: hseparator and vseparator51157
-Node: menubar51605
-Node: terminal52630
-Ref: fig:terminal53930
-Node: sourceview54082
-Ref: fig:sourceview55741
-Node: webview55901
-Ref: fig:webview56915
-Node: Containers57122
-Node: vbox and hbox57718
-Node: frame58682
-Node: notebook59196
-Node: eventbox60067
-Node: expander60779
-Node: buttonbox61560
-Node: window62246
-Node: Widget Sub-elements63001
-Node: variable63952
-Node: label64745
-Node: default65547
-Node: input66515
-Node: output68092
-Node: item68709
-Node: sensitive69652
-Node: width and height70577
-Node: action71272
-Node: Shell commands73084
-Node: exit74059
-Node: launch74643
-Node: closewindow75260
-Node: presentwindow75839
-Node: enable76443
-Node: disable76943
-Node: show77440
-Node: hide78051
-Node: activate78585
-Node: grabfocus79291
-Node: refresh79775
-Node: save80518
-Node: fileselect81016
-Node: clear82080
-Node: removeselected82554
-Node: break83088
-Node: insert83760
-Node: append84365
-Node: Clipboard actions84730
-Node: set85918
+Node: Introduction3058
+Node: The Description Language3571
+Node: Backslash escaping4654
+Node: Space in tag names5426
+Node: Imperative constructs6470
+Node: Implicit window element7673
+Node: Unsupported XML features8471
+Node: Invoking the Program9162
+Node: Command-line options10206
+Node: Environment variable13023
+Node: Capturing output14015
+Node: Output formats14815
+Node: Reading from a file16044
+Node: Standard input16966
+Node: Including function libraries17410
+Node: GtkBuilder UI files18099
+Node: Multiple windows26688
+Node: Layout options28010
+Node: Window placement28776
+Node: Widgets29276
+Node: text33193
+Node: button33738
+Node: entry35265
+Node: checkbox35934
+Node: radiobutton36768
+Node: togglebutton37744
+Node: switch38540
+Ref: fig:switch38978
+Node: combobox39443
+Node: comboboxtext40108
+Node: comboboxentry40955
+Node: list41917
+Node: table42665
+Node: tree44172
+Node: edit44971
+Node: pixmap45796
+Node: hscale and vscale46407
+Node: spinbutton47285
+Node: colorbutton48004
+Node: fontbutton48819
+Node: progressbar49523
+Node: statusbar50277
+Node: timer50993
+Node: hseparator and vseparator51982
+Node: menubar52430
+Node: terminal53455
+Ref: fig:terminal54755
+Node: sourceview54907
+Ref: fig:sourceview56566
+Node: webview56726
+Ref: fig:webview57740
+Node: Containers57947
+Node: vbox and hbox58543
+Node: frame59507
+Node: notebook60021
+Node: eventbox60892
+Node: expander61604
+Node: buttonbox62385
+Node: window63071
+Node: Widget Sub-elements63826
+Node: variable64777
+Node: label65570
+Node: default66372
+Node: input67340
+Node: output68917
+Node: item69534
+Node: sensitive70477
+Node: width and height71402
+Node: action72097
+Node: Shell commands73909
+Node: exit74884
+Node: launch75468
+Node: closewindow76085
+Node: presentwindow76664
+Node: enable77268
+Node: disable77768
+Node: show78265
+Node: hide78876
+Node: activate79410
+Node: grabfocus80116
+Node: refresh80600
+Node: save81343
+Node: fileselect81841
+Node: clear82905
+Node: removeselected83379
+Node: break83913
+Node: insert84585
+Node: append85190
+Node: Clipboard actions85555
+Node: set86743
 
 End Tag Table
 

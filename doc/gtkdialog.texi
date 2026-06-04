@@ -352,6 +352,19 @@ description.
 Print widget geometry negotiations to stderr, showing preferred and
 allocated sizes for each widget.  Can also be enabled by setting the
 environment variable @env{GTKDIALOG_DEBUG_GEOMETRY}.
+
+@item --dbus-name=@var{NAME}
+Set the application name reported to the accessibility (AT-SPI) and GTK
+toolkit layer, and use it as the default window title for any window
+that has no title of its own.  By default every instance is named
+@code{gtkdialog3}, so concurrent or leftover instances look identical to
+tools that find a window by name.  Giving each instance a unique
+@var{NAME} lets a test harness or script address one specific dialog
+reliably.  Can also be set with the environment variable
+@env{GTKDIALOG_DBUS_NAME}, which is convenient when gtkdialog3 is started
+by a wrapper script that does not forward command-line options; an
+explicit @option{--dbus-name} takes precedence.  The functional test
+suite under @file{tests/} uses this to isolate each test's window.
 @end table
 
 @c -----------------------------------------------------------------

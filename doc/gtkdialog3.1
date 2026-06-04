@@ -82,6 +82,24 @@ output is a single JSON object.
 With
 .BR xml ,
 output is an XML document.
+.TP
+.BR \-\-dbus\-name =\fINAME\fR
+Set the application name advertised to the accessibility (AT\-SPI) and
+GTK toolkit layer, and use it as the default window title when a window
+has no title of its own.
+By default every instance is named
+.BR gtkdialog3 ,
+which makes concurrent or leftover instances indistinguishable to tools
+that locate a window by name.
+Giving each instance a unique
+.I NAME
+lets a test harness or script address one specific dialog reliably.
+Can also be set with the environment variable
+.B GTKDIALOG_DBUS_NAME
+(useful when gtkdialog3 is started by a wrapper script that does not
+forward command line options); an explicit
+.B \-\-dbus\-name
+takes precedence.
 .SH USAGE
 .SS Environment variable (most common)
 Store the dialog description in an exported environment variable and pass
