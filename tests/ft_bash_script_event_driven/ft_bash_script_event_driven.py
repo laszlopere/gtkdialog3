@@ -17,26 +17,9 @@ gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
 
 sys.path.insert(0, sys.path[0] + '/..')
-from testlib import TestRunner
+from testlib import TestRunner, launch, wait_for_window, unique_app_name
 
 TIMEOUT = 10
-
-
-def wait_for_window(name, timeout=TIMEOUT):
-    """Wait for a window matching the name to appear in AT-SPI tree."""
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        desktop = Atspi.get_desktop(0)
-        for i in range(desktop.get_child_count()):
-            app = desktop.get_child_at_index(i)
-            if app is None:
-                continue
-            for j in range(app.get_child_count()):
-                win = app.get_child_at_index(j)
-                if win and (win.get_name() or '') == name:
-                    return app, win
-        time.sleep(0.3)
-    return None, None
 
 
 def find_widgets(node, role=None):
@@ -71,17 +54,13 @@ t = TestRunner()
 
 # Launch the example
 t.log("Launching bash_script_event_driven example...")
-proc = subprocess.Popen(
-    ['./examples/languages/bash_script_event_driven'],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    cwd='/home/pipas/gtkdialog/gtkdialog-0.8.3'
-)
+APP_NAME = unique_app_name()
+proc = launch(['./examples/languages/bash_script_event_driven'], APP_NAME)
 
 time.sleep(1)
 
 t.log("Looking for window via AT-SPI...")
-app, window = wait_for_window('Bash Event Driven')
+app, window = wait_for_window(APP_NAME, 'Bash Event Driven')
 t.screenshot('Bash Event Driven')
 
 if window is None:

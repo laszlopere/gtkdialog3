@@ -23,7 +23,7 @@ gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
 
 sys.path.insert(0, sys.path[0] + '/..')
-from testlib import TestRunner
+from testlib import TestRunner, launch, unique_app_name
 
 TIMEOUT = 10  # seconds
 
@@ -192,12 +192,8 @@ time.sleep(0.5)
 
 # Launch the example
 t.log("Launching bash_script_multi_window example...")
-proc = subprocess.Popen(
-    ['./examples/languages/bash_script_multi_window'],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    cwd='/home/pipas/gtkdialog/gtkdialog-0.8.3'
-)
+APP_NAME = unique_app_name()
+proc = launch(['./examples/languages/bash_script_multi_window'], APP_NAME)
 
 time.sleep(1)
 

@@ -22,30 +22,11 @@ gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
 
 sys.path.insert(0, sys.path[0] + '/..')
-from testlib import TestRunner
+from testlib import TestRunner, launch, wait_for_window, unique_app_name
 
 TIMEOUT = 10
 PROJECT_ROOT = os.path.normpath(
     os.path.join(os.path.dirname(__file__), '..', '..'))
-
-
-def wait_for_window(title_substring, timeout=TIMEOUT):
-    """Wait for a gtkdialog3 window with matching title."""
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        desktop = Atspi.get_desktop(0)
-        for i in range(desktop.get_child_count()):
-            app = desktop.get_child_at_index(i)
-            if app is None:
-                continue
-            if 'gtkdialog' not in (app.get_name() or '').lower():
-                continue
-            for j in range(app.get_child_count()):
-                win = app.get_child_at_index(j)
-                if win and title_substring.lower() in (win.get_name() or '').lower():
-                    return app, win
-        time.sleep(0.3)
-    return None, None
 
 
 def find_widgets(node, role=None):
@@ -85,17 +66,13 @@ t = TestRunner()
 
 # Launch the builder entries example
 t.log("Launching builder-entries_functions example...")
-proc = subprocess.Popen(
-    ['./examples/builder/builder-entries_functions.sh'],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    cwd=PROJECT_ROOT
-)
+APP_NAME = unique_app_name()
+proc = launch(['./examples/builder/builder-entries_functions.sh'], APP_NAME)
 
 time.sleep(1)
 
 t.log("Looking for window via AT-SPI...")
-app, window = wait_for_window('GtkDialog Example')
+app, window = wait_for_window(APP_NAME, 'GtkDialog Example')
 t.screenshot('GtkDialog Example')
 
 if window is None:

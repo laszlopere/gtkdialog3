@@ -23,6 +23,80 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 STEP_NAME_WIDTH = 24
 
+# Project root (one level above the tests/ directory holding this file).
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def unique_app_name(suffix=''):
+    """A per-test, per-process AT-SPI application name.
+
+    gtkdialog instances all share the application name "gtkdialog3", so a
+    test that locates its window by scanning the AT-SPI tree can latch onto
+    a stale or concurrently-running instance -- the main source of flaky
+    failures.  Launching gtkdialog with this unique name (see launch())
+    makes every instance individually addressable.
+
+    The name combines the test script's basename with the test process PID,
+    so it is stable within a run yet unique across runs and across parallel
+    tests.
+    """
+    base = os.path.basename(sys.argv[0])
+    if base.endswith('.py'):
+        base = base[:-3]
+    name = "%s_%d" % (base, os.getpid())
+    return name + suffix if suffix else name
+
+
+def launch(argv, app_name, cwd=PROJECT_ROOT, **kwargs):
+    """Launch a gtkdialog example/binary tagged with a unique app_name.
+
+    The name is passed via the GTKDIALOG_DBUS_NAME environment variable,
+    which gtkdialog applies as its AT-SPI application name and default
+    window title.  Using the environment (rather than a command line flag)
+    means it works even when argv points at a wrapper shell script that
+    invokes gtkdialog internally without forwarding its options.
+
+    Returns the subprocess.Popen object.
+    """
+    env = dict(os.environ)
+    env['GTKDIALOG_DBUS_NAME'] = app_name
+    kwargs.setdefault('stdout', subprocess.PIPE)
+    kwargs.setdefault('stderr', subprocess.PIPE)
+    return subprocess.Popen(argv, cwd=cwd, env=env, **kwargs)
+
+
+def wait_for_window(app_name, title_substring=None, timeout=10):
+    """Wait for the window of the gtkdialog instance named app_name.
+
+    Matches the AT-SPI *application* by its exact name (set via launch()),
+    which is unique per instance, then returns one of its toplevel windows.
+    When title_substring is given (e.g. to pick one window of a multi-window
+    dialog) the first window whose name contains it is returned; otherwise
+    the first window is returned.
+
+    Returns (application, window), or (None, None) on timeout.
+    """
+    import gi
+    gi.require_version('Atspi', '2.0')
+    from gi.repository import Atspi
+
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        desktop = Atspi.get_desktop(0)
+        for i in range(desktop.get_child_count()):
+            app = desktop.get_child_at_index(i)
+            if app is None or (app.get_name() or '') != app_name:
+                continue
+            for j in range(app.get_child_count()):
+                win = app.get_child_at_index(j)
+                if win is None:
+                    continue
+                if title_substring is None or \
+                        title_substring.lower() in (win.get_name() or '').lower():
+                    return app, win
+        time.sleep(0.2)
+    return None, None
+
 
 class TestRunner:
     def __init__(self):

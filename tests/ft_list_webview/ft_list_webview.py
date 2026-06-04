@@ -21,53 +21,9 @@ gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
 
 sys.path.insert(0, sys.path[0] + '/..')
-from testlib import TestRunner
+from testlib import TestRunner, launch, wait_for_window, unique_app_name
 
 TIMEOUT = 10
-
-
-def get_child_pid(shell_pid):
-    """Get the gtkdialog3 child PID of the shell script."""
-    try:
-        result = subprocess.run(['pgrep', '-P', str(shell_pid)],
-                                capture_output=True, text=True)
-        pids = result.stdout.strip().split()
-        if pids:
-            return int(pids[0])
-    except Exception:
-        pass
-    return None
-
-
-def find_app_windows(pid):
-    """Find all AT-SPI windows belonging to a PID."""
-    windows = []
-    desktop = Atspi.get_desktop(0)
-    for i in range(desktop.get_child_count()):
-        app = desktop.get_child_at_index(i)
-        if app is None:
-            continue
-        try:
-            if app.get_process_id() != pid:
-                continue
-        except Exception:
-            continue
-        for j in range(app.get_child_count()):
-            win = app.get_child_at_index(j)
-            if win:
-                windows.append(win)
-    return windows
-
-
-def wait_for_window(pid, name, timeout=TIMEOUT):
-    """Wait for an AT-SPI window with the given name to appear."""
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        for win in find_app_windows(pid):
-            if name.lower() in (win.get_name() or '').lower():
-                return win
-        time.sleep(0.3)
-    return None
 
 
 def find_widgets(node, role=None):
@@ -169,26 +125,14 @@ t = TestRunner()
 
 # Launch the example
 t.log("Launching list example...")
-proc = subprocess.Popen(
-    ['./examples/standard/list'],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    cwd='/home/pipas/gtkdialog/gtkdialog-0.8.3'
-)
+APP_NAME = unique_app_name()
+proc = launch(['./examples/standard/list'], APP_NAME)
 
 time.sleep(2)
 
-# Get gtkdialog3 PID
-our_pid = get_child_pid(proc.pid)
-if our_pid is None:
-    proc.kill()
-    t.abort("Could not find gtkdialog3 child process")
-
-t.log(f"gtkdialog3 PID: {our_pid}")
-
 # --- Test 1: Window appears ---
 t.begin("testWindowAppears")
-window = wait_for_window(our_pid, 'Widget Reference')
+app, window = wait_for_window(APP_NAME, 'Widget Reference')
 t.screenshot('GtkDialog3 Widget Reference')
 if not t.check(window is not None, "Widget Reference window found"):
     proc.kill()

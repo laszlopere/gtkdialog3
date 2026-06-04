@@ -23,28 +23,9 @@ gi.require_version('Atspi', '2.0')
 from gi.repository import Atspi
 
 sys.path.insert(0, sys.path[0] + '/..')
-from testlib import TestRunner
+from testlib import TestRunner, launch, wait_for_window, unique_app_name
 
 TIMEOUT = 10  # seconds
-
-
-def wait_for_window(name_substring, timeout=TIMEOUT, app_name='gtkdialog3'):
-    """Wait for a window matching the name to appear in AT-SPI tree."""
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        desktop = Atspi.get_desktop(0)
-        for i in range(desktop.get_child_count()):
-            app = desktop.get_child_at_index(i)
-            if app is None:
-                continue
-            if app_name and app_name.lower() not in (app.get_name() or '').lower():
-                continue
-            for j in range(app.get_child_count()):
-                win = app.get_child_at_index(j)
-                if win and name_substring.lower() in (win.get_name() or '').lower():
-                    return app, win
-        time.sleep(0.3)
-    return None, None
 
 
 def find_widgets(node, role=None):
@@ -146,28 +127,21 @@ def dump_tree(node, indent=0):
 
 t = TestRunner()
 
-# Kill any leftover gtkdialog3 processes
-subprocess.run(['pkill', '-x', 'gtkdialog3'], capture_output=True)
-time.sleep(0.5)
 
 # Launch the example
 t.log("Launching table example...")
-proc = subprocess.Popen(
-    ['./examples/table/table'],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    cwd='/home/pipas/gtkdialog/gtkdialog-0.8.3'
-)
+APP_NAME = unique_app_name()
+proc = launch(['./examples/table/table'], APP_NAME)
 
 time.sleep(2)
 
 t.log("Looking for window via AT-SPI...")
-app, window = wait_for_window('table')
+app, window = wait_for_window(APP_NAME, 'table')
 t.screenshot('table')
 
 if window is None:
     # Try generic name as fallback
-    app, window = wait_for_window('gtkdialog3')
+    app, window = wait_for_window(APP_NAME)
 
 if window is None:
     proc.kill()
