@@ -5,6 +5,7 @@
 ![license](https://img.shields.io/badge/license-GPL--2.0--or--later-blue)
 ![language](https://img.shields.io/badge/language-C-555)
 ![toolkit](https://img.shields.io/badge/GTK-3-green)
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-db61a2.svg)](https://github.com/sponsors/laszlopere)
 
 **GtkDialog3** builds GTK 3 graphical user interfaces *declaratively*. You
 describe the interface in a small XML-like markup language — embedded straight
